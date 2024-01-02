@@ -1,5 +1,6 @@
 package com.example.beeguide.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,10 +23,21 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.beeguide.R
 
+enum class BeeguideRoute() {
+    Home,
+    Map,
+    Profile
+}
+
 @Composable
-fun Navbar() {
+fun Navbar(
+    onHomeIconClicked: () -> Unit,
+    onMapIconClicked: () -> Unit,
+    onProfileIconClicked: () -> Unit
+) {
     Column {
-        Icon(painter = painterResource(R.drawable.navbar_wave),
+        Icon(
+            painter = painterResource(R.drawable.navbar_wave),
             contentDescription = null,
             tint = Color.Blue,
             modifier = Modifier
@@ -45,20 +57,28 @@ fun Navbar() {
                 verticalAlignment = Alignment.Bottom,
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
-                Icon(Icons.Rounded.Home,
+                Icon(
+                    Icons.Rounded.Home,
                     contentDescription = "Home",
-                    Modifier.size(35.dp)
+                    modifier = Modifier
+                        .size(35.dp)
+                        .clickable(onClick = onHomeIconClicked)
                 )
 
                 Icon(
                     painterResource(id = R.drawable.round_explore_24),
                     contentDescription = "Map",
-                    Modifier.size(50.dp)
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clickable(onClick = onMapIconClicked)
                 )
 
-                Icon(Icons.Rounded.Person,
+                Icon(
+                    Icons.Rounded.Person,
                     contentDescription = "Profile",
-                    Modifier.size(35.dp)
+                    modifier = Modifier
+                        .size(35.dp)
+                        .clickable(onClick = onProfileIconClicked)
                 )
             }
         }
