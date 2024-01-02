@@ -23,12 +23,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.beeguide.R
 
-enum class BeeguideRoute() {
-    Home,
-    Map,
-    Profile
-}
-
 @Composable
 fun Navbar(
     onHomeIconClicked: () -> Unit,
