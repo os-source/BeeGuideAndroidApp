@@ -12,12 +12,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
@@ -33,7 +33,7 @@ fun Navbar(
         Icon(
             painter = painterResource(R.drawable.navbar_wave),
             contentDescription = null,
-            tint = Color.Blue,
+            tint = MaterialTheme.colorScheme.surface,
             modifier = Modifier
                 .fillMaxWidth()
                 .scale(1.3f)
@@ -43,7 +43,7 @@ fun Navbar(
                 .fillMaxWidth()
                 .height(60.dp)
                 .zIndex(1f),
-            color = Color.Blue
+            color = MaterialTheme.colorScheme.surface
         ) {
             Row(
                 modifier = Modifier
