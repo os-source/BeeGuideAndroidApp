@@ -1,4 +1,4 @@
-package com.example.beeguide.ui.components
+package com.example.beeguide.ui.screens
 
 import android.util.Size
 import androidx.compose.foundation.Image
