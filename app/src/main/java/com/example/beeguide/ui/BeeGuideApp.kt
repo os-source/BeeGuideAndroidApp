@@ -1,10 +1,11 @@
-package com.example.beeguide
+package com.example.beeguide.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +15,7 @@ import com.example.beeguide.ui.screens.Home
 import com.example.beeguide.ui.screens.NavigationMap
 import com.example.beeguide.ui.screens.Profile
 import com.example.beeguide.ui.screens.Settings
+import com.example.beeguide.ui.screens.UserViewModel
 
 
 /** enum values that represent the screens in the app */
@@ -60,10 +62,12 @@ fun BeeGuideApp(
                 }
             }
             composable(route = BeeGuideRoute.Home.name) {
-                Home()
+                val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
+                Home(userUiState = userViewModel.userUiState)
             }
             composable(route = BeeGuideRoute.Profile.name) {
-                Profile()
+                val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
+                Profile(userUiState = userViewModel.userUiState)
             }
             composable(route = BeeGuideRoute.Settings.name) {
                 Settings()
