@@ -67,7 +67,9 @@ fun BeeGuideApp(
             }
             composable(route = BeeGuideRoute.Profile.name) {
                 val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
-                Profile(userUiState = userViewModel.userUiState)
+                Profile(
+                    userUiState = userViewModel.userUiState,
+                    onSettingsButtonClicked = { navController.navigate(BeeGuideRoute.Settings.name) })
             }
             composable(route = BeeGuideRoute.Settings.name) {
                 Settings()

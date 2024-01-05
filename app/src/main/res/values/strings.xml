@@ -1,3 +1,23 @@
 <resources>
     <string name="app_name">BeeGuide</string>
+    <string name="settings">Einstellungen</string>
+    <string name="hello">Hallo</string>
+    <string name="notifications">Benachrichtigungen</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="privacy">Privatsphäre</string>
+    <string name="security">Sicherheit</string>
+    <string name="appearance">Darstellung</string>
+    <string name="about">Über</string>
+    <string name="share_beeguide">BeeGuide teilen</string>
+    <string name="rate_beeguide">BeeGuide bewerten</string>
+    <string name="help">Hilfe</string>
+    <string name="faq">FAQ</string>
+    <string name="contact_us">Kontaktiere uns</string>
+    <string name="terms_of_service">Nutzungsbedingungen</string>
+    <string name="privacy_policy">Datenschutzerklärung</string>
+    <string name="profile">Profil</string>
+    <string name="edit_profile">Profil bearbeiten</string>
+    <string name="sign_in">Anmelden</string>
+    <string name="sign_out">Abmelden</string>
+    <string name="other">Sonstiges</string>
 </resources>

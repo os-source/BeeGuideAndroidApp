@@ -9,8 +9,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.beeguide.R
 
 @Composable
 fun Home(
@@ -23,7 +25,7 @@ fun Home(
         is UserUiState.Success ->
             Column {
                 Text(
-                    text = "Hallo ${userUiState.user.firstName}!",
+                    text = stringResource(id = R.string.hello) + " " + userUiState.user.firstName + "!",
                     fontSize = 30.sp,
                     modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp)
                 )

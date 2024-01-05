@@ -1,5 +1,6 @@
 package com.example.beeguide.ui.screens
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -28,8 +29,18 @@ sealed interface UserUiState {
     data class Success(
         val user: User
     ) : UserUiState
+
     object Error : UserUiState
     object Loading : UserUiState
+}
+
+sealed interface SettingsUiState {
+    data class Success(
+        val darkMode: Boolean
+    ) : SettingsUiState
+
+    object Error : SettingsUiState
+    object Loading : SettingsUiState
 }
 
 class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : ViewModel() {
@@ -103,6 +114,36 @@ class UserViewModel(private val marsPhotosRepository: MarsPhotosRepository) : Vi
                 val marsPhotosRepository = application.container.marsPhotosRepository
                 UserViewModel(marsPhotosRepository = marsPhotosRepository)
             }
+        }
+    }
+}
+
+class SettingsViewModel : ViewModel() {
+    var settingsUiState: SettingsUiState by mutableStateOf(SettingsUiState.Loading)
+        private set
+
+    init {
+        getDarkMode()
+    }
+
+    fun getDarkMode() {
+        viewModelScope.launch {
+            settingsUiState = SettingsUiState.Loading
+            settingsUiState = try {
+                SettingsUiState.Success(true)
+            } catch (e: IOException) {
+                SettingsUiState.Error
+            } catch (e: HttpException) {
+                SettingsUiState.Error
+            }
+        }
+    }
+
+    fun updateDarkMode() {
+        val currentSettingsUiState = settingsUiState
+        when (currentSettingsUiState) {
+            is SettingsUiState.Success -> settingsUiState = SettingsUiState.Success(!currentSettingsUiState.darkMode)
+            else -> Log.d("Settings", "Error: Dark mode preference could not be updated.")
         }
     }
 }
