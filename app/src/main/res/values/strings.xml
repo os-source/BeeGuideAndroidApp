@@ -2,6 +2,7 @@
     <string name="app_name">BeeGuide</string>
     <string name="settings">Einstellungen</string>
     <string name="hello">Hallo</string>
+    <string name="edit_profile">Profil bearbeiten</string>
     <string name="notifications">Benachrichtigungen</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="privacy">Privatsphäre</string>
@@ -16,7 +17,6 @@
     <string name="terms_of_service">Nutzungsbedingungen</string>
     <string name="privacy_policy">Datenschutzerklärung</string>
     <string name="profile">Profil</string>
-    <string name="edit_profile">Profil bearbeiten</string>
     <string name="sign_in">Anmelden</string>
     <string name="sign_out">Abmelden</string>
     <string name="other">Sonstiges</string>

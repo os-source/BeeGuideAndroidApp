@@ -1,6 +1,7 @@
 package com.example.beeguide.ui.screens
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -16,13 +17,27 @@ import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beeguide.R
+import com.example.beeguide.helpers.getVersionName
 import com.example.beeguide.ui.components.SettingsClickableComp
 import com.example.beeguide.ui.components.SettingsGroup
+
+enum class SettingsRoute() {
+    edit_profile,
+    notifications,
+    privacy,
+    security,
+    appearance,
+    help
+}
 
 @Composable
 fun Settings(
@@ -110,6 +125,19 @@ fun Settings(
                     ) {
                     }
                 }
+
+                /*Button(onClick = { /*TODO*/ }) {
+                    Text(stringResource(id = R.string.sign_out))
+                }*/
+
+                Text(
+                    text = "Version ${getVersionName(context = LocalContext.current)}",
+                    color = Color(0xFF858585),
+                    fontSize = 12.sp,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
             }
 
         else -> Text(text = "Error!")
