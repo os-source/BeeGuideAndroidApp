@@ -15,7 +15,7 @@ import androidx.compose.ui.unit.sp
 import com.example.beeguide.R
 
 @Composable
-fun Home(
+fun HomeScreen(
     userUiState: UserUiState
 ) {
     when (userUiState) {

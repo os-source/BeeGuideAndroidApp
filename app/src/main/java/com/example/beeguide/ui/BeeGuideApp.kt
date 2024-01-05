@@ -1,6 +1,5 @@
 package com.example.beeguide.ui
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -11,10 +10,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.beeguide.ui.components.Navbar
-import com.example.beeguide.ui.screens.Home
-import com.example.beeguide.ui.screens.NavigationMap
-import com.example.beeguide.ui.screens.Profile
+import com.example.beeguide.ui.screens.HomeScreen
+import com.example.beeguide.ui.screens.MapScreen
+import com.example.beeguide.ui.screens.ProfileScreen
 import com.example.beeguide.ui.screens.Settings
+import com.example.beeguide.ui.screens.SettingsRoute
 import com.example.beeguide.ui.screens.UserViewModel
 
 
@@ -22,8 +22,7 @@ import com.example.beeguide.ui.screens.UserViewModel
 enum class BeeGuideRoute() {
     Home,
     Map,
-    Profile,
-    Settings
+    Profile
 }
 
 @Composable
@@ -54,24 +53,19 @@ fun BeeGuideApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = BeeGuideRoute.Map.name) {
-                Column(
-                    modifier = Modifier
-                        .padding(innerPadding)
-                ) {
-                    NavigationMap()
-                }
+                MapScreen()
             }
             composable(route = BeeGuideRoute.Home.name) {
                 val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
-                Home(userUiState = userViewModel.userUiState)
+                HomeScreen(userUiState = userViewModel.userUiState)
             }
             composable(route = BeeGuideRoute.Profile.name) {
                 val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
-                Profile(
+                ProfileScreen(
                     userUiState = userViewModel.userUiState,
-                    onSettingsButtonClicked = { navController.navigate(BeeGuideRoute.Settings.name) })
+                    onSettingsButtonClicked = { navController.navigate(SettingsRoute.Settings.name) })
             }
-            composable(route = BeeGuideRoute.Settings.name) {
+            composable(route = SettingsRoute.Settings.name) {
                 Settings()
             }
         }

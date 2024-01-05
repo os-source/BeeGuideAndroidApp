@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.dp
 import com.example.beeguide.R
 
 @Composable
-fun NavigationMap() {
+fun MapScreen() {
     var scale by remember {
         mutableStateOf(1f)
     }
