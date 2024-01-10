@@ -1,5 +1,6 @@
 package com.example.beeguide.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,16 +17,18 @@ import com.example.beeguide.R
 
 @Composable
 fun HomeScreen(
-    userUiState: UserUiState
+    userUiState: UserUiState,
+    testUiState: TestUiState
 ) {
-    when (userUiState) {
-        is UserUiState.Loading ->
+    when (testUiState) {
+        is TestUiState.Loading ->
             Text(text = "Loading...")
 
-        is UserUiState.Success ->
+        is TestUiState.Success -> {
+            Log.d("TestUiState", "HomeScreen: ${testUiState}")
             Column {
                 Text(
-                    text = stringResource(id = R.string.hello) + " " + userUiState.user.firstName + "!",
+                    text = stringResource(id = R.string.hello) + " " + "!",
                     fontSize = 30.sp,
                     modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp)
                 )
@@ -53,6 +56,7 @@ fun HomeScreen(
                     }
                 }
             }
+        }
 
         else -> Text(text = "Error!")
     }

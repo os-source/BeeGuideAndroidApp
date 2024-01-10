@@ -15,8 +15,10 @@ import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Divider
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,12 +53,20 @@ enum class SettingsRoute() {
     About
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Settings(
+    appearanceViewModel: AppearanceViewModel,
     navController: NavHostController = rememberNavController()
 ) {
     Scaffold(
-        topBar = {}
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(stringResource(id = R.string.settings))
+                }
+            )
+        }
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -79,7 +89,7 @@ fun Settings(
                 SecurityScreen()
             }
             composable(route = SettingsRoute.Appearance.name) {
-                AppearanceScreen()
+                AppearanceScreen(appearanceViewModel)
             }
             composable(route = SettingsRoute.About.name) {
                 AboutScreen()
@@ -96,8 +106,6 @@ fun SettingsScreen(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
     ) {
-        Text(text = stringResource(id = R.string.settings), fontSize = 30.sp)
-
         SettingsGroup(name = R.string.profile) {
             SettingsClickableComp(
                 name = R.string.edit_profile,

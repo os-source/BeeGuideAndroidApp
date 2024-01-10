@@ -2,7 +2,6 @@ package com.example.beeguide.ui.theme
 
 import android.app.Activity
 import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -13,21 +12,22 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import com.example.beeguide.ui.screens.AppearanceViewModel
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
     secondary = PurpleGrey80,
     tertiary = Pink80,
-    background = background,
+    background = background_dark,
     surface = surface_dark
 )
 
-private val LightColorScheme = lightColorScheme(
+public val LightColorScheme = lightColorScheme(
     primary = Purple40,
     secondary = PurpleGrey40,
     tertiary = Pink40,
-    background = background,
-    surface = surface_dark
+    background = background_light,
+    surface = surface_light
     /*onPrimary = Color.White,
     onSecondary = Color.White,
     onTertiary = Color.White,
@@ -37,11 +37,13 @@ private val LightColorScheme = lightColorScheme(
 
 @Composable
 fun BeeGuideTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    appearanceViewModel: AppearanceViewModel,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false, // Disabled
     content: @Composable () -> Unit
 ) {
+    val darkTheme: Boolean = appearanceViewModel.darkMode
+
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -51,6 +53,7 @@ fun BeeGuideTheme(
         darkTheme -> DarkColorScheme
         else -> LightColorScheme
     }
+
     val view = LocalView.current
     if (!view.isInEditMode) {
         SideEffect {

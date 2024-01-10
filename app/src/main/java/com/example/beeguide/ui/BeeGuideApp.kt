@@ -10,11 +10,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.beeguide.ui.components.Navbar
+import com.example.beeguide.ui.screens.AppearanceViewModel
 import com.example.beeguide.ui.screens.HomeScreen
 import com.example.beeguide.ui.screens.MapScreen
 import com.example.beeguide.ui.screens.ProfileScreen
 import com.example.beeguide.ui.screens.Settings
 import com.example.beeguide.ui.screens.SettingsRoute
+import com.example.beeguide.ui.screens.TestViewModel
 import com.example.beeguide.ui.screens.UserViewModel
 
 
@@ -27,6 +29,7 @@ enum class BeeGuideRoute() {
 
 @Composable
 fun BeeGuideApp(
+    appearanceViewModel: AppearanceViewModel,
     navController: NavHostController = rememberNavController()
 ) {
     Scaffold(
@@ -57,7 +60,8 @@ fun BeeGuideApp(
             }
             composable(route = BeeGuideRoute.Home.name) {
                 val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
-                HomeScreen(userUiState = userViewModel.userUiState)
+                val testViewModel: TestViewModel = viewModel(factory = TestViewModel.Factory)
+                HomeScreen(userUiState = userViewModel.userUiState, testUiState = testViewModel.testUiState)
             }
             composable(route = BeeGuideRoute.Profile.name) {
                 val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
@@ -66,7 +70,7 @@ fun BeeGuideApp(
                     onSettingsButtonClicked = { navController.navigate(SettingsRoute.Settings.name) })
             }
             composable(route = SettingsRoute.Settings.name) {
-                Settings()
+                Settings(appearanceViewModel)
             }
         }
     }

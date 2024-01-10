@@ -6,17 +6,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
-import com.example.beeguide.data.MarsPhotosRepository
+import com.example.beeguide.PreferencesDataStore
+import com.example.beeguide.data.BeeGuideRespository
 import com.example.beeguide.model.MarsPhoto
 import com.example.beeguide.model.User
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import okio.IOException
 import retrofit2.HttpException
-import java.io.IOException
 
 // UI State
 sealed interface MarsUiState {
@@ -34,16 +36,16 @@ sealed interface UserUiState {
     object Loading : UserUiState
 }
 
-sealed interface SettingsUiState {
+sealed interface TestUiState {
     data class Success(
-        val darkMode: Boolean
-    ) : SettingsUiState
+        val test: String
+    ) : TestUiState
 
-    object Error : SettingsUiState
-    object Loading : SettingsUiState
+    object Error : TestUiState
+    object Loading : TestUiState
 }
 
-class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : ViewModel() {
+/*class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : ViewModel() {
     /** The mutable State that stores the status of the most recent request */
     var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)
         private set
@@ -83,9 +85,9 @@ class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : Vi
             }
         }
     }
-}
+}*/
 
-class UserViewModel(private val marsPhotosRepository: MarsPhotosRepository) : ViewModel() {
+class UserViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
     var userUiState: UserUiState by mutableStateOf(UserUiState.Loading)
         private set
 
@@ -111,39 +113,85 @@ class UserViewModel(private val marsPhotosRepository: MarsPhotosRepository) : Vi
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
-                val marsPhotosRepository = application.container.marsPhotosRepository
-                UserViewModel(marsPhotosRepository = marsPhotosRepository)
+                val beeGuideRespository = application.container.beeGuideRespository
+                UserViewModel(beeGuideRespository = beeGuideRespository)
             }
         }
     }
 }
 
-class SettingsViewModel : ViewModel() {
-    var settingsUiState: SettingsUiState by mutableStateOf(SettingsUiState.Loading)
+
+class TestViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
+    var testUiState: TestUiState by mutableStateOf(TestUiState.Loading)
         private set
 
     init {
-        getDarkMode()
+        getTest()
     }
 
-    fun getDarkMode() {
+    fun getTest() {
         viewModelScope.launch {
-            settingsUiState = SettingsUiState.Loading
-            settingsUiState = try {
-                SettingsUiState.Success(true)
+            testUiState = TestUiState.Loading
+            testUiState = try {
+                TestUiState.Success(beeGuideRespository.getUser().title)
             } catch (e: IOException) {
-                SettingsUiState.Error
+                TestUiState.Error
             } catch (e: HttpException) {
-                SettingsUiState.Error
+                TestUiState.Error
             }
         }
     }
 
-    fun updateDarkMode() {
-        val currentSettingsUiState = settingsUiState
-        when (currentSettingsUiState) {
-            is SettingsUiState.Success -> settingsUiState = SettingsUiState.Success(!currentSettingsUiState.darkMode)
-            else -> Log.d("Settings", "Error: Dark mode preference could not be updated.")
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
+                        as BeeGuideApplication)
+                val beeGuideRespository = application.container.beeGuideRespository
+                TestViewModel(beeGuideRespository = beeGuideRespository)
+            }
         }
     }
 }
+
+
+
+class AppearanceViewModel(
+    private val bol: Boolean
+) : ViewModel() {
+    var darkMode by mutableStateOf(true)
+        private set
+
+    init {
+        viewModelScope.launch {
+            darkMode = bol
+        }
+    }
+
+    fun update() {
+        darkMode = !darkMode
+        /*viewModelScope.launch {
+            preferencesDataStore.setDarkThemeMode(darkMode)
+        }*/
+    }
+
+    companion object {
+        class Factory(private val bool: Boolean) : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return AppearanceViewModel(bool) as T
+            }
+        }
+    }
+}
+
+fun getDarkThemeMode(): Boolean {
+    CoroutineScope(Dispatchers.IO).launch {
+        val preferencesDataStore = PreferencesDataStore(BeeGuideApplication())
+        Log.d("AppearanceViewModel", "create: ${preferencesDataStore.getDarkThemeMode()}")
+    }
+    return true
+}
+
+
+
+//darkTheme: Boolean = isSystemInDarkTheme(),
