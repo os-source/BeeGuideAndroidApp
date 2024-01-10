@@ -6,7 +6,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.beeguide.navigation.MonitoringActivity
-import com.example.beeguide.navigation.MonitoringActivity
 import com.example.beeguide.ui.BeeGuideApp
 import com.example.beeguide.ui.screens.AppearanceViewModel
 import com.example.beeguide.ui.theme.BeeGuideTheme
