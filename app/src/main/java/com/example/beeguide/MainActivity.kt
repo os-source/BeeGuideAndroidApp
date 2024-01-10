@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import com.example.beeguide.navigation.MonitoringActivity
+import com.example.beeguide.navigation.MonitoringActivity
 import com.example.beeguide.ui.BeeGuideApp
 import com.example.beeguide.ui.screens.AppearanceViewModel
 import com.example.beeguide.ui.theme.BeeGuideTheme
@@ -13,7 +15,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
-
     //private val preferencesDataStore by lazy { PreferencesDataStore(this) }
 
     private val appearanceViewModel by viewModels<AppearanceViewModel>(
@@ -21,6 +22,8 @@ class MainActivity : ComponentActivity() {
             AppearanceViewModel.Companion.Factory(false)
         }
     )
+
+    val monitor: MonitoringActivity = MonitoringActivity()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +39,7 @@ class MainActivity : ComponentActivity() {
                 BeeGuideApp(appearanceViewModel)
             }
         }
+
     }
 }
 
