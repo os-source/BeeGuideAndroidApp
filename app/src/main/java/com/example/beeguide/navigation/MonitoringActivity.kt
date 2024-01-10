@@ -1,8 +1,13 @@
 package com.example.beeguide.navigation
 
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import com.example.beeguide.R
 import org.altbeacon.beacon.BeaconManager;
@@ -13,6 +18,7 @@ import org.altbeacon.beacon.MonitorNotifier
 
 class MonitoringActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        Log.d("navDebug", "Monitoring started")
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -27,12 +33,13 @@ class MonitoringActivity : AppCompatActivity() {
         beaconManager.startMonitoring(region)
     }
 
+
     val monitoringObserver = Observer<Int> { state ->
         if (state == MonitorNotifier.INSIDE) {
-            Log.d(TAG, "Detected beacons(s)")
+            Log.d("beacon", "Detected beacons(s)")
         }
         else {
-            Log.d(TAG, "Stopped detecteing beacons")
+            Log.d("beacon", "Stopped detecteing beacons")
         }
     }
 }
