@@ -16,3 +16,9 @@ data class MapMarker(
     val name: String,
     val description: String
 )
+
+@Serializable
+data class UserPosition(
+    val x: Double,
+    val y: Double,
+)
