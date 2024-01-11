@@ -1,4 +1,4 @@
-package com.example.beeguide.navigation.permissions
+package com.example.beeguide.navigation.preconditions
 
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
@@ -12,8 +12,14 @@ class PermissionChecker(private var componentActivity: ComponentActivity){
     private val bluetoothAvailable = componentActivity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
     private val bluetoothLEAvailable = componentActivity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
     private val logTag: String = "Permission"
+    private val granted: Boolean = false
 
-    public fun Check() {
+    public val getGranted: Boolean
+        get() {
+            return granted
+        }
+
+    public fun check() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             requestMultiplePermissions.launch(arrayOf(
                 android.Manifest.permission.BLUETOOTH_SCAN,
@@ -45,7 +51,7 @@ class PermissionChecker(private var componentActivity: ComponentActivity){
     private val requestMultiplePermissions =
         componentActivity.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             permissions.entries.forEach {
-                Log.d("test006", "${it.key} = ${it.value}")
+                Log.d(logTag, "${it.key} = ${it.value}")
             }
         }
 

@@ -1,21 +1,14 @@
 package com.example.beeguide
 
 import android.bluetooth.BluetoothAdapter
-import android.bluetooth.BluetoothManager
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import com.example.beeguide.navigation.permissions.PermissionChecker
+import com.example.beeguide.navigation.preconditions.PermissionChecker
 import com.example.beeguide.ui.BeeGuideApp
 import com.example.beeguide.ui.screens.AppearanceViewModel
 import com.example.beeguide.ui.theme.BeeGuideTheme
@@ -54,42 +47,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var preferencesDataStore = PreferencesDataStore(this)
-
-        var permissionChecker : PermissionChecker = PermissionChecker(this)
-        permissionChecker.Check()
-
-        // Initialisiere den Launcher für die Berechtigungsanfrage
-        requestPermissionLauncher =
-            registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted: Boolean ->
-                if (isGranted) {
-                    // Standortberechtigung wurde erteilt, führen Sie Ihre Bluetooth-Aktionen durch
-                } else {
-                    // Standortberechtigung wurde nicht erteilt, behandeln Sie dies entsprechend
-                }
-            }
-
-
-        // BluetoothManager initialisieren
-        val bluetoothManager =
-            getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
-        bluetoothAdapter = bluetoothManager.adapter
-
-        // Bluetooth-Status überprüfen
-        if (bluetoothAdapter == null || !bluetoothAdapter.isEnabled) {
-            // Bluetooth ist deaktiviert, fordern Sie den Benutzer auf, es zu aktivieren
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
-        } else {
-            // Bluetooth ist aktiviert, überprüfen Sie die Standortberechtigung
-            //checkLocationPermission()
-        }
-
-
-
-
-        //val intent = Intent(this, MonitoringActivity::class.java)
-        //startActivity(intent)
+        val preferencesDataStore = PreferencesDataStore(this)
+        val permissionChecker : PermissionChecker = PermissionChecker(this); permissionChecker.check()
 
         CoroutineScope(Dispatchers.IO).launch {
             Log.d("AppearanceViewModel", "create: ${preferencesDataStore.getDarkThemeMode()}")
@@ -104,21 +63,6 @@ class MainActivity : ComponentActivity() {
         Log.d(TAG, "Heloo")
         startBeaconMonitor()
     }
-
-    private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == RESULT_OK) {
-            //granted
-        }else{
-            //deny
-        }
-    }
-
-    private val requestMultiplePermissions =
-        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-            permissions.entries.forEach {
-                Log.d("test006", "${it.key} = ${it.value}")
-            }
-        }
 
     val monitoringObserver = Observer<Int> {state ->
         if (state == MonitorNotifier.OUTSIDE) {
@@ -139,7 +83,6 @@ class MainActivity : ComponentActivity() {
         parser.setHardwareAssistManufacturerCodes(arrayOf(0x004c).toIntArray())
         beaconManager.beaconParsers.add(
             parser)
-
 
         val region = Region("all-beacons", null, null, null)
         // Set up a Live Data observer for beacon data
@@ -166,25 +109,7 @@ class MainActivity : ComponentActivity() {
         beaconManager.startMonitoring(region)
         beaconManager.startRangingBeacons(region)
     }
-
-    private fun checkLocationPermission() {
-        // Überprüfen, ob die Standortberechtigung erteilt wurde
-        if (ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // Wenn nicht, die Berechtigung anfordern
-            requestPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
-        } else {
-            // Die Standortberechtigung wurde bereits erteilt
-            // Führen Sie hier Ihre Bluetooth-Aktionen durch
-        }
-    }
-
 }
-
-
 
 fun getDarkThemeMode(): Boolean {
     CoroutineScope(Dispatchers.IO).launch {
