@@ -5,6 +5,7 @@ import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -49,6 +50,26 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         var preferencesDataStore = PreferencesDataStore(this)
+
+        // Check to see if the Bluetooth classic feature is available.
+        val bluetoothAvailable = packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
+
+        // Check to see if the BLE feature is available.
+        val bluetoothLEAvailable = packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
+
+        Log.d("Bluetooth", "Bluetooth: $bluetoothAvailable       BLE: $bluetoothLEAvailable")
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            requestMultiplePermissions.launch(arrayOf(
+                android.Manifest.permission.BLUETOOTH_SCAN,
+                android.Manifest.permission.BLUETOOTH_CONNECT))
+        }
+        else{
+            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
+            requestBluetooth.launch(enableBtIntent)
+        }
+
 
         // Initialisiere den Launcher für die Berechtigungsanfrage
         requestPermissionLauncher =
@@ -96,6 +117,21 @@ class MainActivity : ComponentActivity() {
         startBeaconMonitor()
     }
 
+    private var requestBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == RESULT_OK) {
+            //granted
+        }else{
+            //deny
+        }
+    }
+
+    private val requestMultiplePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+            permissions.entries.forEach {
+                Log.d("test006", "${it.key} = ${it.value}")
+            }
+        }
+
     val monitoringObserver = Observer<Int> {state ->
         if (state == MonitorNotifier.OUTSIDE) {
             Log.d(TAG, "outside beacon region: ")
@@ -124,8 +160,11 @@ class MainActivity : ComponentActivity() {
 
         regionViewModel.rangedBeacons.observe(this){beacons->
             val rangeAgeMillis = System.currentTimeMillis() - (beacons.firstOrNull()?.lastCycleDetectionTimestamp ?: 0)
+            Log.d(TAG, "System Time ${System.currentTimeMillis()}")
+            Log.d(TAG, "Last Beacon Detection Timestamp ${(beacons.firstOrNull()?.lastCycleDetectionTimestamp ?: 0)}")
             if (rangeAgeMillis < 10000) {
                 Log.d(MainActivity.TAG, "Ranged: ${beacons.count()} beacons")
+                Log.d(TAG, "Regions count ${beaconManager.rangedRegions.size}")
                 for (beacon: Beacon in beacons) {
                     Log.d(TAG, "$beacon about ${beacon.distance} meters away")
                 }
@@ -135,6 +174,7 @@ class MainActivity : ComponentActivity() {
             }
         }
         regionViewModel.regionState.observe(this, monitoringObserver)
+        beaconManager.startMonitoring(region)
         beaconManager.startMonitoring(region)
         beaconManager.startRangingBeacons(region)
     }
