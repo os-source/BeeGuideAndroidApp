@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
+import com.example.beeguide.navigation.permissions.PermissionChecker
 import com.example.beeguide.ui.BeeGuideApp
 import com.example.beeguide.ui.screens.AppearanceViewModel
 import com.example.beeguide.ui.theme.BeeGuideTheme
@@ -34,6 +35,10 @@ class MainActivity : ComponentActivity() {
     private lateinit var bluetoothAdapter: BluetoothAdapter
     private lateinit var requestPermissionLauncher: ActivityResultLauncher<String>
 
+
+
+
+
     companion object {
         private const val REQUEST_ENABLE_BT = 1
         private const val REQUEST_LOCATION_PERMISSION = 2
@@ -51,25 +56,8 @@ class MainActivity : ComponentActivity() {
 
         var preferencesDataStore = PreferencesDataStore(this)
 
-        // Check to see if the Bluetooth classic feature is available.
-        val bluetoothAvailable = packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH)
-
-        // Check to see if the BLE feature is available.
-        val bluetoothLEAvailable = packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)
-
-        Log.d("Bluetooth", "Bluetooth: $bluetoothAvailable       BLE: $bluetoothLEAvailable")
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            requestMultiplePermissions.launch(arrayOf(
-                android.Manifest.permission.BLUETOOTH_SCAN,
-                android.Manifest.permission.BLUETOOTH_CONNECT))
-        }
-        else{
-            val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-            requestBluetooth.launch(enableBtIntent)
-        }
-
+        var permissionChecker : PermissionChecker = PermissionChecker(this)
+        permissionChecker.Check()
 
         // Initialisiere den Launcher für die Berechtigungsanfrage
         requestPermissionLauncher =
@@ -94,7 +82,7 @@ class MainActivity : ComponentActivity() {
             startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT)
         } else {
             // Bluetooth ist aktiviert, überprüfen Sie die Standortberechtigung
-            checkLocationPermission()
+            //checkLocationPermission()
         }
 
 
