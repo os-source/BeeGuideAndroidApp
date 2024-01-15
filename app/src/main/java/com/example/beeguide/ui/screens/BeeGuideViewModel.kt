@@ -12,7 +12,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
 import com.example.beeguide.PreferencesDataStore
 import com.example.beeguide.data.BeeGuideRespository
-import com.example.beeguide.model.MarsPhoto
+import com.example.beeguide.model.Map
 import com.example.beeguide.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,15 +21,18 @@ import okio.IOException
 import retrofit2.HttpException
 
 // UI State
-sealed interface MarsUiState {
-    data class Success(val photos: List<MarsPhoto>) : MarsUiState
-    object Error : MarsUiState
-    object Loading : MarsUiState
-}
-
 sealed interface UserUiState {
     data class Success(
         val user: User
+    ) : UserUiState
+
+    object Error : UserUiState
+    object Loading : UserUiState
+}
+
+sealed interface MapUiState {
+    data class Success(
+        val map: Map
     ) : UserUiState
 
     object Error : UserUiState
@@ -44,48 +47,6 @@ sealed interface TestUiState {
     object Error : TestUiState
     object Loading : TestUiState
 }
-
-/*class MarsViewModel(private val marsPhotosRepository: MarsPhotosRepository) : ViewModel() {
-    /** The mutable State that stores the status of the most recent request */
-    var marsUiState: MarsUiState by mutableStateOf(MarsUiState.Loading)
-        private set
-
-    /**
-     * Call getMarsPhotos() on init so we can display status immediately.
-     */
-    init {
-        getMarsPhotos()
-    }
-
-    /**
-     * Gets Mars photos information from the Mars API Retrofit service and updates the
-     */
-    fun getMarsPhotos() {
-        viewModelScope.launch {
-            marsUiState = MarsUiState.Loading
-            marsUiState = try {
-                MarsUiState.Success(marsPhotosRepository.getMarsPhotos())
-            } catch (e: IOException) {
-                MarsUiState.Error
-            } catch (e: HttpException) {
-                MarsUiState.Error
-            }
-        }
-    }
-
-    /**
-     * Factory for [MarsViewModel] that takes [MarsPhotosRepository] as a dependency
-     */
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as BeeGuideApplication)
-                val marsPhotosRepository = application.container.marsPhotosRepository
-                MarsViewModel(marsPhotosRepository = marsPhotosRepository)
-            }
-        }
-    }
-}*/
 
 class UserViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
     var userUiState: UserUiState by mutableStateOf(UserUiState.Loading)
@@ -133,10 +94,12 @@ class TestViewModel(private val beeGuideRespository: BeeGuideRespository) : View
         viewModelScope.launch {
             testUiState = TestUiState.Loading
             testUiState = try {
-                TestUiState.Success(beeGuideRespository.getUser().title)
+                TestUiState.Success(beeGuideRespository.getMap().name)
             } catch (e: IOException) {
+                Log.d("TestUiState", "getMap: $e")
                 TestUiState.Error
             } catch (e: HttpException) {
+                Log.d("TestUiState", "getMap: $e")
                 TestUiState.Error
             }
         }

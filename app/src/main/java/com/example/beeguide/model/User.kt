@@ -7,11 +7,3 @@ data class User(
     val firstName: String,
     val lastName: String
 )
-
-@Serializable
-data class Test(
-    val userId: Int,
-    val id: Int,
-    val title: String,
-    val completed: Boolean
-)

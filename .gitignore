@@ -31,3 +31,6 @@ google-services.json
 
 # Android Profiling
 *.hprof
+
+# Ignore BeeGuide properties file that contains sensitive information
+beeguide.properties

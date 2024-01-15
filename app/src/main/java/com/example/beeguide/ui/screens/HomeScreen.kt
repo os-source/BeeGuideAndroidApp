@@ -21,14 +21,15 @@ fun HomeScreen(
     testUiState: TestUiState
 ) {
     when (testUiState) {
-        is TestUiState.Loading ->
+        is TestUiState.Loading ->{
             Text(text = "Loading...")
+        Log.d("TestUiState", "HomeScreen: ${testUiState}")}
 
         is TestUiState.Success -> {
             Log.d("TestUiState", "HomeScreen: ${testUiState}")
             Column {
                 Text(
-                    text = stringResource(id = R.string.hello) + " " + "!",
+                    text = stringResource(id = R.string.hello) + " " + testUiState.test + "!",
                     fontSize = 30.sp,
                     modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp)
                 )
@@ -58,7 +59,10 @@ fun HomeScreen(
             }
         }
 
-        else -> Text(text = "Error!")
+        else -> {
+            Text(text = "Error!")
+            Log.d("HomeScreen TestUiState response", testUiState.toString())
+        }
     }
     //TODO: Add home screen
 }

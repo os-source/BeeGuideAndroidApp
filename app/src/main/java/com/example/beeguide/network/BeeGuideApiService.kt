@@ -1,15 +1,9 @@
 package com.example.beeguide.network
 
-import com.example.beeguide.model.MarsPhoto
-import com.example.beeguide.model.Test
+import com.example.beeguide.model.Map
 import retrofit2.http.GET
 
-interface MarsApiService {
-    @GET("photos")
-    suspend fun getPhotos(): List<MarsPhoto>
-}
-
 interface BeeGuideApiService {
-    @GET("1")
-    suspend fun getUser(): Test
+    @GET("regions/426C7565-4368-6172-6D43-6561636F6E73/maps/3000")
+    suspend fun getMap(): Map
 }

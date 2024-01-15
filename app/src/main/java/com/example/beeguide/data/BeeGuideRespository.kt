@@ -1,14 +1,14 @@
 package com.example.beeguide.data
 
-import com.example.beeguide.model.Test
+import com.example.beeguide.model.Map
 import com.example.beeguide.network.BeeGuideApiService
 
 interface BeeGuideRespository {
-    suspend fun getUser(): Test
+    suspend fun getMap(): Map
 }
 
 class NetworkBeeGuideRepository(
     private val beeGuideApiService: BeeGuideApiService
 ) : BeeGuideRespository {
-    override suspend fun getUser(): Test = beeGuideApiService.getUser()
+    override suspend fun getMap(): Map = beeGuideApiService.getMap()
 }
