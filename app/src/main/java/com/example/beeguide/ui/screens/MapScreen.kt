@@ -30,9 +30,16 @@ import androidx.compose.ui.unit.dp
 import com.example.beeguide.R
 import com.example.beeguide.navigation.beacons.Monitor
 import com.example.beeguide.ui.components.RangedBeaconList
+import com.example.beeguide.ui.viewmodels.MapPositionUiState
+import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 
 @Composable
-fun MapScreen() {
+fun MapScreen(
+    mapPositionViewModel: MapPositionViewModel
+
+) {
+
+
     var scale by remember {
         mutableStateOf(1f)
     }

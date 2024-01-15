@@ -8,9 +8,16 @@ import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import com.example.beeguide.BeeGuideApplication
+import com.example.beeguide.navigation.beacons.Monitor
 import com.example.beeguide.ui.screens.MapUiState
+import com.example.beeguide.ui.screens.UserViewModel
 import kotlinx.coroutines.launch
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RegionViewModel
@@ -42,15 +49,15 @@ class MapPositionViewModel(
     }
 
     private fun triangulate(): MapPositionUiState {
-        // TODO 
+        // TODO
         return MapPositionUiState.Success(10, 10) // TODO: calculate actual position
     }
 
-    private val rangedBeaconObserver =  Observer<Collection<Beacon>> { beacons ->
+    private val rangedBeaconObserver =  Observer<Collection<Beacon>> {
         calculatePosition()
     }
 
-    private val mapObserver = Observer<MapUiState> { mapUiState ->
+    private val mapObserver = Observer<MapUiState> {
         calculatePosition()
     }
 
@@ -65,6 +72,7 @@ class MapPositionViewModel(
         regionViewModel.rangedBeacons.removeObserver(rangedBeaconObserver)
         mapViewModel.mapUiState.asLiveData().observeForever(mapObserver)
     }
+
 
 
 }

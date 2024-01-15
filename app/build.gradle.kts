@@ -97,6 +97,8 @@ dependencies {
     implementation("org.altbeacon:android-beacon-library:2.20.3")
     implementation("androidx.appcompat:appcompat:1.6.1")
 
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
+
 
 
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.05.01"))

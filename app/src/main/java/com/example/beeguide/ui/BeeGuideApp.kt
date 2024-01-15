@@ -19,6 +19,7 @@ import com.example.beeguide.ui.screens.Settings
 import com.example.beeguide.ui.screens.SettingsRoute
 import com.example.beeguide.ui.screens.TestViewModel
 import com.example.beeguide.ui.screens.UserViewModel
+import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 
 
 /** enum values that represent the screens in the app */
@@ -61,7 +62,9 @@ fun BeeGuideApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = BeeGuideRoute.Map.name) {
-                MapScreen()
+                //val mapPositionViewModel = MapPositionViewModel()
+
+                //MapScreen(mapPositionViewModel = )
             }
             composable(route = BeeGuideRoute.Home.name) {
                 val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
