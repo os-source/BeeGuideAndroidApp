@@ -22,10 +22,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.beeguide.R
+import com.example.beeguide.navigation.beacons.Monitor
+import com.example.beeguide.ui.components.RangedBeaconList
 
 @Composable
 fun MapScreen() {
@@ -82,6 +86,16 @@ fun MapScreen() {
                 MapMarker(markerPosition = Pair(0.93f, 0.23f), imageSize = size)
             }
         }
+    }
+    Box (
+    ){
+        val ctx = LocalContext.current
+        val owner = LocalLifecycleOwner.current
+
+        val monitor = Monitor(ctx)
+        monitor.startLogging(owner)
+        val regionViewModel = monitor.getRegionViewModel()
+        RangedBeaconList(regionViewModel = regionViewModel)
     }
 }
 

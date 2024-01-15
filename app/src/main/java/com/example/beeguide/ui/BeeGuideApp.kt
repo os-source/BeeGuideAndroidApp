@@ -1,15 +1,24 @@
 package com.example.beeguide.ui
 
+import android.content.Context
+import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MonotonicFrameClock
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.beeguide.navigation.beacons.Monitor
 import com.example.beeguide.ui.components.Navbar
+import com.example.beeguide.ui.components.RangedBeaconList
 import com.example.beeguide.ui.screens.AppearanceViewModel
 import com.example.beeguide.ui.screens.HomeScreen
 import com.example.beeguide.ui.screens.MapScreen
@@ -50,6 +59,10 @@ fun BeeGuideApp(
 
         }
     ) { innerPadding ->
+
+
+
+
         NavHost(
             navController = navController,
             startDestination = BeeGuideRoute.Map.name,

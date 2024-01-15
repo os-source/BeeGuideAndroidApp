@@ -40,7 +40,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val monitor = Monitor(this); monitor.start()
+        //val monitor = Monitor(this); monitor.start()
     }
 }
 
