@@ -11,6 +11,7 @@ import retrofit2.Retrofit
 
 interface AppContainer {
     val beeGuideRespository: BeeGuideRespository
+    val mapRepository: MapRepository
 }
 
 class DefaultAppContainer : AppContainer {
@@ -42,5 +43,9 @@ class DefaultAppContainer : AppContainer {
 
     override val beeGuideRespository: BeeGuideRespository by lazy {
         NetworkBeeGuideRepository(retrofitService)
+    }
+
+    override val mapRepository: MapRepository by lazy {
+        NetworkMapRepository(retrofitService)
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Card
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -22,7 +23,7 @@ import org.altbeacon.beacon.RegionViewModel
 fun RangedBeaconList(regionViewModel: RegionViewModel){
     val rangedBeaconState = regionViewModel.rangedBeacons.observeAsState(listOf())
 
-    val rangedBeacons = rangedBeaconState.value
+    val rangedBeacons by rangedBeaconState
 
     Box {
         Column {

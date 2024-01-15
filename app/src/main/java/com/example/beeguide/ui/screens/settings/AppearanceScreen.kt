@@ -10,6 +10,7 @@ import com.example.beeguide.ui.components.SettingsGroup
 import com.example.beeguide.ui.components.SettingsSwitchComp
 import com.example.beeguide.ui.screens.AppearanceViewModel
 
+
 @Composable
 fun AppearanceScreen(
     appearanceViewModel: AppearanceViewModel

@@ -17,8 +17,8 @@ import com.example.beeguide.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import okio.IOException
 import retrofit2.HttpException
+import java.io.IOException
 
 // UI State
 sealed interface UserUiState {
@@ -33,10 +33,10 @@ sealed interface UserUiState {
 sealed interface MapUiState {
     data class Success(
         val map: Map
-    ) : UserUiState
+    ) : MapUiState
 
-    object Error : UserUiState
-    object Loading : UserUiState
+    object Error : MapUiState
+    object Loading : MapUiState
 }
 
 sealed interface TestUiState {
@@ -47,6 +47,7 @@ sealed interface TestUiState {
     object Error : TestUiState
     object Loading : TestUiState
 }
+
 
 class UserViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
     var userUiState: UserUiState by mutableStateOf(UserUiState.Loading)
@@ -80,7 +81,6 @@ class UserViewModel(private val beeGuideRespository: BeeGuideRespository) : View
         }
     }
 }
-
 
 class TestViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
     var testUiState: TestUiState by mutableStateOf(TestUiState.Loading)
@@ -117,8 +117,6 @@ class TestViewModel(private val beeGuideRespository: BeeGuideRespository) : View
     }
 }
 
-
-
 class AppearanceViewModel(
     private val bol: Boolean
 ) : ViewModel() {
@@ -146,6 +144,7 @@ class AppearanceViewModel(
         }
     }
 }
+
 
 fun getDarkThemeMode(): Boolean {
     CoroutineScope(Dispatchers.IO).launch {

@@ -42,6 +42,7 @@ import com.example.beeguide.ui.screens.settings.NotificationsScreen
 import com.example.beeguide.ui.screens.settings.PrivacyScreen
 import com.example.beeguide.ui.screens.settings.SecurityScreen
 
+
 /** enum values that represent the settings screens in the app */
 enum class SettingsRoute() {
     Settings,
