@@ -5,7 +5,8 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import com.example.beeguide.navigation.MonitoringActivity
+import com.example.beeguide.navigation.beacons.Monitor
+import com.example.beeguide.navigation.preconditions.PermissionChecker
 import com.example.beeguide.ui.BeeGuideApp
 import com.example.beeguide.ui.screens.AppearanceViewModel
 import com.example.beeguide.ui.theme.BeeGuideTheme
@@ -14,6 +15,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+
     //private val preferencesDataStore by lazy { PreferencesDataStore(this) }
 
     private val appearanceViewModel by viewModels<AppearanceViewModel>(
@@ -22,12 +24,11 @@ class MainActivity : ComponentActivity() {
         }
     )
 
-    val monitor: MonitoringActivity = MonitoringActivity()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        var preferencesDataStore = PreferencesDataStore(this)
+        val preferencesDataStore = PreferencesDataStore(this)
+        val permissionChecker = PermissionChecker(this); permissionChecker.check()
 
         CoroutineScope(Dispatchers.IO).launch {
             Log.d("AppearanceViewModel", "create: ${preferencesDataStore.getDarkThemeMode()}")
@@ -39,6 +40,7 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+        val monitor = Monitor(this); monitor.start()
     }
 }
 
