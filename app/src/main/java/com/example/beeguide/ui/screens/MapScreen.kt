@@ -23,10 +23,14 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.beeguide.R
+import com.example.beeguide.navigation.beacons.Monitor
+import com.example.beeguide.ui.components.RangedBeaconList
 import com.example.beeguide.ui.viewmodels.MapPositionUiState
 
 @Composable
@@ -98,7 +102,7 @@ fun MapScreen(
             }
         }
     }
-    /*Box (
+    Box (
     ){
         val ctx = LocalContext.current
         val owner = LocalLifecycleOwner.current
@@ -107,7 +111,7 @@ fun MapScreen(
         monitor.startLogging(owner)
         val regionViewModel = monitor.getRegionViewModel()
         RangedBeaconList(regionViewModel = regionViewModel)
-    }*/
+    }
 }
 
 @Composable

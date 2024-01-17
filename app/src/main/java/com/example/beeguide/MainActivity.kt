@@ -19,7 +19,7 @@ class MainActivity : ComponentActivity() {
 
     private val appearanceViewModel by viewModels<AppearanceViewModel>(
         factoryProducer = {
-            AppearanceViewModel.Companion.Factory(false)
+            AppearanceViewModel.Companion.Factory(true)
         }
     )
 
