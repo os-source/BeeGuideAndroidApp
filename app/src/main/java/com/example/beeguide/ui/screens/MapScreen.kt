@@ -1,5 +1,6 @@
 package com.example.beeguide.ui.screens
 
+import android.util.Log
 import android.util.Size
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,24 +23,16 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.beeguide.R
-import com.example.beeguide.navigation.beacons.Monitor
-import com.example.beeguide.ui.components.RangedBeaconList
 import com.example.beeguide.ui.viewmodels.MapPositionUiState
-import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 
 @Composable
 fun MapScreen(
-    mapPositionViewModel: MapPositionViewModel
-
+    mapPositionUiState: MapPositionUiState,
 ) {
-
-
     var scale by remember {
         mutableStateOf(1f)
     }
@@ -49,6 +42,17 @@ fun MapScreen(
     var offset by remember {
         mutableStateOf(Offset.Zero)
     }
+
+    when (mapPositionUiState) {
+        is MapPositionUiState.None ->
+            Log.d("MapScreen", "MapScreen: None")
+
+        is MapPositionUiState.Success ->
+            Log.d("MapScreen", "MapScreen: ${mapPositionUiState.x}")
+
+        else -> Log.d("MapScreen", "MapScreen: Error")
+    }
+
 
     BoxWithConstraints(
         modifier = Modifier
@@ -94,7 +98,7 @@ fun MapScreen(
             }
         }
     }
-    Box (
+    /*Box (
     ){
         val ctx = LocalContext.current
         val owner = LocalLifecycleOwner.current
@@ -103,7 +107,7 @@ fun MapScreen(
         monitor.startLogging(owner)
         val regionViewModel = monitor.getRegionViewModel()
         RangedBeaconList(regionViewModel = regionViewModel)
-    }
+    }*/
 }
 
 @Composable

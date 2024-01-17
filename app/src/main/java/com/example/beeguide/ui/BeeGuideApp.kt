@@ -4,14 +4,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.beeguide.navigation.beacons.Monitor
 import com.example.beeguide.ui.components.Navbar
 import com.example.beeguide.ui.screens.AppearanceViewModel
-
 import com.example.beeguide.ui.screens.HomeScreen
 import com.example.beeguide.ui.screens.MapScreen
 import com.example.beeguide.ui.screens.ProfileScreen
@@ -20,6 +21,7 @@ import com.example.beeguide.ui.screens.SettingsRoute
 import com.example.beeguide.ui.screens.TestViewModel
 import com.example.beeguide.ui.screens.UserViewModel
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
+import com.example.beeguide.ui.viewmodels.MapViewModel
 
 
 /** enum values that represent the screens in the app */
@@ -52,19 +54,20 @@ fun BeeGuideApp(
 
         }
     ) { innerPadding ->
-
-
-
-
         NavHost(
             navController = navController,
             startDestination = BeeGuideRoute.Map.name,
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = BeeGuideRoute.Map.name) {
-                //val mapPositionViewModel = MapPositionViewModel()
+                val monitor = Monitor(LocalContext.current)
+                val regionViewModel = monitor.getRegionViewModel()
 
-                //MapScreen(mapPositionViewModel = )
+                val mapViewModel: MapViewModel = viewModel(factory = MapViewModel.Factory)
+
+                val mapPositionViewModel = MapPositionViewModel(regionViewModel = regionViewModel, mapViewModel = mapViewModel)
+
+                MapScreen(mapPositionUiState = mapPositionViewModel.mapPositionUiState)
             }
             composable(route = BeeGuideRoute.Home.name) {
                 val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)

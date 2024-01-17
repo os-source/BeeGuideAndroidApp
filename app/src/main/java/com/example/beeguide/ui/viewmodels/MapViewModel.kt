@@ -1,19 +1,14 @@
 package com.example.beeguide.ui.viewmodels
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
-import com.example.beeguide.data.BeeGuideRespository
 import com.example.beeguide.data.MapRepository
 import com.example.beeguide.ui.screens.MapUiState
-import com.example.beeguide.ui.screens.TestUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,10 +27,12 @@ class MapViewModel(
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
-                MapViewModel(mapRepository = application.container.mapRepository)
+                val mapRepository = application.container.mapRepository
+                MapViewModel(mapRepository = mapRepository)
             }
         }
     }
+
     private val _mapUiState = MutableStateFlow<MapUiState>(MapUiState.Loading)
     val mapUiState: StateFlow<MapUiState> = _mapUiState.asStateFlow()
 
