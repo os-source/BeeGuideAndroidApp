@@ -41,6 +41,7 @@ import com.example.beeguide.ui.screens.settings.EditProfileScreen
 import com.example.beeguide.ui.screens.settings.NotificationsScreen
 import com.example.beeguide.ui.screens.settings.PrivacyScreen
 import com.example.beeguide.ui.screens.settings.SecurityScreen
+import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 
 
 /** enum values that represent the settings screens in the app */

@@ -12,14 +12,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.beeguide.navigation.beacons.Monitor
 import com.example.beeguide.ui.components.Navbar
-import com.example.beeguide.ui.screens.AppearanceViewModel
+import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.screens.HomeScreen
 import com.example.beeguide.ui.screens.MapScreen
 import com.example.beeguide.ui.screens.ProfileScreen
 import com.example.beeguide.ui.screens.Settings
 import com.example.beeguide.ui.screens.SettingsRoute
-import com.example.beeguide.ui.screens.TestViewModel
-import com.example.beeguide.ui.screens.UserViewModel
+import com.example.beeguide.ui.viewmodels.TestViewModel
+import com.example.beeguide.ui.viewmodels.UserViewModel
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
 

@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import com.example.beeguide.R
 import com.example.beeguide.ui.components.SettingsGroup
 import com.example.beeguide.ui.components.SettingsSwitchComp
-import com.example.beeguide.ui.screens.AppearanceViewModel
+import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 
 
 @Composable

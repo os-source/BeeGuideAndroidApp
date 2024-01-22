@@ -7,7 +7,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import com.example.beeguide.navigation.preconditions.PermissionChecker
 import com.example.beeguide.ui.BeeGuideApp
-import com.example.beeguide.ui.screens.AppearanceViewModel
+import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.theme.BeeGuideTheme
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

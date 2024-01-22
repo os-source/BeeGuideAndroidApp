@@ -12,7 +12,7 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import com.example.beeguide.ui.screens.AppearanceViewModel
+import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 
 private val DarkColorScheme = darkColorScheme(
     primary = primary,

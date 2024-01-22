@@ -7,7 +7,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.beeguide.ui.screens.MapUiState
 import kotlinx.coroutines.launch
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RegionViewModel
