@@ -15,24 +15,29 @@ import androidx.compose.ui.platform.LocalView
 import com.example.beeguide.ui.screens.AppearanceViewModel
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80,
+    primary = primary,
+    secondary = secondary,
+    //tertiary = ,
     background = background_dark,
-    surface = surface_dark
+    surface = surface_dark,
+    onPrimary = light,
+    onSecondary = light,
+    onTertiary = light,
+    onBackground = light,
+    onSurface = light,
 )
 
 public val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
+    primary = primary,
+    secondary = secondary,
+    //tertiary = ,
     background = background_light,
-    surface = surface_light
-    /*onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),*/
+    surface = surface_light,
+    onPrimary = light,
+    onSecondary = light,
+    onTertiary = light,
+    onBackground = dark,
+    onSurface = dark,
 )
 
 @Composable
