@@ -12,6 +12,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
 import com.example.beeguide.PreferencesDataStore
 import com.example.beeguide.data.BeeGuideRespository
+import com.example.beeguide.model.Map
 import com.example.beeguide.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -27,6 +28,15 @@ sealed interface UserUiState {
 
     object Error : UserUiState
     object Loading : UserUiState
+}
+
+sealed interface MapUiState {
+    data class Success(
+        val map: Map
+    ) : MapUiState
+
+    object Error : MapUiState
+    object Loading : MapUiState
 }
 
 sealed interface TestUiState {
