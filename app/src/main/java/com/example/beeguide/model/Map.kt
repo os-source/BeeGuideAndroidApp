@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class Map(
     val major: Int,
     val svg: String,
-    val beacons: List<Beacon>,
+    val beacons: List<BeeGuideBeacon>,
     val pois: List<POI>,
     val name: String,
     @SerialName("y-axis")
@@ -17,7 +17,7 @@ data class Map(
 )
 
 @Serializable
-data class Beacon(
+data class BeeGuideBeacon(
     val x: Int,
     val y: Int,
     val minor: Int
