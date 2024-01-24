@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
 import com.example.beeguide.data.MapRepository
+import com.example.beeguide.model.Map
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,6 +16,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+
+sealed interface MapUiState {
+    data class Success(
+        val map: Map
+    ) : MapUiState
+
+    object Error : MapUiState
+    object Loading : MapUiState
+}
 
 class MapViewModel(
     private val mapRepository: MapRepository
