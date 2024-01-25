@@ -21,7 +21,7 @@ class CircleValidator(private val beaconViewModel: RegionViewModel, private val 
                 Log.d("MapScreen", "MapScreen: None")
 
             is MapUiState.Success ->
-                circleAllocator(mapState.map)
+                if(!beaconViewModel.rangedBeacons.value.isNullOrEmpty()) circleAllocator(mapState.map)
 
             else -> Log.d("MapScreen", "MapScreen: Error")
         }

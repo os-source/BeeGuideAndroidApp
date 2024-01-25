@@ -7,6 +7,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
+import com.example.beeguide.navigation.algorithm.CalculationController
+import com.example.beeguide.navigation.algorithm.CircleValidator
 import kotlinx.coroutines.launch
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RegionViewModel
@@ -32,12 +34,17 @@ class MapPositionViewModel(
 
     fun calculatePosition(){
         viewModelScope.launch {
-            mapPositionUiState = triangulate()
+            mapPositionUiState = calculate()
         }
     }
 
-    private fun triangulate(): MapPositionUiState {
-        // TODO
+    private fun calculate(): MapPositionUiState {
+        val circleValidator = CircleValidator(regionViewModel, mapViewModel); circleValidator.validate()
+        val circles = circleValidator.circles
+
+        val calculationController = CalculationController(circles)
+        calculationController.log()
+
         return MapPositionUiState.Success(10, 10) // TODO: calculate actual position
     }
 
