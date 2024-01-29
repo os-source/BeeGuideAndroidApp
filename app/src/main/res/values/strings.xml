@@ -23,6 +23,14 @@
     <string name="profile">Profil</string>
     <string name="other">Sonstiges</string>
 
+    <string name="tipps_and_recomandations">Tipps und Empfehlungen</string>
+    <string name="available_maps">Verfügbare Karten</string>
+    <string name="updates_and_newFeatures">Updates und Neuerungen</string>
+
+
     <string name="sign_in">Anmelden</string>
     <string name="sign_out">Abmelden</string>
+
+
+
 </resources>
