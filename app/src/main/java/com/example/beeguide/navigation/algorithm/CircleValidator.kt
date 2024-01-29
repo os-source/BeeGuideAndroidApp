@@ -30,7 +30,8 @@ class CircleValidator(private val beaconViewModel: RegionViewModel, private val 
     private fun circleAllocator(map: Map){
         map.beacons.forEach{beeGuideBeacon : BeeGuideBeacon ->
             val beacon: Beacon? = beaconViewModel.rangedBeacons.value?.find {beacon: Beacon -> beacon.id3.toInt() == beeGuideBeacon.minor }
-            val distance: Int = (beacon?.distance?.times(100))?.toInt() ?: 0
+            var distance: Int = (beacon?.distance?.times(100))?.toInt() ?: 0
+            distance = (distance * 1.5).toInt() //a wengl a spezi
             val circle: Circle = Circle(beeGuideBeacon.x, beeGuideBeacon.y, distance)
             circles += circle
         }
