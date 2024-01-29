@@ -6,13 +6,22 @@ class CalculationController(private val circles: List<Circle>) {
     private var circleDuos = mutableListOf<kotlin.Array<Circle>>()
     private var intersections = mutableListOf<Point>()
 
-    fun control(){
+    fun control(): Point {
         generateCircleDuos()
         val intersectionCalculator = IntersectionCalculator()
 
         circleDuos.forEach { duo ->
             intersectionCalculator.getIntersections(duo[0], duo[1])
                 ?.forEach { intersection -> intersections.add(intersection) }
+        }
+
+        if(circleDuos.count() > 1){
+            val intersectionEvaluator = IntersectionEvaluator(intersections)
+            intersectionEvaluator.findInsaneClusterRoot()
+            return intersectionEvaluator.insaneClusterRoot
+        }
+        else{
+            return Point(0, 0)
         }
     }
 

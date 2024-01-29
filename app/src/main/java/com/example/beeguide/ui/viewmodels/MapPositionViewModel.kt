@@ -1,5 +1,6 @@
 package com.example.beeguide.ui.viewmodels
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -17,6 +18,10 @@ sealed interface MapPositionUiState {
     data class Success(
         val x: Int,
         val y: Int
+    ) : MapPositionUiState
+
+    data class Useless(
+        val message: String
     ) : MapPositionUiState
 
     object Error: MapPositionUiState
@@ -43,10 +48,16 @@ class MapPositionViewModel(
         val circles = circleValidator.circles
 
         val calculationController = CalculationController(circles)
-        calculationController.control()
+        val clusterRoot = calculationController.control()
         calculationController.logPoints()
 
-        return MapPositionUiState.Success(10, 10) // TODO: calculate actual position
+        if(clusterRoot.x != 0 || clusterRoot.y != 0){
+            Log.d("Cluster-Root", "Cluster-Root: X: ${clusterRoot.x}, Y: ${clusterRoot.y}")
+            return MapPositionUiState.Success(clusterRoot.x, clusterRoot.y)
+        }
+        else{
+            return MapPositionUiState.Useless("Useless calculation")
+        }
     }
 
     private val rangedBeaconObserver =  Observer<Collection<Beacon>> {
