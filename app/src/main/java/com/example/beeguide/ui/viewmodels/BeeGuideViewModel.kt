@@ -38,6 +38,16 @@ sealed interface TestUiState {
     object Loading : TestUiState
 }
 
+sealed interface LoginUiState {
+    data class Success(
+        val loginUrl: String,
+        val session: String,
+    ) : LoginUiState
+
+    object Error : LoginUiState
+    object Loading : LoginUiState
+}
+
 
 class UserViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
     var userUiState: UserUiState by mutableStateOf(UserUiState.Loading)
@@ -102,6 +112,41 @@ class TestViewModel(private val beeGuideRespository: BeeGuideRespository) : View
                         as BeeGuideApplication)
                 val beeGuideRespository = application.container.beeGuideRespository
                 TestViewModel(beeGuideRespository = beeGuideRespository)
+            }
+        }
+    }
+}
+
+class LoginViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
+    var loginUiState: LoginUiState by mutableStateOf(LoginUiState.Loading)
+        private set
+
+    init {
+        login()
+    }
+
+    fun login() {
+        viewModelScope.launch {
+            loginUiState = LoginUiState.Loading
+            loginUiState = try {
+                LoginUiState.Success(beeGuideRespository.login().signInUrl, "")
+            } catch (e: IOException) {
+                Log.d("TestUiState", "getLogin: $e")
+                LoginUiState.Error
+            } catch (e: HttpException) {
+                Log.d("TestUiState", "getLogin: $e")
+                LoginUiState.Error
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
+                        as BeeGuideApplication)
+                val beeGuideRespository = application.container.beeGuideRespository
+                LoginViewModel(beeGuideRespository = beeGuideRespository)
             }
         }
     }
