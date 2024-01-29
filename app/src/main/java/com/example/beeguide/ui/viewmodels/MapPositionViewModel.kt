@@ -43,7 +43,8 @@ class MapPositionViewModel(
         val circles = circleValidator.circles
 
         val calculationController = CalculationController(circles)
-        calculationController.log()
+        calculationController.control()
+        calculationController.logPoints()
 
         return MapPositionUiState.Success(10, 10) // TODO: calculate actual position
     }
