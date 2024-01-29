@@ -112,7 +112,9 @@ fun MapScreen(
 
                     is MapPositionUiState.Success -> {
                         Log.d("MapScreen", "MapScreen: ${mapPositionUiState.x}")
-                        UserMarker(markerPosition = Pair((1/685*mapPositionUiState.x).toFloat(), (1/855*mapPositionUiState.y).toFloat()), imageSize = size)
+                        val xPosition = 1/685f * mapPositionUiState.x
+                        val yPosition = 1/855f * mapPositionUiState.y
+                        UserMarker(markerPosition = Pair(xPosition, yPosition), imageSize = size)
                     }
 
                     else -> Log.d("MapScreen", "MapScreen: Error")
