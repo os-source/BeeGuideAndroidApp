@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
@@ -94,31 +95,36 @@ fun MapScreen(
                 contentDescription = null,
                 tint = Color.White,
                 modifier = Modifier
+                    .rotate(180f)
                     .onGloballyPositioned { coordinates ->
                         imageSize = Size(coordinates.size.width, coordinates.size.height)
                     }
             )
 
             imageSize?.let { size ->
-                MapMarker(markerPosition = Pair(0.5f, 0.5f), imageSize = size)
+                /*MapMarker(markerPosition = Pair(0.5f, 0.5f), imageSize = size)
                 MapMarker(markerPosition = Pair(0.2f, 0.3f), imageSize = size)
                 MapMarker(markerPosition = Pair(0.7f, 0.56f), imageSize = size)
                 MapMarker(markerPosition = Pair(0.19f, 0.59f), imageSize = size)
-                MapMarker(markerPosition = Pair(0.93f, 0.23f), imageSize = size)
+                MapMarker(markerPosition = Pair(0.93f, 0.23f), imageSize = size)*/
 
                 when (mapPositionUiState) {
                     is MapPositionUiState.None ->
                         Log.d("MapScreen", "MapScreen: None")
 
                     is MapPositionUiState.Success -> {
-                        Log.d("MapScreen", "MapScreen: ${mapPositionUiState.x}")
-                        val xPosition = 1/685f * mapPositionUiState.x
-                        val yPosition = 1/855f * mapPositionUiState.y
-                        UserMarker(markerPosition = Pair(xPosition, yPosition), imageSize = size)
+                        Log.d("MapScreen", "MapScreen: ${mapPositionUiState.points}")
+                        mapPositionUiState.points.forEach { point ->
+                            var xPosition = 1/685f * point.x
+                            var yPosition = 1/855f * point.y
+                            UserMarker(markerPosition = Pair(xPosition, yPosition), imageSize = size)
+                        }
                     }
 
                     else -> Log.d("MapScreen", "MapScreen: Error")
                 }
+
+                //UserMarker(markerPosition = Pair(xPosition, yPosition), imageSize = size)
             }
         }
     }
