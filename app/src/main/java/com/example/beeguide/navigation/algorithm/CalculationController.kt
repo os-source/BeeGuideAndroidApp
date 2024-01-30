@@ -15,7 +15,7 @@ class CalculationController(private val circles: List<Circle>) {
                 ?.forEach { intersection -> intersections.add(intersection) }
         }
 
-        if(circleDuos.count() > 1){
+        if(intersections.count() > 6){
             val intersectionEvaluator = IntersectionEvaluator(intersections)
             intersectionEvaluator.findInsaneClusterRoot()
             return intersectionEvaluator.insaneClusterRoot
