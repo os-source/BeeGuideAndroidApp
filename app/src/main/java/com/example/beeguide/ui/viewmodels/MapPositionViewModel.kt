@@ -10,14 +10,16 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.beeguide.navigation.algorithm.CalculationController
 import com.example.beeguide.navigation.algorithm.CircleValidator
+import com.example.beeguide.navigation.algorithm.Point
 import kotlinx.coroutines.launch
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RegionViewModel
 
 sealed interface MapPositionUiState {
     data class Success(
-        val x: Int,
-        val y: Int
+        /*val x: Int,
+        val y: Int*/
+        val points: MutableList<Point>
     ) : MapPositionUiState
 
     data class Useless(
@@ -53,7 +55,8 @@ class MapPositionViewModel(
 
         if(clusterRoot.x != 0 || clusterRoot.y != 0){
             Log.d("Cluster-Root", "Cluster-Root: X: ${clusterRoot.x}, Y: ${clusterRoot.y}")
-            return MapPositionUiState.Success(clusterRoot.x, clusterRoot.y)
+            //return MapPositionUiState.Success(clusterRoot.x, clusterRoot.y)
+            return MapPositionUiState.Success(calculationController.intersections)
         }
         else{
             return MapPositionUiState.Useless("Useless calculation")

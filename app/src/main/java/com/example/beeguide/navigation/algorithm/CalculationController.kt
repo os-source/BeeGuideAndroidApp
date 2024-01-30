@@ -4,7 +4,7 @@ import android.util.Log
 
 class CalculationController(private val circles: List<Circle>) {
     private var circleDuos = mutableListOf<kotlin.Array<Circle>>()
-    private var intersections = mutableListOf<Point>()
+    var intersections = mutableListOf<Point>()
 
     fun control(): Point {
         generateCircleDuos()
