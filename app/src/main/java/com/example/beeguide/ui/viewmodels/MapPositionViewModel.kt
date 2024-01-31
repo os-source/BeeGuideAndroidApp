@@ -17,9 +17,7 @@ import org.altbeacon.beacon.RegionViewModel
 
 sealed interface MapPositionUiState {
     data class Success(
-        /*val x: Int,
-        val y: Int*/
-        val points: MutableList<Point>
+        val location: Point
     ) : MapPositionUiState
 
     data class Useless(
@@ -50,13 +48,13 @@ class MapPositionViewModel(
         val circles = circleValidator.circles
 
         val calculationController = CalculationController(circles)
-        val clusterRoot = calculationController.control()
+        val location = calculationController.control()
         calculationController.logPoints()
 
-        if(clusterRoot.x != 0 || clusterRoot.y != 0){
-            Log.d("Cluster-Root", "Cluster-Root: X: ${clusterRoot.x}, Y: ${clusterRoot.y}")
+        if(location.x != 0 || location.y != 0){
+            Log.d("Location", "Location: X: ${location.x}, Y: ${location.y}")
             //return MapPositionUiState.Success(clusterRoot.x, clusterRoot.y)
-            return MapPositionUiState.Success(calculationController.intersections)
+            return MapPositionUiState.Success(location)
         }
         else{
             return MapPositionUiState.Useless("Useless calculation")

@@ -4,7 +4,8 @@ import android.util.Log
 
 class CalculationController(private val circles: List<Circle>) {
     private var circleDuos = mutableListOf<kotlin.Array<Circle>>()
-    var intersections = mutableListOf<Point>()
+    private var intersections = mutableListOf<Point>()
+    private var minIntersections = 15
 
     fun control(): Point {
         generateCircleDuos()
@@ -15,10 +16,12 @@ class CalculationController(private val circles: List<Circle>) {
                 ?.forEach { intersection -> intersections.add(intersection) }
         }
 
-        if(intersections.count() > 6){
+        if(intersections.count() > minIntersections){
             val intersectionEvaluator = IntersectionEvaluator(intersections)
             intersectionEvaluator.findInsaneClusterRoot()
-            return intersectionEvaluator.insaneClusterRoot
+            intersectionEvaluator.findUsefulIntersections()
+            val locationDeterminator = LocationDeterminator(intersectionEvaluator.usefulIntersections)
+            return locationDeterminator.location
         }
         else{
             return Point(0, 0)
