@@ -113,12 +113,15 @@ fun MapScreen(
                         Log.d("MapScreen", "MapScreen: None")
 
                     is MapPositionUiState.Success -> {
-                        Log.d("MapScreen", "MapScreen: ${mapPositionUiState.points}")
-                        mapPositionUiState.points.forEach { point ->
+                        Log.d("MapScreen", "MapScreen: ${mapPositionUiState.location}")
+                        var xPosition = 1/685f * mapPositionUiState.location.x
+                        var yPosition = 1/855f * mapPositionUiState.location.y
+                        UserMarker(markerPosition = Pair(xPosition, yPosition), imageSize = size)
+                        /*mapPositionUiState.points.forEach { point ->
                             var xPosition = 1/685f * point.x
                             var yPosition = 1/855f * point.y
                             UserMarker(markerPosition = Pair(xPosition, yPosition), imageSize = size)
-                        }
+                        }*/
                     }
 
                     else -> Log.d("MapScreen", "MapScreen: Error")
