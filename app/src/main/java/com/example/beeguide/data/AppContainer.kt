@@ -1,10 +1,7 @@
 package com.example.beeguide.data
-
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.lifecycle.viewmodel.viewModelFactory
+import android.content.Context
 import com.example.beeguide.BuildConfig
-import com.example.beeguide.navigation.beacons.Monitor
+import com.example.beeguide.network.AuthService
 import com.example.beeguide.network.BeeGuideApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
@@ -12,13 +9,14 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 interface AppContainer {
     val beeGuideRespository: BeeGuideRespository
     val mapRepository: MapRepository
 }
 
-class DefaultAppContainer : AppContainer {
+class DefaultAppContainer(context: Context): AppContainer {
     private val baseUrl = "https://beeguide.at/api/v1/"
     private val apiKey = BuildConfig.API_KEY
 
@@ -30,20 +28,43 @@ class DefaultAppContainer : AppContainer {
         chain.proceed(request)
     }
 
-    private val okHttpClient = OkHttpClient.Builder()
-        .addInterceptor(interceptor)
-        .build()
+    private fun okhttpClient(context: Context): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(interceptor)
+            .addInterceptor(SessionInterceptor(context))
+            .build()
+    }
+
+
 
     // Using Retrofit builder to build a retrofit object using a kotlinx.serialization converter
-    private val retrofit = Retrofit.Builder()
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-        .baseUrl(baseUrl)
-        .client(okHttpClient)
-        .build()
+
+
+
+    private fun retrofit(context: Context): BeeGuideApiService {
+        return Retrofit.Builder()
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+            .baseUrl(baseUrl)
+            .client(okhttpClient(context))
+            .build()
+            .create(BeeGuideApiService::class.java)
+
+    }
+
+    private fun retroAuth (context: Context): AuthService {
+        return Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(okhttpClient(context))
+            .build()
+            .create(AuthService::class.java)
+
+    }
 
     private val retrofitService: BeeGuideApiService by lazy {
-        retrofit.create(BeeGuideApiService::class.java)
+       retrofit(context)
     }
+
 
     override val beeGuideRespository: BeeGuideRespository by lazy {
         NetworkBeeGuideRepository(retrofitService)

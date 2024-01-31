@@ -1,12 +1,13 @@
 package com.example.beeguide.data
 
-import com.example.beeguide.model.Login
 import com.example.beeguide.model.Map
 import com.example.beeguide.network.BeeGuideApiService
+import okhttp3.ResponseBody
+import retrofit2.Call
 
 interface BeeGuideRespository {
     suspend fun getMap(): Map
-    suspend fun login(): Login
+    suspend fun login(): String
 }
 
 class NetworkBeeGuideRepository(
@@ -14,5 +15,6 @@ class NetworkBeeGuideRepository(
 ) : BeeGuideRespository {
     override suspend fun getMap(): Map = beeGuideApiService.getMap()
 
-    override suspend fun login(): Login = beeGuideApiService.login()
+    override suspend fun login(): String = beeGuideApiService.login()
+
 }
