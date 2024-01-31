@@ -1,7 +1,7 @@
 package com.example.beeguide.network
 
-import com.example.beeguide.model.Login
 import com.example.beeguide.model.Map
+import retrofit2.Call
 import retrofit2.http.GET
 
 interface BeeGuideApiService {
@@ -9,5 +9,8 @@ interface BeeGuideApiService {
     suspend fun getMap(): Map
 
     @GET("user")
-    suspend fun login(): Login
+    suspend fun login(): String
+
+
+
 }

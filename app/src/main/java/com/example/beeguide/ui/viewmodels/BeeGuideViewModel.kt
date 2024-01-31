@@ -61,7 +61,8 @@ class UserViewModel(private val beeGuideRespository: BeeGuideRespository) : View
         viewModelScope.launch {
             userUiState = UserUiState.Loading
             userUiState = try {
-                UserUiState.Success(User("John", "Doe"))
+
+                UserUiState.Success(User("John", beeGuideRespository.login()))
             } catch (e: IOException) {
                 UserUiState.Error
             } catch (e: HttpException) {
@@ -129,7 +130,7 @@ class LoginViewModel(private val beeGuideRespository: BeeGuideRespository) : Vie
         viewModelScope.launch {
             loginUiState = LoginUiState.Loading
             loginUiState = try {
-                LoginUiState.Success(beeGuideRespository.login().signInUrl, "")
+                LoginUiState.Success(beeGuideRespository.getMap().name, "")
             } catch (e: IOException) {
                 Log.d("TestUiState", "getLogin: $e")
                 LoginUiState.Error

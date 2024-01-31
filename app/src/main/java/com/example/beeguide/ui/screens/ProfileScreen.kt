@@ -17,12 +17,14 @@ import com.example.beeguide.ui.viewmodels.UserUiState
 fun ProfileScreen(
     userUiState: UserUiState,
     onSettingsButtonClicked: () -> Unit
+
 ) {
     when (userUiState) {
         is UserUiState.Loading ->
             Text(text = "Loading...")
 
         is UserUiState.Success -> {
+
             Icon(
                 painter = painterResource(R.drawable.round_shape),
                 contentDescription = null,

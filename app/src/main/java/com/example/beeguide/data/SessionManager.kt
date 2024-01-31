@@ -2,20 +2,21 @@ package com.example.beeguide.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.beeguide.R
 
 class SessionManager (context: Context) {
-    private var prefs: SharedPreferences = context.getSharedPreferences(context.getString(), Context.MODE_PRIVATE)
+    private var prefs: SharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
 
     companion object {
-        const val USER_TOKEN = "user_token"
+        const val SESSION_TOKEN = "SESSION_TOKEN"
     }
 
     /**
-     * Function to save auth token
+     * Function to save session token
      */
     fun saveSessionCookie(token: String) {
         val editor = prefs.edit()
-        editor.putString(USER_TOKEN, token)
+        editor.putString(SESSION_TOKEN, token)
         editor.apply()
     }
 
@@ -23,6 +24,6 @@ class SessionManager (context: Context) {
      * Function to fetch auth token
      */
     fun fetchSessionToken(): String? {
-        return prefs.getString(USER_TOKEN, null)
+        return prefs.getString(SESSION_TOKEN, null)
     }
 }
