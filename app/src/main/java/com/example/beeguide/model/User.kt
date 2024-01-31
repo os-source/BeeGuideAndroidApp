@@ -1,10 +1,9 @@
 package com.example.beeguide.model
-
 import kotlinx.serialization.Serializable
 
-@Serializable
+
 data class Login(
-    val signInUrl: String,
+    val html :String
 )
 
 @Serializable
