@@ -51,6 +51,7 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
     private val _sensorState = MutableStateFlow<SensorState>(SensorState.Loading)
     val sensorState: StateFlow<SensorState> = _sensorState.asStateFlow()
     override fun onSensorChanged(event: SensorEvent?) {
+        Log.d("Acceleration-Features", "Updated")
         viewModelScope.launch {
             _sensorState.update {
                 SensorState.Success(sensorEvent = event!!)

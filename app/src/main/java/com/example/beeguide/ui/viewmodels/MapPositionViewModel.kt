@@ -31,7 +31,7 @@ sealed interface MapPositionUiState {
     object None: MapPositionUiState
 }
 
-abstract class MapPositionViewModel(
+class MapPositionViewModel(
     private val regionViewModel: RegionViewModel,
     private val mapViewModel: MapViewModel,
     private val sensorViewModel: SensorViewModel
