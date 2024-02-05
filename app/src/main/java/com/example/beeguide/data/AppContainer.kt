@@ -78,7 +78,7 @@ class DefaultAppContainer(context: Context): AppContainer {
     }
 
     override val sensorRepository: SensorRepository by lazy {
-        HardwareSensorRepository(sensorGetter)
+        HardwareSensorRepository(context)
     }
 
 }

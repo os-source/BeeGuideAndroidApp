@@ -3,6 +3,7 @@ package com.example.beeguide.ui.viewmodels
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.util.Log
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
@@ -50,8 +51,9 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
 
     private val _sensorState = MutableStateFlow<SensorState>(SensorState.Loading)
     val sensorState: StateFlow<SensorState> = _sensorState.asStateFlow()
+
     override fun onSensorChanged(event: SensorEvent?) {
-        Log.d("Acceleration-Features", "Updated")
+        Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
             _sensorState.update {
                 SensorState.Success(sensorEvent = event!!)
@@ -60,7 +62,14 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        TODO("Not yet implemented")
+        Log.d("Acceleration-Features", "AccuracyUpdated")
+    }
+
+    init{
+        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getSensor(), SensorManager.SENSOR_DELAY_GAME)
+    }
+    override fun onCleared() {
+        sensorRepository.getSensorManager().unregisterListener(this)
     }
 }
 
