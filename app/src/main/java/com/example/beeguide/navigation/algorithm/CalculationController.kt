@@ -21,6 +21,7 @@ class CalculationController(private val circles: List<Circle>) {
             intersectionEvaluator.findInsaneClusterRoot()
             intersectionEvaluator.findUsefulIntersections()
             val locationDeterminator = LocationDeterminator(intersectionEvaluator.usefulIntersections)
+            locationDeterminator.calcLocation()
             return locationDeterminator.location
         }
         else{

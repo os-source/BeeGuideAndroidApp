@@ -1,5 +1,8 @@
 package com.example.beeguide.ui.viewmodels
 
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,9 +31,10 @@ sealed interface MapPositionUiState {
     object None: MapPositionUiState
 }
 
-class MapPositionViewModel(
+abstract class MapPositionViewModel(
     private val regionViewModel: RegionViewModel,
-    private val mapViewModel: MapViewModel
+    private val mapViewModel: MapViewModel,
+    private val sensorViewModel: SensorViewModel
 ): ViewModel() {
 
     var mapPositionUiState: MapPositionUiState by mutableStateOf(MapPositionUiState.None)
@@ -68,6 +72,7 @@ class MapPositionViewModel(
     private val mapObserver = Observer<MapUiState> {
         calculatePosition()
     }
+
 
 
     init {
