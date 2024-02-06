@@ -17,6 +17,7 @@ import com.example.beeguide.navigation.algorithm.Point
 import kotlinx.coroutines.launch
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RegionViewModel
+import kotlin.math.pow
 
 sealed interface MapPositionUiState {
     data class Success(
@@ -36,6 +37,8 @@ class MapPositionViewModel(
     private val mapViewModel: MapViewModel,
     private val sensorViewModel: SensorViewModel
 ): ViewModel() {
+
+    private var oldSensorValues: SensorState.Success = SensorState.Success(accelerationX = 0f, accelerationZ = 0f, timestamp = 0)
 
     var mapPositionUiState: MapPositionUiState by mutableStateOf(MapPositionUiState.None)
         private set
@@ -73,11 +76,32 @@ class MapPositionViewModel(
         calculatePosition()
     }
 
+    private val sensorObserver = Observer<SensorState> {
+        if(sensorViewModel.sensorState.value is SensorState.Success) {
+            val sensorValues: SensorState.Success =
+                sensorViewModel.sensorState.value as SensorState.Success
 
+            if (oldSensorValues.timestamp != 0.toLong()) {
+                val timeDifference: Float =
+                    (sensorValues.timestamp - oldSensorValues.timestamp).toFloat() * 1000
+                val finalVelocity = oldSensorValues.accelerationX
+                val initialVelocity = sensorValues.accelerationX
+                val distance =
+                    initialVelocity * timeDifference + (1 / 2) * finalVelocity * timeDifference.pow(
+                        2
+                    )
+
+                Log.d("distance", distance.toString())
+            }
+
+            oldSensorValues = sensorValues
+        }
+    }
 
     init {
         regionViewModel.rangedBeacons.observeForever(rangedBeaconObserver)
         mapViewModel.mapUiState.asLiveData().observeForever(mapObserver)
+        sensorViewModel.sensorState.asLiveData().observeForever(sensorObserver)
     }
 
     override fun onCleared() {

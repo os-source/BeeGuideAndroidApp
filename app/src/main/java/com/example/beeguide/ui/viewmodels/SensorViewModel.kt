@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
 import com.example.beeguide.data.HardwareSensorRepository
 import com.example.beeguide.data.SensorRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,11 +22,14 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
+import java.sql.Timestamp
 
 
 sealed interface SensorState {
     data class Success(
-        val sensorEvent: SensorEvent
+        val accelerationX: Float,
+        val accelerationZ: Float,
+        val timestamp: Long
     ) : SensorState
 
     object Error : SensorState
@@ -56,7 +60,7 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
         Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
             _sensorState.update {
-                SensorState.Success(sensorEvent = event!!)
+                SensorState.Success(accelerationX = event!!.values[0], accelerationZ = event.values[2], timestamp = event.timestamp)
             }
         }
     }
