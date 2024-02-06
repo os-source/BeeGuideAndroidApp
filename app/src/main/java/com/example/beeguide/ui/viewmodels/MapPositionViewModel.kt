@@ -39,6 +39,7 @@ class MapPositionViewModel(
 ): ViewModel() {
 
     private var oldSensorValues: SensorState.Success = SensorState.Success(accelerationX = 0f, accelerationZ = 0f, timestamp = 0)
+    private var currentVelocity: Float = 0f
 
     var mapPositionUiState: MapPositionUiState by mutableStateOf(MapPositionUiState.None)
         private set
@@ -84,14 +85,15 @@ class MapPositionViewModel(
             if (oldSensorValues.timestamp != 0.toLong()) {
                 val timeDifference: Float =
                     (sensorValues.timestamp - oldSensorValues.timestamp).toFloat() * 1000
-                val finalVelocity = oldSensorValues.accelerationX
-                val initialVelocity = sensorValues.accelerationX
+                val acceleration = sensorValues.accelerationX
                 val distance =
-                    initialVelocity * timeDifference + (1 / 2) * finalVelocity * timeDifference.pow(
+                    currentVelocity * timeDifference + (1 / 2) * acceleration * timeDifference.pow(
                         2
                     )
+                currentVelocity += timeDifference * acceleration
 
                 Log.d("distance", distance.toString())
+                Log.d("velocity", currentVelocity.toString())
             }
 
             oldSensorValues = sensorValues
