@@ -34,8 +34,11 @@ class DefaultAppContainer(context: Context): AppContainer {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
             .addInterceptor(SessionInterceptor(context))
+            .followRedirects(false)
             .build()
     }
+
+
 
 
 
