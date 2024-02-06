@@ -1,6 +1,7 @@
 package com.example.beeguide.data
 import android.content.Context
 import com.example.beeguide.BuildConfig
+import com.example.beeguide.navigation.preconditions.SensorGetter
 import com.example.beeguide.network.AuthService
 import com.example.beeguide.network.BeeGuideApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -14,6 +15,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 interface AppContainer {
     val beeGuideRespository: BeeGuideRespository
     val mapRepository: MapRepository
+    val sensorRepository: SensorRepository
 }
 
 class DefaultAppContainer(context: Context): AppContainer {
@@ -65,6 +67,7 @@ class DefaultAppContainer(context: Context): AppContainer {
        retrofit(context)
     }
 
+    private val sensorGetter: SensorGetter = SensorGetter()
 
     override val beeGuideRespository: BeeGuideRespository by lazy {
         NetworkBeeGuideRepository(retrofitService)
@@ -73,4 +76,9 @@ class DefaultAppContainer(context: Context): AppContainer {
     override val mapRepository: MapRepository by lazy {
         NetworkMapRepository(retrofitService)
     }
+
+    override val sensorRepository: SensorRepository by lazy {
+        HardwareSensorRepository(context)
+    }
+
 }

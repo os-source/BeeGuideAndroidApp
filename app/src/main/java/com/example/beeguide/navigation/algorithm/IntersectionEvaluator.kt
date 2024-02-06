@@ -6,7 +6,7 @@ class IntersectionEvaluator(private var intersections: MutableList<Point>) {
     var insaneClusterRoot = Point(0, 0)
     public val usefulIntersections = mutableListOf<Point>()
     private val distanceCalculator = DistanceCalculator()
-    private val usefulRadius: Int = 300
+    private val usefulRadius: Int = 1000
 
     fun findInsaneClusterRoot(){
         var lastDistance: Int = 0

@@ -1,10 +1,17 @@
 package com.example.beeguide.ui
 
+import android.content.Context
+import android.app.Service
+import android.hardware.SensorManager
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -20,6 +27,7 @@ import com.example.beeguide.ui.screens.SettingsRoute
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
+import com.example.beeguide.ui.viewmodels.SensorViewModel
 import com.example.beeguide.ui.viewmodels.TestViewModel
 import com.example.beeguide.ui.viewmodels.UserViewModel
 
@@ -64,8 +72,9 @@ fun BeeGuideApp(
                 val regionViewModel = monitor.getRegionViewModel()
 
                 val mapViewModel: MapViewModel = viewModel(factory = MapViewModel.Factory)
+                val sensorViewModel: SensorViewModel = viewModel(factory = SensorViewModel.Factory)
 
-                val mapPositionViewModel = MapPositionViewModel(regionViewModel = regionViewModel, mapViewModel = mapViewModel)
+                val mapPositionViewModel = MapPositionViewModel(regionViewModel = regionViewModel, mapViewModel = mapViewModel, sensorViewModel = sensorViewModel)
 
                 MapScreen(mapPositionUiState = mapPositionViewModel.mapPositionUiState)
             }

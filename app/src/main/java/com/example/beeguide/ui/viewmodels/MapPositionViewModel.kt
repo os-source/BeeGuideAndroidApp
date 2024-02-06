@@ -1,5 +1,8 @@
 package com.example.beeguide.ui.viewmodels
 
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -14,6 +17,7 @@ import com.example.beeguide.navigation.algorithm.Point
 import kotlinx.coroutines.launch
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RegionViewModel
+import kotlin.math.pow
 
 sealed interface MapPositionUiState {
     data class Success(
@@ -30,8 +34,12 @@ sealed interface MapPositionUiState {
 
 class MapPositionViewModel(
     private val regionViewModel: RegionViewModel,
-    private val mapViewModel: MapViewModel
+    private val mapViewModel: MapViewModel,
+    private val sensorViewModel: SensorViewModel
 ): ViewModel() {
+
+    private var oldSensorValues: SensorState.Success = SensorState.Success(accelerationX = 0f, accelerationZ = 0f, timestamp = 0)
+    private var currentVelocity: Float = 0f
 
     var mapPositionUiState: MapPositionUiState by mutableStateOf(MapPositionUiState.None)
         private set
@@ -69,10 +77,33 @@ class MapPositionViewModel(
         calculatePosition()
     }
 
+    private val sensorObserver = Observer<SensorState> {
+        if(sensorViewModel.sensorState.value is SensorState.Success) {
+            val sensorValues: SensorState.Success =
+                sensorViewModel.sensorState.value as SensorState.Success
+
+            if (oldSensorValues.timestamp != 0.toLong()) {
+                val timeDifference: Float =
+                    (sensorValues.timestamp - oldSensorValues.timestamp).toFloat() * 1000
+                val acceleration = sensorValues.accelerationX
+                val distance =
+                    currentVelocity * timeDifference + (1 / 2) * acceleration * timeDifference.pow(
+                        2
+                    )
+                currentVelocity += timeDifference * acceleration
+
+                Log.d("distance", distance.toString())
+                Log.d("velocity", currentVelocity.toString())
+            }
+
+            oldSensorValues = sensorValues
+        }
+    }
 
     init {
         regionViewModel.rangedBeacons.observeForever(rangedBeaconObserver)
         mapViewModel.mapUiState.asLiveData().observeForever(mapObserver)
+        sensorViewModel.sensorState.asLiveData().observeForever(sensorObserver)
     }
 
     override fun onCleared() {
