@@ -62,7 +62,7 @@ fun ProfileScreen(
             }
             Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 Spacer(modifier = Modifier.size(50.dp))
-                Text(text = "${userUiState.user.firstName} ${userUiState.user.lastName}", fontSize = 32.sp)
+                Text(text = "${userUiState.user.firstName}", fontSize = 32.sp)
                 Text(text = "@johnDoe1234", fontSize = 16.sp)
                 Spacer(modifier = Modifier.size(40.dp))
                 Image(

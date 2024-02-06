@@ -99,8 +99,15 @@ dependencies {
 
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.7.0")
     //WebViewFunction
-    implementation ("androidx.webkit:webkit:1.10.0")
-    implementation ("com.squareup.retrofit2:converter-scalars:2.9.0")
+    implementation("androidx.webkit:webkit:1.10.0")
+    implementation("com.squareup.retrofit2:converter-scalars:2.9.0")
+
+
+    implementation("androidx.compose.ui:ui:1.6.0")
+    implementation("androidx.compose.ui:ui-tooling:1.6.0")
+    implementation("androidx.compose.foundation:foundation:1.6.0")
+    implementation("androidx.compose.material:material:1.6.0")
+    //implementation("androidx.compose.web:web:1.0.5")
 
 
 

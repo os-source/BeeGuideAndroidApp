@@ -5,7 +5,6 @@ import android.util.Size
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -25,14 +24,10 @@ import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.beeguide.R
-import com.example.beeguide.navigation.beacons.Monitor
-import com.example.beeguide.ui.components.RangedBeaconList
 import com.example.beeguide.ui.viewmodels.MapPositionUiState
 
 @Composable
@@ -52,7 +47,7 @@ fun MapScreen(
         mutableStateOf(TransformOrigin(0.5f, 0.5f))
     }
 
-    BoxWithConstraints(
+    Box(
         modifier = Modifier
             .fillMaxSize()
     ) {
@@ -89,7 +84,7 @@ fun MapScreen(
                         mapRotation += rotation
                     }
                 }
-        ){
+        ) {
             Icon(
                 painter = painterResource(R.drawable.map_k02),
                 contentDescription = null,
@@ -131,7 +126,7 @@ fun MapScreen(
             }
         }
     }
-    Box (
+    /*Box (
     ){
         val ctx = LocalContext.current
         val owner = LocalLifecycleOwner.current
@@ -140,7 +135,7 @@ fun MapScreen(
         monitor.startLogging(owner)
         val regionViewModel = monitor.getRegionViewModel()
         RangedBeaconList(regionViewModel = regionViewModel)
-    }
+    }*/
 }
 
 @Composable

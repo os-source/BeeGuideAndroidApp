@@ -1,19 +1,15 @@
 package com.example.beeguide.ui.screens
 
 import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import android.webkit.WebView
+import android.webkit.WebViewClient
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.beeguide.R
+import androidx.compose.ui.viewinterop.AndroidView
 import com.example.beeguide.ui.viewmodels.TestUiState
 import com.example.beeguide.ui.viewmodels.UserUiState
 
@@ -22,14 +18,29 @@ fun HomeScreen(
     userUiState: UserUiState,
     testUiState: TestUiState
 ) {
-    when (testUiState) {
-        is TestUiState.Loading ->{
+    when (userUiState) {
+        is UserUiState.Loading -> {
             Text(text = "Loading...")
-        Log.d("TestUiState", "HomeScreen: ${testUiState}")}
+        }
+
+        is UserUiState.Success -> {
+            LaunchWebView(userUiState.user.lastName)
+        }
+
+        else -> {
+            Text(text = "Error!")
+        }
+    }
+
+    when (testUiState) {
+        is TestUiState.Loading -> {
+            Text(text = "Loading...")
+            Log.d("TestUiState", "HomeScreen: ${testUiState}")
+        }
 
         is TestUiState.Success -> {
             Log.d("TestUiState", "HomeScreen: ${testUiState}")
-            Column {
+            /*Column {
                 Text(
                     text = stringResource(id = R.string.hello) + " " + testUiState.test + "!",
                     fontSize = 30.sp,
@@ -58,7 +69,7 @@ fun HomeScreen(
                         )
                     }
                 }
-            }
+            }*/
         }
 
         else -> {
@@ -67,4 +78,20 @@ fun HomeScreen(
         }
     }
     //TODO: Add home screen
+}
+
+@Composable
+fun LaunchWebView(htmlContent: String) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background
+    ) {
+        AndroidView(factory = { context ->
+            WebView(context).apply {
+                webViewClient = WebViewClient()
+                settings.javaScriptEnabled = true
+                loadDataWithBaseURL(null, htmlContent, "text/html", "utf-8", null)
+            }
+        })
+    }
 }
