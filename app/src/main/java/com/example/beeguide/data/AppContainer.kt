@@ -2,7 +2,6 @@ package com.example.beeguide.data
 import android.content.Context
 import com.example.beeguide.BuildConfig
 import com.example.beeguide.navigation.preconditions.SensorGetter
-import com.example.beeguide.network.AuthService
 import com.example.beeguide.network.BeeGuideApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
 import kotlinx.serialization.json.Json
