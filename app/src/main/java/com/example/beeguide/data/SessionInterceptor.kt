@@ -41,7 +41,7 @@ class SessionInterceptor(context: Context) : Interceptor {
             val newresponse = response.newBuilder().body(body).build()
             Log.d("TestInterceptor", newresponse.body.toString())
 
-            openUrlInBrowser(context, response.header("location").toString())
+            //openUrlInBrowser(context, response.header("location").toString())
         }
 
 
