@@ -1,6 +1,8 @@
 package com.example.beeguide.data
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import okhttp3.Interceptor
 import okhttp3.Response
@@ -14,6 +16,7 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 class SessionInterceptor(context: Context) : Interceptor {
 
     private val sessionManager = SessionManager(context)
+    private val context = context
 
 
     override fun intercept(chain: Interceptor.Chain): Response {
@@ -38,6 +41,7 @@ class SessionInterceptor(context: Context) : Interceptor {
             val newresponse = response.newBuilder().body(body).build()
             Log.d("TestInterceptor", newresponse.body.toString())
 
+            openUrlInBrowser(context, response.header("location").toString())
         }
 
 
@@ -47,4 +51,12 @@ class SessionInterceptor(context: Context) : Interceptor {
         Log.d("SessionInterceptor", "received:" + response.headers)
         return response;
     }
+}
+
+fun openUrlInBrowser(context: Context, url: String) {
+    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    }
+
+    context.startActivity(browserIntent)
 }

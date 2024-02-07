@@ -1,4 +1,5 @@
 package com.example.beeguide.data
+
 import android.content.Context
 import com.example.beeguide.BuildConfig
 import com.example.beeguide.navigation.preconditions.SensorGetter
@@ -25,7 +26,7 @@ class DefaultAppContainer(context: Context): AppContainer {
     private val interceptor = Interceptor { chain ->
         val request = chain.request()
             .newBuilder()
-            .addHeader("Api-Key", "$apiKey")
+            .addHeader("Api-Key", apiKey)
             .build()
         chain.proceed(request)
     }
