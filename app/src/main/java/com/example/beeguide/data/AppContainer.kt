@@ -57,14 +57,14 @@ class DefaultAppContainer(context: Context): AppContainer {
 
     }
 
-    private fun retroAuth (context: Context): AuthService {
+    /*private fun retroAuth (context: Context): AuthService {
         return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(okhttpClient(context))
             .build()
             .create(AuthService::class.java)
 
-    }
+    }*/
 
     private val retrofitService: BeeGuideApiService by lazy {
        retrofit(context)
