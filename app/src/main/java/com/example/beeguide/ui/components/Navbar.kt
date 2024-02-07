@@ -9,22 +9,29 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.rounded.Home
 import androidx.compose.material.icons.rounded.Person
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.example.beeguide.R
+import com.example.beeguide.ui.BeeGuideRoute
 
 @Composable
-fun Navbar(
+fun BeeGuideBottomBar(
     onHomeIconClicked: () -> Unit,
     onMapIconClicked: () -> Unit,
     onProfileIconClicked: () -> Unit
@@ -77,4 +84,31 @@ fun Navbar(
             }
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun BeeGuideTopBar(
+    modifier: Modifier = Modifier,
+    currentScreen: BeeGuideRoute,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit = {},
+) {
+    TopAppBar(
+        title = {
+            Text(stringResource(id = currentScreen.title))
+        },
+        modifier = modifier,
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
+                        contentDescription = stringResource(R.string.back_button),
+                        modifier = Modifier.scale(1.3f)
+                    )
+                }
+            }
+        }
+    )
 }

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">BeeGuide</string>
 
+    <string name="home">BeeGuide</string>
+    <string name="map">Karte</string>
+
     <!-- Home Screen Strings -->
     <string name="hello">Hallo</string>
 
@@ -26,6 +29,8 @@
     <string name="tipps_and_recomandations">Tipps und Empfehlungen</string>
     <string name="available_maps">Verfügbare Karten</string>
     <string name="updates_and_newFeatures">Updates und Neuerungen</string>
+
+    <string name="back_button">Zurück</string>
 
 
     <string name="sign_in">Anmelden</string>

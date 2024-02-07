@@ -15,94 +15,27 @@ import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.beeguide.R
 import com.example.beeguide.helpers.getVersionName
 import com.example.beeguide.ui.components.SettingsClickableComp
 import com.example.beeguide.ui.components.SettingsGroup
-import com.example.beeguide.ui.screens.settings.AboutScreen
-import com.example.beeguide.ui.screens.settings.AppearanceScreen
-import com.example.beeguide.ui.screens.settings.EditProfileScreen
-import com.example.beeguide.ui.screens.settings.NotificationsScreen
-import com.example.beeguide.ui.screens.settings.PrivacyScreen
-import com.example.beeguide.ui.screens.settings.SecurityScreen
-import com.example.beeguide.ui.viewmodels.AppearanceViewModel
-
-
-/** enum values that represent the settings screens in the app */
-enum class SettingsRoute() {
-    Settings,
-    EditProfile,
-    Notifications,
-    Privacy,
-    Security,
-    Appearance,
-    About
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun Settings(
-    appearanceViewModel: AppearanceViewModel,
-    navController: NavHostController = rememberNavController()
-) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(stringResource(id = R.string.settings))
-                }
-            )
-        }
-    ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = SettingsRoute.Settings.name,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(route = SettingsRoute.Settings.name) {
-                SettingsScreen(navController)
-            }
-            composable(route = SettingsRoute.EditProfile.name) {
-                EditProfileScreen()
-            }
-            composable(route = SettingsRoute.Notifications.name) {
-                NotificationsScreen()
-            }
-            composable(route = SettingsRoute.Privacy.name) {
-                PrivacyScreen()
-            }
-            composable(route = SettingsRoute.Security.name) {
-                SecurityScreen()
-            }
-            composable(route = SettingsRoute.Appearance.name) {
-                AppearanceScreen(appearanceViewModel)
-            }
-            composable(route = SettingsRoute.About.name) {
-                AboutScreen()
-            }
-        }
-    }
-}
 
 @Composable
 fun SettingsScreen(
-    navController: NavHostController
+    onEditProfileSettingsClicked: () -> Unit,
+    onNotificationsSettingsClicked: () -> Unit,
+    onPrivacySettingsClicked: () -> Unit,
+    onSecuritySettingsClicked: () -> Unit,
+    onAppearanceSettingsClicked: () -> Unit,
+    onAboutSettingsClicked: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -114,7 +47,7 @@ fun SettingsScreen(
                 icon = Icons.Rounded.Edit,
                 iconDesc = R.string.edit_profile,
             ) {
-                navController.navigate(SettingsRoute.EditProfile.name)
+                onEditProfileSettingsClicked()
             }
         }
 
@@ -124,7 +57,7 @@ fun SettingsScreen(
                 icon = Icons.Rounded.Notifications,
                 iconDesc = R.string.notifications,
             ) {
-                navController.navigate(SettingsRoute.Notifications.name)
+                onNotificationsSettingsClicked()
             }
             Divider()
             SettingsClickableComp(
@@ -132,7 +65,7 @@ fun SettingsScreen(
                 icon = Icons.Rounded.AccountBox,
                 iconDesc = R.string.privacy,
             ) {
-                navController.navigate(SettingsRoute.Privacy.name)
+                onPrivacySettingsClicked()
             }
             Divider()
             SettingsClickableComp(
@@ -140,7 +73,7 @@ fun SettingsScreen(
                 icon = Icons.Rounded.Lock,
                 iconDesc = R.string.security,
             ) {
-                navController.navigate(SettingsRoute.Security.name)
+                onSecuritySettingsClicked()
             }
         }
 
@@ -150,7 +83,7 @@ fun SettingsScreen(
                 icon = Icons.Rounded.Favorite,
                 iconDesc = R.string.appearance,
             ) {
-                navController.navigate(SettingsRoute.Appearance.name)
+                onAppearanceSettingsClicked()
             }
         }
 
@@ -181,7 +114,7 @@ fun SettingsScreen(
                 icon = Icons.Rounded.Info,
                 iconDesc = R.string.about,
             ) {
-                navController.navigate(SettingsRoute.About.name)
+                onAboutSettingsClicked()
             }
         }
 

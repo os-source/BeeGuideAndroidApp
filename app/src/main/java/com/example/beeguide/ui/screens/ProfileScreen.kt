@@ -30,7 +30,6 @@ import com.example.beeguide.ui.viewmodels.UserUiState
 fun ProfileScreen(
     userUiState: UserUiState,
     onSettingsButtonClicked: () -> Unit
-
 ) {
     /*when (userUiState) {
         is UserUiState.Loading ->
