@@ -1,10 +1,10 @@
 package com.example.beeguide.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,19 +20,20 @@ import com.example.beeguide.ui.viewmodels.UserUiState
 @Composable
 fun HomeScreen(
     userUiState: UserUiState,
-    testUiState: TestUiState
+    testUiState: TestUiState,
+    onSingInButtonClicked: () -> Unit,
 ) {
-    when (testUiState) {
+    /*when (testUiState) {
         is TestUiState.Loading -> {
             Text(text = "Loading...")
             Log.d("TestUiState", "HomeScreen: ${testUiState}")
         }
 
         is TestUiState.Success -> {
-            Log.d("TestUiState", "HomeScreen: ${testUiState}")
+            Log.d("TestUiState", "HomeScreen: ${testUiState}")*/
             Column {
                 Text(
-                    text = stringResource(id = R.string.hello) + " " + testUiState.test + "!",
+                    text = stringResource(id = R.string.hello) + " " + "John" + "!",
                     fontSize = 30.sp,
                     modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp)
                 )
@@ -59,13 +60,16 @@ fun HomeScreen(
                         )
                     }
                 }
+                Button(onClick = onSingInButtonClicked) {
+                    Text(text = stringResource(id = R.string.sign_in))
+                }
             }
-        }
+    /*}
 
-        else -> {
-            Text(text = "Error!")
-            Log.d("HomeScreen TestUiState response", testUiState.toString())
-        }
+    else -> {
+        Text(text = "Error!")
+        Log.d("HomeScreen TestUiState response", testUiState.toString())
     }
+}*/
     //TODO: Add home screen
 }

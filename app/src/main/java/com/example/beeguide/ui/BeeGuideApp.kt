@@ -26,6 +26,8 @@ import com.example.beeguide.ui.screens.HomeScreen
 import com.example.beeguide.ui.screens.MapScreen
 import com.example.beeguide.ui.screens.ProfileScreen
 import com.example.beeguide.ui.screens.SettingsScreen
+import com.example.beeguide.ui.screens.authentication.SignInScreen
+import com.example.beeguide.ui.screens.authentication.SignUpScreen
 import com.example.beeguide.ui.screens.settings.AboutScreen
 import com.example.beeguide.ui.screens.settings.AppearanceScreen
 import com.example.beeguide.ui.screens.settings.EditProfileScreen
@@ -45,6 +47,7 @@ enum class BeeGuideRoute(@StringRes val title: Int) {
     Map(R.string.map),
     Profile(R.string.profile),
     Settings(R.string.settings),
+    Authentication(R.string.sign_in),
 
     SettingsOverview(R.string.settings),
     EditProfile(R.string.edit_profile),
@@ -53,6 +56,9 @@ enum class BeeGuideRoute(@StringRes val title: Int) {
     Security(R.string.security),
     Appearance(R.string.appearance),
     About(R.string.about),
+
+    SignIn(R.string.sign_in),
+    SignUp(R.string.sign_up),
 }
 
 @Composable
@@ -125,7 +131,8 @@ fun BeeGuideApp(
                 val testViewModel: TestViewModel = viewModel(factory = TestViewModel.Factory)
                 HomeScreen(
                     userUiState = userViewModel.userUiState,
-                    testUiState = testViewModel.testUiState
+                    testUiState = testViewModel.testUiState,
+                    onSingInButtonClicked = { navController.navigate(BeeGuideRoute.Authentication.name) }
                 )
             }
             composable(route = BeeGuideRoute.Profile.name) {
@@ -136,8 +143,8 @@ fun BeeGuideApp(
                 )
             }
             navigation(
-                startDestination = BeeGuideRoute.SettingsOverview.name,
                 route = BeeGuideRoute.Settings.name,
+                startDestination = BeeGuideRoute.SettingsOverview.name,
             ) {
                 composable(route = BeeGuideRoute.SettingsOverview.name) {
                     SettingsScreen(
@@ -166,6 +173,17 @@ fun BeeGuideApp(
                 }
                 composable(route = BeeGuideRoute.About.name) {
                     AboutScreen()
+                }
+            }
+            navigation(
+                route = BeeGuideRoute.Authentication.name,
+                startDestination = BeeGuideRoute.SignIn.name,
+            ) {
+                composable(route = BeeGuideRoute.SignIn.name) {
+                    SignInScreen()
+                }
+                composable(route = BeeGuideRoute.SignUp.name) {
+                    SignUpScreen()
                 }
             }
         }
