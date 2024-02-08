@@ -33,18 +33,10 @@ class DefaultAppContainer(context: Context): AppContainer {
     private fun okhttpClient(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
-            .addInterceptor(SessionInterceptor(context))
-            .followRedirects(false)
             .build()
     }
 
-
-
-
-
     // Using Retrofit builder to build a retrofit object using a kotlinx.serialization converter
-
-
 
     private fun retrofit(context: Context): BeeGuideApiService {
         return Retrofit.Builder()
@@ -56,15 +48,6 @@ class DefaultAppContainer(context: Context): AppContainer {
             .create(BeeGuideApiService::class.java)
 
     }
-
-    /*private fun retroAuth (context: Context): AuthService {
-        return Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(okhttpClient(context))
-            .build()
-            .create(AuthService::class.java)
-
-    }*/
 
     private val retrofitService: BeeGuideApiService by lazy {
        retrofit(context)

@@ -31,11 +31,11 @@ fun ProfileScreen(
     userUiState: UserUiState,
     onSettingsButtonClicked: () -> Unit
 ) {
-    /*when (userUiState) {
+    when (userUiState) {
         is UserUiState.Loading ->
             Text(text = "Loading...")
 
-        is UserUiState.Success -> {*/
+        is UserUiState.Success -> {
 
             Icon(
                 painter = painterResource(R.drawable.round_shape),
@@ -59,9 +59,12 @@ fun ProfileScreen(
                         .clickable(onClick = onSettingsButtonClicked)
                 )
             }
-            Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
                 Spacer(modifier = Modifier.size(50.dp))
-                Text(text = "{userUiState.user.firstName} Test", fontSize = 32.sp)
+                Text(text = "${userUiState.user.firstName} ${userUiState.user.lastName}", fontSize = 32.sp)
                 Text(text = "@johnDoe1234", fontSize = 16.sp)
                 Spacer(modifier = Modifier.size(40.dp))
                 Image(
@@ -92,10 +95,10 @@ fun ProfileScreen(
                         )
                     }
                 }
-            //}
-        //}
+            }
+        }
 
-        //else -> Text(text = "Error!")
+        else -> Text(text = "Error!")
     }
 
     //TODO: Add profile page

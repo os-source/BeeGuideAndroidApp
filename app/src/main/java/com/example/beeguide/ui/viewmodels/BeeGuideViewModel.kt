@@ -61,9 +61,7 @@ class UserViewModel(private val beeGuideRespository: BeeGuideRespository) : View
         viewModelScope.launch {
             userUiState = UserUiState.Loading
             userUiState = try {
-
-
-                UserUiState.Success(User("John", beeGuideRespository.login()))
+                UserUiState.Success(User("John", "Doe"))
             } catch (e: IOException) {
                 UserUiState.Error
             } catch (e: HttpException) {
