@@ -21,7 +21,7 @@ import com.example.beeguide.ui.viewmodels.UserUiState
 fun HomeScreen(
     userUiState: UserUiState,
     testUiState: TestUiState,
-    onSingInButtonClicked: () -> Unit,
+    onSignInButtonClicked: () -> Unit,
 ) {
     /*when (testUiState) {
         is TestUiState.Loading -> {
@@ -60,7 +60,7 @@ fun HomeScreen(
                         )
                     }
                 }
-                Button(onClick = onSingInButtonClicked) {
+                Button(onClick = onSignInButtonClicked) {
                     Text(text = stringResource(id = R.string.sign_in))
                 }
             }

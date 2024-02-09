@@ -14,10 +14,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 
-private val DarkColorScheme = darkColorScheme(
+val DarkColorScheme = darkColorScheme(
     primary = primary,
     secondary = secondary,
-    //tertiary = ,
+    tertiary = primary,
     background = background_dark,
     surface = surface_dark,
     onPrimary = light,
@@ -27,10 +27,10 @@ private val DarkColorScheme = darkColorScheme(
     onSurface = light,
 )
 
-public val LightColorScheme = lightColorScheme(
+val LightColorScheme = lightColorScheme(
     primary = primary,
     secondary = secondary,
-    //tertiary = ,
+    tertiary = primary,
     background = background_light,
     surface = surface_light,
     onPrimary = light,

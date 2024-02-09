@@ -1,7 +1,6 @@
 package com.example.beeguide.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.beeguide.R
@@ -51,13 +52,13 @@ fun ProfileScreen(
                     .fillMaxWidth()
                     .padding(15.dp)
             ) {
-                Icon(
-                    Icons.Rounded.Settings,
-                    contentDescription = "Settings",
-                    modifier = Modifier
-                        .size(35.dp)
-                        .clickable(onClick = onSettingsButtonClicked)
-                )
+                IconButton(onClick = onSettingsButtonClicked) {
+                    Icon(
+                        imageVector =  Icons.Rounded.Settings,
+                        contentDescription = stringResource(R.string.settings),
+                        modifier = Modifier.size(35.dp)
+                    )
+                }
             }
             Column(
                 modifier = Modifier.fillMaxWidth(),

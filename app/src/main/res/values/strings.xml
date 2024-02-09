@@ -36,6 +36,8 @@
     <string name="sign_in">Anmelden</string>
     <string name="sign_up">Registrieren</string>
     <string name="sign_out">Abmelden</string>
+    <string name="no_profile_yet">Noch kein Profil?</string>
+    <string name="already_a_profile">Bereits ein Profil?</string>
 
 
 

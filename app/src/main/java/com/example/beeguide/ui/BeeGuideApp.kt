@@ -1,16 +1,22 @@
 package com.example.beeguide.ui
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Star
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -21,6 +27,7 @@ import androidx.navigation.navigation
 import com.example.beeguide.R
 import com.example.beeguide.navigation.beacons.Monitor
 import com.example.beeguide.ui.components.BeeGuideBottomBar
+import com.example.beeguide.ui.components.BeeGuideFloatingActionButtton
 import com.example.beeguide.ui.components.BeeGuideTopBar
 import com.example.beeguide.ui.screens.HomeScreen
 import com.example.beeguide.ui.screens.MapScreen
@@ -66,6 +73,18 @@ fun BeeGuideApp(
     appearanceViewModel: AppearanceViewModel,
     navController: NavHostController = rememberNavController()
 ) {
+    val topBarScreens = listOf<BeeGuideRoute>(
+        BeeGuideRoute.SettingsOverview,
+        BeeGuideRoute.EditProfile,
+        BeeGuideRoute.Notifications,
+        BeeGuideRoute.Privacy,
+        BeeGuideRoute.Security,
+        BeeGuideRoute.Appearance,
+        BeeGuideRoute.About
+    )
+    val bottomBarScreens =
+        listOf<BeeGuideRoute>(BeeGuideRoute.Home, BeeGuideRoute.Map, BeeGuideRoute.Profile)
+
     val backStackEntry by navController.currentBackStackEntryAsState()
 
     val currentScreen = BeeGuideRoute.valueOf(
@@ -74,7 +93,7 @@ fun BeeGuideApp(
 
     Scaffold(
         topBar = {
-            if (currentScreen != BeeGuideRoute.Home && currentScreen != BeeGuideRoute.Map && currentScreen != BeeGuideRoute.Profile) {
+            if (currentScreen in topBarScreens) {
                 BeeGuideTopBar(
                     currentScreen = currentScreen,
                     canNavigateBack = navController.previousBackStackEntry != null,
@@ -83,7 +102,7 @@ fun BeeGuideApp(
             }
         },
         bottomBar = {
-            if (currentScreen == BeeGuideRoute.Home || currentScreen == BeeGuideRoute.Map || currentScreen == BeeGuideRoute.Profile) {
+            if (currentScreen in bottomBarScreens) {
                 BeeGuideBottomBar(
                     onHomeIconClicked = {
                         navController.navigate(BeeGuideRoute.Home.name)
@@ -100,9 +119,11 @@ fun BeeGuideApp(
         },
         floatingActionButton = {
             if (currentScreen == BeeGuideRoute.Map) {
-                FloatingActionButton(onClick = { /*TODO*/ }) {
-                    Icon(Icons.Rounded.Star, contentDescription = "Location")
-                }
+                BeeGuideFloatingActionButtton(
+                    fabIcon = Icons.Rounded.Star,
+                    fabDescription = R.string.map,
+                    onFabClicked = { /*TODO*/ }
+                )
             }
         }
     ) { innerPadding ->
@@ -132,7 +153,7 @@ fun BeeGuideApp(
                 HomeScreen(
                     userUiState = userViewModel.userUiState,
                     testUiState = testViewModel.testUiState,
-                    onSingInButtonClicked = { navController.navigate(BeeGuideRoute.Authentication.name) }
+                    onSignInButtonClicked = { navController.navigate(BeeGuideRoute.Authentication.name) }
                 )
             }
             composable(route = BeeGuideRoute.Profile.name) {
@@ -180,11 +201,34 @@ fun BeeGuideApp(
                 startDestination = BeeGuideRoute.SignIn.name,
             ) {
                 composable(route = BeeGuideRoute.SignIn.name) {
-                    SignInScreen()
+                    SignInScreen(
+                        onSignUpButtonClicked = { navController.navigate(BeeGuideRoute.SignUp.name) },
+                    )
                 }
                 composable(route = BeeGuideRoute.SignUp.name) {
-                    SignUpScreen()
+                    SignUpScreen(
+                        onSignInButtonClicked = { navController.navigate(BeeGuideRoute.SignIn.name) },
+                    )
                 }
+            }
+        }
+
+        // bottom navigation bar top icon
+        if (currentScreen in bottomBarScreens) {
+            Column(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+                verticalArrangement = Arrangement.Bottom,
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.navbar_wave),
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.surface,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .scale(1.3f)
+                )
             }
         }
     }

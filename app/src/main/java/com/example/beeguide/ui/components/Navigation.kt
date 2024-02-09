@@ -1,13 +1,14 @@
 package com.example.beeguide.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.KeyboardArrowLeft
 import androidx.compose.material.icons.rounded.Home
@@ -22,7 +23,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -36,52 +38,41 @@ fun BeeGuideBottomBar(
     onMapIconClicked: () -> Unit,
     onProfileIconClicked: () -> Unit
 ) {
-    Column {
-        Icon(
-            painter = painterResource(R.drawable.navbar_wave),
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.surface,
+
+    Surface(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(60.dp)
+            .zIndex(1f),
+        color = MaterialTheme.colorScheme.surface
+    ) {
+        Row(
             modifier = Modifier
-                .fillMaxWidth()
-                .scale(1.3f)
-        )
-        Surface(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(60.dp)
-                .zIndex(1f),
-            color = MaterialTheme.colorScheme.surface
+                .padding(50.dp, 0.dp, 50.dp, 12.5.dp),
+            verticalAlignment = Alignment.Bottom,
+            horizontalArrangement = Arrangement.SpaceAround
         ) {
-            Row(
+            Icon(
+                Icons.Rounded.Home,
+                contentDescription = "Home",
                 modifier = Modifier
-                    .padding(50.dp, 0.dp, 50.dp, 12.5.dp),
-                verticalAlignment = Alignment.Bottom,
-                horizontalArrangement = Arrangement.SpaceAround
-            ) {
-                Icon(
-                    Icons.Rounded.Home,
-                    contentDescription = "Home",
-                    modifier = Modifier
-                        .size(35.dp)
-                        .clickable(onClick = onHomeIconClicked)
-                )
-
-                Icon(
-                    painterResource(id = R.drawable.round_explore_24),
-                    contentDescription = "Map",
-                    modifier = Modifier
-                        .size(50.dp)
-                        .clickable(onClick = onMapIconClicked)
-                )
-
-                Icon(
-                    Icons.Rounded.Person,
-                    contentDescription = "Profile",
-                    modifier = Modifier
-                        .size(35.dp)
-                        .clickable(onClick = onProfileIconClicked)
-                )
-            }
+                    .size(35.dp)
+                    .clickable(onClick = onHomeIconClicked)
+            )
+            Icon(
+                painterResource(id = R.drawable.round_explore_24),
+                contentDescription = "Map",
+                modifier = Modifier
+                    .size(50.dp)
+                    .clickable(onClick = onMapIconClicked)
+            )
+            Icon(
+                Icons.Rounded.Person,
+                contentDescription = "Profile",
+                modifier = Modifier
+                    .size(35.dp)
+                    .clickable(onClick = onProfileIconClicked)
+            )
         }
     }
 }
@@ -105,10 +96,32 @@ fun BeeGuideTopBar(
                     Icon(
                         imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowLeft,
                         contentDescription = stringResource(R.string.back_button),
-                        modifier = Modifier.scale(1.3f)
+                        modifier = Modifier.size(35.dp)
                     )
                 }
             }
         }
     )
+}
+
+@Composable
+fun BeeGuideFloatingActionButtton(
+    fabIcon: ImageVector,
+    @StringRes fabDescription: Int,
+    onFabClicked: () -> Unit,
+) {
+    Surface(
+        onClick = onFabClicked,
+        modifier = Modifier
+            .padding(10.dp)
+            .clip(CircleShape)
+    ) {
+        Icon(
+            fabIcon,
+            contentDescription = stringResource(id = fabDescription),
+            modifier = Modifier
+                .padding(15.dp)
+                .size(35.dp)
+        )
+    }
 }
