@@ -1,7 +1,9 @@
 package com.example.beeguide.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.example.beeguide.BuildConfig
+import com.example.beeguide.R
 import com.example.beeguide.navigation.preconditions.SensorGetter
 import com.example.beeguide.network.BeeGuideApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -33,8 +35,20 @@ class DefaultAppContainer(context: Context): AppContainer {
     private fun okhttpClient(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
+            .addInterceptor(AuthenticationInterceptor(this.provideJwtTokenManager(this.provideDataStore(context))))
             .build()
     }
+
+
+    fun provideDataStore(appContext: Context): SharedPreferences{
+        return appContext.getSharedPreferences(appContext.getString(R.string.app_name), Context.MODE_PRIVATE)
+    }
+
+
+    fun provideJwtTokenManager(dataStore: SharedPreferences): AuthenticationManager {
+        return AuthenticationManager(dataStore)
+    }
+
 
     // Using Retrofit builder to build a retrofit object using a kotlinx.serialization converter
 
@@ -56,7 +70,7 @@ class DefaultAppContainer(context: Context): AppContainer {
     private val sensorGetter: SensorGetter = SensorGetter()
 
     override val beeGuideRespository: BeeGuideRespository by lazy {
-        NetworkBeeGuideRepository(retrofitService)
+        NetworkBeeGuideRepository(retrofitService,provideJwtTokenManager(provideDataStore(context)))
     }
 
     override val mapRepository: MapRepository by lazy {
