@@ -2,6 +2,7 @@ package com.example.beeguide.ui.screens
 
 import android.util.Log
 import android.util.Size
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box
@@ -80,7 +81,8 @@ fun MapScreen(
                             x = (mapOffset.x + mapScale * pan.x),
                             y = (mapOffset.y + mapScale * pan.y),
                         )
-                        mapTransformOrigin = TransformOrigin((centroid.x / size.width), (centroid.y / size.height))
+                        mapTransformOrigin =
+                            TransformOrigin((centroid.x / size.width), (centroid.y / size.height))
                         mapRotation += rotation
                     }
                 }
@@ -95,6 +97,16 @@ fun MapScreen(
                         imageSize = Size(coordinates.size.width, coordinates.size.height)
                     }
             )
+
+            /*Image(
+                painter = painterResource(id = R.drawable.mapdesign),
+                contentDescription = null,
+                modifier = Modifier
+                    .rotate(180f)
+                    .onGloballyPositioned { coordinates ->
+                        imageSize = Size(coordinates.size.width, coordinates.size.height)
+                    }
+            )*/
 
             imageSize?.let { size ->
                 /*MapMarker(markerPosition = Pair(0.5f, 0.5f), imageSize = size)
