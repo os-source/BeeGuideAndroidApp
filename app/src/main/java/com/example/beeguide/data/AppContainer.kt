@@ -35,8 +35,20 @@ class DefaultAppContainer(context: Context): AppContainer {
     private fun okhttpClient(context: Context): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(interceptor)
+            .addInterceptor(AuthenticationInterceptor(this.provideJwtTokenManager(this.provideDataStore(context))))
             .build()
     }
+
+
+    fun provideDataStore(appContext: Context): SharedPreferences{
+        return appContext.getSharedPreferences(appContext.getString(R.string.app_name), Context.MODE_PRIVATE)
+    }
+
+
+    fun provideJwtTokenManager(dataStore: SharedPreferences): AuthenticationManager {
+        return AuthenticationManager(dataStore)
+    }
+
 
     // Using Retrofit builder to build a retrofit object using a kotlinx.serialization converter
 
@@ -59,8 +71,8 @@ class DefaultAppContainer(context: Context): AppContainer {
 
     private val sensorGetter: SensorGetter = SensorGetter()
 
-    override val beeGuideRepository: BeeGuideRepository by lazy {
-        NetworkBeeGuideRepository(retrofitService)
+    override val beeGuideRespository: BeeGuideRespository by lazy {
+        NetworkBeeGuideRepository(retrofitService, provideJwtTokenManager(provideDataStore(context)))
     }
 
     override val authRepository: AuthRepository by lazy {
