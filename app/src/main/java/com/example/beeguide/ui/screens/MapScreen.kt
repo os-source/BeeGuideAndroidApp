@@ -2,7 +2,6 @@ package com.example.beeguide.ui.screens
 
 import android.util.Log
 import android.util.Size
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Box

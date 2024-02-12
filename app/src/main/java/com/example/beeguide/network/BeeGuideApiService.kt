@@ -1,8 +1,12 @@
 package com.example.beeguide.network
 
+import com.example.beeguide.model.AuthRequest
 import com.example.beeguide.model.Map
+import com.example.beeguide.model.TokenResponse
 import com.example.beeguide.model.User
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface BeeGuideApiService {
@@ -12,6 +16,12 @@ interface BeeGuideApiService {
     @GET("/user")
     suspend fun getUser(): User
     //getMapXML as String
+
+    @POST("/signup")
+    suspend fun signUp(@Body request: AuthRequest)
+
+    @POST("/login")
+    suspend fun signIn(@Body request: AuthRequest): TokenResponse
 
     @GET("/maps/{id}/file")
     suspend fun getMapFile(@Path("id") map_id: Int): String

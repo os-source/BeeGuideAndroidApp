@@ -1,7 +1,9 @@
 package com.example.beeguide.data
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.example.beeguide.BuildConfig
+import com.example.beeguide.R
 import com.example.beeguide.navigation.preconditions.SensorGetter
 import com.example.beeguide.network.BeeGuideApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
@@ -10,10 +12,10 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
 
 interface AppContainer {
-    val beeGuideRespository: BeeGuideRespository
+    val beeGuideRepository: BeeGuideRepository
+    val authRepository: AuthRepository
     val mapRepository: MapRepository
     val sensorRepository: SensorRepository
 }
@@ -40,7 +42,7 @@ class DefaultAppContainer(context: Context): AppContainer {
 
     private fun retrofit(context: Context): BeeGuideApiService {
         return Retrofit.Builder()
-            .addConverterFactory(ScalarsConverterFactory.create())
+            //.addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .baseUrl(baseUrl)
             .client(okhttpClient(context))
@@ -53,10 +55,16 @@ class DefaultAppContainer(context: Context): AppContainer {
        retrofit(context)
     }
 
+    private val prefs: SharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+
     private val sensorGetter: SensorGetter = SensorGetter()
 
-    override val beeGuideRespository: BeeGuideRespository by lazy {
+    override val beeGuideRepository: BeeGuideRepository by lazy {
         NetworkBeeGuideRepository(retrofitService)
+    }
+
+    override val authRepository: AuthRepository by lazy {
+        NetworkAuthRepository(retrofitService, prefs)
     }
 
     override val mapRepository: MapRepository by lazy {

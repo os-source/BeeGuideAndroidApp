@@ -24,13 +24,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beeguide.R
 import com.example.beeguide.ui.components.BeeGuidePasswordField
 import com.example.beeguide.ui.components.BeeGuideTextField
+import com.example.beeguide.ui.viewmodels.SignUpViewModel
 
 @Composable
 fun SignUpScreen(
     onSignInButtonClicked: () -> Unit,
+    signUpViewModel: SignUpViewModel = viewModel(factory = SignUpViewModel.Factory)
 ) {
     Column(
         modifier = Modifier
@@ -60,8 +63,8 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.size(30.dp))
 
         BeeGuideTextField(
-            value = "oskar@obernberger.at",
-            onValueChange = {/*TODO*/ },
+            value = signUpViewModel.signUpUiState.email,
+            onValueChange = { signUpViewModel.emailChanged(it) },
             label = "E-Mail",
             icon = Icons.Rounded.Email,
             modifier = Modifier.fillMaxWidth()
@@ -70,24 +73,15 @@ fun SignUpScreen(
         Spacer(modifier = Modifier.size(20.dp))
 
         BeeGuidePasswordField(
-            value = "password",
-            onValueChange = { },
-            submit = { },
+            value = signUpViewModel.signUpUiState.password,
+            onValueChange = { signUpViewModel.passwordChanged(it) },
+            submit = { signUpViewModel.signUp() },
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.size(20.dp))
 
-        BeeGuidePasswordField(
-            value = "password",
-            onValueChange = { },
-            submit = { },
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.size(20.dp))
-
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { signUpViewModel.signUp() }) {
             Text(text = stringResource(id = R.string.sign_up))
         }
 

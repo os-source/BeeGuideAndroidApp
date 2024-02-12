@@ -11,7 +11,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
 import com.example.beeguide.PreferencesDataStore
-import com.example.beeguide.data.BeeGuideRespository
+import com.example.beeguide.data.BeeGuideRepository
 import com.example.beeguide.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,7 @@ sealed interface LoginUiState {
 }
 
 
-class UserViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
+class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewModel() {
     var userUiState: UserUiState by mutableStateOf(UserUiState.Loading)
         private set
 
@@ -75,14 +75,14 @@ class UserViewModel(private val beeGuideRespository: BeeGuideRespository) : View
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
-                val beeGuideRespository = application.container.beeGuideRespository
-                UserViewModel(beeGuideRespository = beeGuideRespository)
+                val beeGuideRepository = application.container.beeGuideRepository
+                UserViewModel(beeGuideRepository = beeGuideRepository)
             }
         }
     }
 }
 
-class TestViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
+class TestViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewModel() {
     var testUiState: TestUiState by mutableStateOf(TestUiState.Loading)
         private set
 
@@ -94,7 +94,7 @@ class TestViewModel(private val beeGuideRespository: BeeGuideRespository) : View
         viewModelScope.launch {
             testUiState = TestUiState.Loading
             testUiState = try {
-                TestUiState.Success(beeGuideRespository.getMap().name)
+                TestUiState.Success(beeGuideRepository.getMap().name)
             } catch (e: IOException) {
                 Log.d("TestUiState", "getMap: $e")
                 TestUiState.Error
@@ -110,14 +110,14 @@ class TestViewModel(private val beeGuideRespository: BeeGuideRespository) : View
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
-                val beeGuideRespository = application.container.beeGuideRespository
-                TestViewModel(beeGuideRespository = beeGuideRespository)
+                val beeGuideRepository = application.container.beeGuideRepository
+                TestViewModel(beeGuideRepository = beeGuideRepository)
             }
         }
     }
 }
 
-class LoginViewModel(private val beeGuideRespository: BeeGuideRespository) : ViewModel() {
+class LoginViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewModel() {
     var loginUiState: LoginUiState by mutableStateOf(LoginUiState.Loading)
         private set
 
@@ -129,7 +129,7 @@ class LoginViewModel(private val beeGuideRespository: BeeGuideRespository) : Vie
         viewModelScope.launch {
             loginUiState = LoginUiState.Loading
             loginUiState = try {
-                LoginUiState.Success(beeGuideRespository.getMap().name, "")
+                LoginUiState.Success(beeGuideRepository.getMap().name, "")
             } catch (e: IOException) {
                 Log.d("TestUiState", "getLogin: $e")
                 LoginUiState.Error
@@ -145,8 +145,8 @@ class LoginViewModel(private val beeGuideRespository: BeeGuideRespository) : Vie
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
-                val beeGuideRespository = application.container.beeGuideRespository
-                LoginViewModel(beeGuideRespository = beeGuideRespository)
+                val beeGuideRepository = application.container.beeGuideRepository
+                LoginViewModel(beeGuideRepository = beeGuideRepository)
             }
         }
     }
