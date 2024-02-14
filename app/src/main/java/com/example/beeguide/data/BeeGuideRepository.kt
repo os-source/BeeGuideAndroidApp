@@ -13,23 +13,18 @@ interface BeeGuideRepository {
 }
 
 class NetworkBeeGuideRepository(
-    private val beeGuideApiService: BeeGuideApiService, private val authenticator : AuthenticationManager
+    private val beeGuideApiService: BeeGuideApiService,
+    private val authenticator: AuthenticationManager
 ) : BeeGuideRepository {
     override suspend fun getMap(): Map = beeGuideApiService.getMap()
 
-    override suspend fun getUser() : User = beeGuideApiService.getUser()
+    override suspend fun getUser(): User = beeGuideApiService.getUser()
 
-    override suspend fun Login(email:String, password:String, remember: Boolean)
-    {
-        val token:Login = beeGuideApiService.login(LoginRequest(email, password), false);
-        authenticator.saveJWTToken(token.JWT);
-        if(remember)
-        {
-            authenticator.saveRefreshToken(token.refresh);
+    override suspend fun Login(email: String, password: String, remember: Boolean) {
+        val token: Login = beeGuideApiService.login(LoginRequest(email, password), false)
+        authenticator.saveJWTToken(token.JWT)
+        if (remember) {
+            authenticator.saveRefreshToken(token.refresh)
         }
-
-
     }
-
-
 }

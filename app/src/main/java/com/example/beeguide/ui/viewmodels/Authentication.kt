@@ -10,6 +10,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
 import com.example.beeguide.data.AuthRepository
+import com.example.beeguide.data.BeeGuideRepository
 import com.example.beeguide.network.AuthResult
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -28,7 +29,7 @@ data class SignUpUiState(
 )
 
 class SignInViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: BeeGuideRepository
 ): ViewModel() {
     var signInUiState: SignInUiState by mutableStateOf(SignInUiState())
 
@@ -46,8 +47,9 @@ class SignInViewModel(
     fun signIn() {
         viewModelScope.launch {
             signInUiState = signInUiState.copy(isLoading = true)
-            val result = authRepository.signIn(signInUiState.email, signInUiState.password)
-            resultChanel.send(result)
+            //val result =
+                authRepository.Login(signInUiState.email, signInUiState.password, true)
+            //resultChanel.send(result)
             signInUiState = signInUiState.copy(isLoading = false)
         }
     }
@@ -57,7 +59,7 @@ class SignInViewModel(
             initializer {
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
-                val authRepository = application.container.authRepository
+                val authRepository = application.container.beeGuideRepository
                 SignInViewModel(authRepository = authRepository)
             }
         }

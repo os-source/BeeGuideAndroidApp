@@ -3,10 +3,8 @@ package com.example.beeguide.data
 import android.content.SharedPreferences
 import android.util.Log
 
-class AuthenticationManager (dataStore: SharedPreferences) {
-
+class AuthenticationManager(dataStore: SharedPreferences) {
     private final val prefs = dataStore;
-
 
     companion object {
         const val JWT_TOKEN = "JWT_TOKEN"
@@ -23,6 +21,7 @@ class AuthenticationManager (dataStore: SharedPreferences) {
         editor.apply()
         Log.d(LOGGER, "Saved JWT: " + token);
     }
+
     fun saveRefreshToken(token: String) {
         val editor = prefs.edit()
         editor.putString(JWT_REFRESH, token)
@@ -35,7 +34,7 @@ class AuthenticationManager (dataStore: SharedPreferences) {
      */
     fun fetchJWTToken(): String? {
         val token = prefs.getString(JWT_TOKEN, null)
-        Log.d(LOGGER, "Retrieved Token: "+ token)
+        Log.d(LOGGER, "Retrieved Token: " + token)
         return token;
 
     }
@@ -44,10 +43,9 @@ class AuthenticationManager (dataStore: SharedPreferences) {
         return prefs.getString(JWT_REFRESH, null)
     }
 
-   fun clearAllTokens()
-   {
-       prefs.edit().remove(JWT_REFRESH)
-       prefs.edit().remove(JWT_TOKEN)
+    fun clearAllTokens() {
+        prefs.edit().remove(JWT_REFRESH)
+        prefs.edit().remove(JWT_TOKEN)
 
     }
 }

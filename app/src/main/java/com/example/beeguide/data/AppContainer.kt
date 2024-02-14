@@ -20,35 +20,36 @@ interface AppContainer {
     val sensorRepository: SensorRepository
 }
 
-class DefaultAppContainer(context: Context): AppContainer {
+class DefaultAppContainer(context: Context) : AppContainer {
     private val baseUrl = "https://beeguide.at/api/v1/"
     private val apiKey = BuildConfig.API_KEY
 
     private val interceptor = Interceptor { chain ->
-        val request = chain.request()
-            .newBuilder()
-            .addHeader("Api-Key", apiKey)
-            .build()
+        val request = chain.request().newBuilder().addHeader("Api-Key", apiKey).build()
         chain.proceed(request)
     }
 
     private fun okhttpClient(context: Context): OkHttpClient {
-        return OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .addInterceptor(AuthenticationInterceptor(this.provideJwtTokenManager(this.provideDataStore(context))))
-            .build()
+        return OkHttpClient.Builder().addInterceptor(interceptor).addInterceptor(
+            AuthenticationInterceptor(
+                this.provideJwtTokenManager(
+                    this.provideDataStore(
+                        context
+                    )
+                )
+            )
+        ).build()
     }
 
-
-    fun provideDataStore(appContext: Context): SharedPreferences{
-        return appContext.getSharedPreferences(appContext.getString(R.string.app_name), Context.MODE_PRIVATE)
+    fun provideDataStore(appContext: Context): SharedPreferences {
+        return appContext.getSharedPreferences(
+            appContext.getString(R.string.app_name), Context.MODE_PRIVATE
+        )
     }
-
 
     fun provideJwtTokenManager(dataStore: SharedPreferences): AuthenticationManager {
         return AuthenticationManager(dataStore)
     }
-
 
     // Using Retrofit builder to build a retrofit object using a kotlinx.serialization converter
 
@@ -56,23 +57,23 @@ class DefaultAppContainer(context: Context): AppContainer {
         return Retrofit.Builder()
             //.addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
-            .baseUrl(baseUrl)
-            .client(okhttpClient(context))
-            .build()
+            .baseUrl(baseUrl).client(okhttpClient(context)).build()
             .create(BeeGuideApiService::class.java)
-
     }
 
     private val retrofitService: BeeGuideApiService by lazy {
-       retrofit(context)
+        retrofit(context)
     }
 
-    private val prefs: SharedPreferences = context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
+    private val prefs: SharedPreferences =
+        context.getSharedPreferences(context.getString(R.string.app_name), Context.MODE_PRIVATE)
 
     private val sensorGetter: SensorGetter = SensorGetter()
 
     override val beeGuideRepository: BeeGuideRepository by lazy {
-        NetworkBeeGuideRepository(retrofitService, provideJwtTokenManager(provideDataStore(context)))
+        NetworkBeeGuideRepository(
+            retrofitService, provideJwtTokenManager(provideDataStore(context))
+        )
     }
 
     override val authRepository: AuthRepository by lazy {
@@ -86,5 +87,4 @@ class DefaultAppContainer(context: Context): AppContainer {
     override val sensorRepository: SensorRepository by lazy {
         HardwareSensorRepository(context)
     }
-
 }
