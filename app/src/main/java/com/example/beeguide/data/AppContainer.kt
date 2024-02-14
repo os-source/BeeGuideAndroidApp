@@ -71,7 +71,7 @@ class DefaultAppContainer(context: Context): AppContainer {
 
     private val sensorGetter: SensorGetter = SensorGetter()
 
-    override val beeGuideRespository: BeeGuideRespository by lazy {
+    override val beeGuideRepository: BeeGuideRepository by lazy {
         NetworkBeeGuideRepository(retrofitService, provideJwtTokenManager(provideDataStore(context)))
     }
 

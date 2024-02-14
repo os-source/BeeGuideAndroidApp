@@ -1,6 +1,5 @@
 package com.example.beeguide.data
 
-import android.content.Context
 import okhttp3.Interceptor
 import okhttp3.Response
 
@@ -14,7 +13,7 @@ class AuthenticationInterceptor (
         val requestBuilder = chain.request().newBuilder()
 
         // If token has been saved, add it to the request
-        tokenManager.fetchSessionToken()?.let {
+        tokenManager.fetchJWTToken()?.let {
             requestBuilder.addHeader("Authorization", "Bearer: " + it)
         } //add JWT Token if ready
 

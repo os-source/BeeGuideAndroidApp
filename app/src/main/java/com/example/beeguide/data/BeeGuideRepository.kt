@@ -14,7 +14,7 @@ interface BeeGuideRepository {
 
 class NetworkBeeGuideRepository(
     private val beeGuideApiService: BeeGuideApiService, private val authenticator : AuthenticationManager
-) : BeeGuideRespository {
+) : BeeGuideRepository {
     override suspend fun getMap(): Map = beeGuideApiService.getMap()
 
     override suspend fun getUser() : User = beeGuideApiService.getUser()
