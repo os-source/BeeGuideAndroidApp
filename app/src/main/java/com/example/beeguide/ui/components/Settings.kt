@@ -121,7 +121,6 @@ fun SettingsSingleGroup(
     Column(
         modifier = Modifier
             .padding(vertical = 8.dp)
-            .padding(horizontal = 10.dp)
     ) {
         Surface(
             modifier = Modifier
@@ -144,7 +143,6 @@ fun SettingsGroup(
     Column(
         modifier = Modifier
             .padding(vertical = 8.dp)
-            .padding(horizontal = 10.dp)
     ) {
         Text(stringResource(id = name))
         Spacer(modifier = Modifier.height(8.dp))
@@ -167,6 +165,5 @@ fun SettingsHeaderDescriptionText(
     Text(
         text = text, modifier = Modifier
             .padding(vertical = 8.dp)
-            .padding(horizontal = 10.dp)
     )
 }

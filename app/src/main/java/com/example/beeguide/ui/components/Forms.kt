@@ -1,5 +1,10 @@
 package com.example.beeguide.ui.components
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -131,4 +136,76 @@ fun BeeGuideTextField(
         ),
         shape = RoundedCornerShape(10.dp)
     )
+}
+
+@Composable
+fun BeeGuideTextArea(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier.height(100.dp).fillMaxWidth(),
+    placeholder: String = "",
+) {
+    Column(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+    ) {
+        Text(label)
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier,
+            placeholder = { Text(placeholder) },
+            singleLine = false,
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                cursorColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface.copy(0.8f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface
+            ),
+            shape = RoundedCornerShape(10.dp)
+        )
+    }
+}
+
+@Composable
+fun BeeGuideSingleLineTextArea(
+    value: String,
+    onValueChange: (String) -> Unit,
+    label: String,
+    modifier: Modifier = Modifier.fillMaxWidth(),
+    placeholder: String = "",
+) {
+    Column(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+    ) {
+        Text(label)
+        Spacer(modifier = Modifier.height(8.dp))
+        TextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier,
+            placeholder = { Text(placeholder) },
+            singleLine = false,
+            colors = TextFieldDefaults.colors(
+                focusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedLabelColor = MaterialTheme.colorScheme.onSurface,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                cursorColor = MaterialTheme.colorScheme.onSurface,
+                focusedContainerColor = MaterialTheme.colorScheme.surface.copy(0.8f),
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface
+            ),
+            shape = RoundedCornerShape(10.dp)
+        )
+    }
 }

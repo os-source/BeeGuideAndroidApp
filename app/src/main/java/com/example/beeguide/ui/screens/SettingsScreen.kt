@@ -40,6 +40,7 @@ fun SettingsScreen(
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
+            .padding(horizontal = 10.dp)
     ) {
         SettingsGroup(name = R.string.profile) {
             SettingsClickableComp(

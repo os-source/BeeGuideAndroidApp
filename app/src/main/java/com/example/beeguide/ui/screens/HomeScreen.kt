@@ -30,31 +30,34 @@ fun HomeScreen(
 
         is TestUiState.Success -> {
             Log.d("TestUiState", "HomeScreen: ${testUiState}")*/
-            Column {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 10.dp)
+            ) {
                 Text(
                     text = stringResource(id = R.string.hello) + " " + "John" + "!",
                     fontSize = 30.sp,
-                    modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp)
+                    modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp)
                 )
                 Text(
                     text = "Hier erhällst du wichtige Informationen zu neuen Funktionen von BeeGuide.",
                     fontSize = 18.sp,
-                    modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 10.dp)
+                    modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp)
                 )
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(10.dp),
+                        .padding(vertical = 10.dp),
                     shape = RoundedCornerShape(10.dp),
                 ) {
                     Column {
                         Text(
-                            text = "Deine Karte!",
+                            text = "Individualisierung!",
                             modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp),
                             fontSize = 20.sp
                         )
                         Text(
-                            text = "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                            text = "Passe deine Einstellungen an, um BeeGuide nach deinen Bedürfnissen zu gestalten. Du möchtest weniger Benachrichtigungen erhalten? Ein helleres Design? Kein Problem!",
                             modifier = Modifier.padding(10.dp)
                         )
                     }
