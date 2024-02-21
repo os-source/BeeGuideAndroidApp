@@ -72,12 +72,12 @@ class DefaultAppContainer(context: Context) : AppContainer {
 
     override val beeGuideRepository: BeeGuideRepository by lazy {
         NetworkBeeGuideRepository(
-            retrofitService, provideJwtTokenManager(provideDataStore(context))
+            retrofitService
         )
     }
 
     override val authRepository: AuthRepository by lazy {
-        NetworkAuthRepository(retrofitService, prefs)
+        NetworkAuthRepository(retrofitService, provideJwtTokenManager(provideDataStore(context)))
     }
 
     override val mapRepository: MapRepository by lazy {

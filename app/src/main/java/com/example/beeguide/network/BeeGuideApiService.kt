@@ -1,7 +1,6 @@
 package com.example.beeguide.network
 
 import com.example.beeguide.model.AuthRequest
-import com.example.beeguide.model.Login
 import com.example.beeguide.model.Map
 import com.example.beeguide.model.TokenResponse
 import com.example.beeguide.model.User
@@ -24,13 +23,10 @@ interface BeeGuideApiService {
     suspend fun signUp(@Body request: AuthRequest)
 
     @POST("/login")
-    suspend fun signIn(@Body request: AuthRequest): TokenResponse
-
-    @POST("login")
-    suspend fun login(
+    suspend fun signIn(
         @Body body: AuthRequest,
         @Query("rememberme") remember: Boolean
-    ): Login
+    ): TokenResponse
 
     @GET("/maps/{id}/file")
     suspend fun getMapFile(@Path("id") map_id: Int): String
