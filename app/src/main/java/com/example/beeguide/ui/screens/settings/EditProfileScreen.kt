@@ -46,7 +46,6 @@ fun EditProfileScreen() {
             placeholder = "Beschreibe dich in ein paar Worten.",
         )
 
-
         SettingsSingleGroup {
             SettingsSwitchComp(
                 name = R.string.available_maps,

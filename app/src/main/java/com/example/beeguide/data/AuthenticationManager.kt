@@ -22,7 +22,7 @@ class AuthenticationManager(dataStore: SharedPreferences) {
         Log.d(LOGGER, "Saved JWT: " + token);
     }
 
-    fun saveRefreshToken(token: String) {
+    fun saveRefreshToken(token: String?) {
         val editor = prefs.edit()
         editor.putString(JWT_REFRESH, token)
         editor.apply()
