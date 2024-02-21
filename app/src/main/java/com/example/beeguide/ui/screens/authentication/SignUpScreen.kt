@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.AccountCircle
 import androidx.compose.material.icons.rounded.Email
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -76,6 +77,16 @@ fun SignUpScreen(
             value = signUpViewModel.signUpUiState.password,
             onValueChange = { signUpViewModel.passwordChanged(it) },
             submit = { signUpViewModel.signUp() },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.size(20.dp))
+
+        BeeGuideTextField(
+            value = signUpViewModel.signUpUiState.name,
+            onValueChange = { signUpViewModel.nameChanged(it) },
+            label = "Name",
+            icon = Icons.Rounded.AccountCircle,
             modifier = Modifier.fillMaxWidth()
         )
 

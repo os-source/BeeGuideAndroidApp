@@ -8,8 +8,16 @@ data class TokenResponse(
     val refresh: String?
 )
 
+
 @Serializable
-data class AuthRequest(
+data class SignUpRequest(
+    val email: String,
+    val password: String,
+    val name: String,
+)
+
+@Serializable
+data class SignInRequest(
     val email: String,
     val password: String,
 )

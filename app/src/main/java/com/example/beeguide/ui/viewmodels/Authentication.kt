@@ -15,17 +15,59 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 
+data class SignUpUiState(
+    val isLoading: Boolean = false,
+    val email: String = "",
+    val password: String = "",
+    val name: String = "",
+)
+
 data class SignInUiState(
     val isLoading: Boolean = false,
     val email: String = "",
     val password: String = "",
 )
 
-data class SignUpUiState(
-    val isLoading: Boolean = false,
-    val email: String = "",
-    val password: String = "",
-)
+class SignUpViewModel(
+    private val authRepository: AuthRepository
+): ViewModel() {
+    var signUpUiState: SignUpUiState by mutableStateOf(SignUpUiState())
+
+    private val resultChanel = Channel<AuthResult<Unit>>()
+    val authResults = resultChanel.receiveAsFlow()
+
+    fun emailChanged(email: String) {
+        signUpUiState = signUpUiState.copy(email = email)
+    }
+
+    fun passwordChanged(password: String) {
+        signUpUiState = signUpUiState.copy(password = password)
+    }
+
+    fun nameChanged(name: String) {
+        signUpUiState = signUpUiState.copy(name = name)
+    }
+
+    fun signUp() {
+        viewModelScope.launch {
+            signUpUiState = signUpUiState.copy(isLoading = true)
+            val result = authRepository.signUp(signUpUiState.email, signUpUiState.password, signUpUiState.name)
+            resultChanel.send(result)
+            signUpUiState = signUpUiState.copy(isLoading = false)
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
+                        as BeeGuideApplication)
+                val authRepository = application.container.authRepository
+                SignUpViewModel(authRepository = authRepository)
+            }
+        }
+    }
+}
 
 class SignInViewModel(
     private val authRepository: AuthRepository
@@ -60,43 +102,6 @@ class SignInViewModel(
                         as BeeGuideApplication)
                 val authRepository = application.container.authRepository
                 SignInViewModel(authRepository = authRepository)
-            }
-        }
-    }
-}
-
-class SignUpViewModel(
-    private val authRepository: AuthRepository
-): ViewModel() {
-    var signUpUiState: SignUpUiState by mutableStateOf(SignUpUiState())
-
-    private val resultChanel = Channel<AuthResult<Unit>>()
-    val authResults = resultChanel.receiveAsFlow()
-
-    fun emailChanged(email: String) {
-        signUpUiState = signUpUiState.copy(email = email)
-    }
-
-    fun passwordChanged(password: String) {
-        signUpUiState = signUpUiState.copy(password = password)
-    }
-
-    fun signUp() {
-        viewModelScope.launch {
-            signUpUiState = signUpUiState.copy(isLoading = true)
-            val result = authRepository.signUp(signUpUiState.email, signUpUiState.password)
-            resultChanel.send(result)
-            signUpUiState = signUpUiState.copy(isLoading = false)
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
-                        as BeeGuideApplication)
-                val authRepository = application.container.authRepository
-                SignUpViewModel(authRepository = authRepository)
             }
         }
     }

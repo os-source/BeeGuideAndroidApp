@@ -1,7 +1,8 @@
 package com.example.beeguide.network
 
-import com.example.beeguide.model.AuthRequest
 import com.example.beeguide.model.Map
+import com.example.beeguide.model.SignInRequest
+import com.example.beeguide.model.SignUpRequest
 import com.example.beeguide.model.TokenResponse
 import com.example.beeguide.model.User
 import retrofit2.http.Body
@@ -17,12 +18,14 @@ interface BeeGuideApiService {
     @GET("user")
     suspend fun getUser(): User
 
-    @POST("signup")
-    suspend fun signUp(@Body request: AuthRequest)
+    @POST("register")
+    suspend fun signUp(
+        @Body body: SignUpRequest,
+    )
 
     @POST("login")
     suspend fun signIn(
-        @Body body: AuthRequest,
+        @Body body: SignInRequest,
         @Query("rememberme") remember: Boolean
     ): TokenResponse
 
