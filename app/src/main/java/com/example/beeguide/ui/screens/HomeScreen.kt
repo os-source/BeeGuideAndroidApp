@@ -1,5 +1,6 @@
 package com.example.beeguide.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,8 +29,8 @@ fun HomeScreen(
             Log.d("TestUiState", "HomeScreen: ${testUiState}")
         }
 
-        is TestUiState.Success -> {
-            Log.d("TestUiState", "HomeScreen: ${testUiState}")*/
+        is TestUiState.Success -> {*/
+            Log.d("TestUiState", "HomeScreen: ")
             Column(
                 modifier = Modifier
                     .padding(horizontal = 10.dp)

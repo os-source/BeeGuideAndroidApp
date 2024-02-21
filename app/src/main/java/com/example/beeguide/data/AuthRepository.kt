@@ -1,5 +1,6 @@
 package com.example.beeguide.data
 
+import android.util.Log
 import com.example.beeguide.model.AuthRequest
 import com.example.beeguide.model.TokenResponse
 import com.example.beeguide.network.AuthResult
@@ -13,11 +14,11 @@ interface AuthRepository {
 
 class NetworkAuthRepository(
     private val beeGuideApiService: BeeGuideApiService,
-    private val authenticator: AuthenticationManager,
+    private val authenticationManager: AuthenticationManager,
 ) : AuthRepository {
     override suspend fun signUp(email: String, password: String): AuthResult<Unit> {
         return try {
-            beeGuideApiService.signUp(request = AuthRequest(email, password))
+            beeGuideApiService.signUp(AuthRequest(email, password))
             signIn(email, password, false)
         } catch (e: HttpException) {
             if (e.code() == 401) {
@@ -31,21 +32,26 @@ class NetworkAuthRepository(
     }
 
     override suspend fun signIn(email: String, password: String, remember: Boolean): AuthResult<Unit> {
-        return try {
+        Log.d("test", "blala")
+        try {
+            Log.d("test", "blala2")
             val token: TokenResponse = beeGuideApiService.signIn(AuthRequest(email, password), false)
-            authenticator.saveJWTToken(token.JWT)
+            Log.d("test", "blala3")
+            authenticationManager.saveJWTToken(token.JWT)
+            Log.d("test", "blala4")
             if (remember) {
-                authenticator.saveRefreshToken(token.refresh)
+                authenticationManager.saveRefreshToken(token.refresh)
             }
-            AuthResult.Authorized()
+            Log.d("test", "blala5")
+            return AuthResult.Authorized()
         } catch (e: HttpException) {
             if (e.code() == 401) {
-                AuthResult.Unauthorized()
+                return AuthResult.Unauthorized()
             } else {
-                AuthResult.UnknownError()
+                return AuthResult.UnknownError()
             }
         } catch (e: Exception) {
-            AuthResult.UnknownError()
+            return AuthResult.UnknownError()
         }
     }
 }

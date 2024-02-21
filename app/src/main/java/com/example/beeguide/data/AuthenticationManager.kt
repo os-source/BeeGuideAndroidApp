@@ -19,14 +19,14 @@ class AuthenticationManager(dataStore: SharedPreferences) {
         val editor = prefs.edit()
         editor.putString(JWT_TOKEN, token)
         editor.apply()
-        Log.d(LOGGER, "Saved JWT: " + token);
+        Log.d(LOGGER, "Saved JWT: " + token)
     }
 
     fun saveRefreshToken(token: String?) {
         val editor = prefs.edit()
         editor.putString(JWT_REFRESH, token)
         editor.apply()
-        Log.d(LOGGER, "Saved JWT: " + token);
+        Log.d(LOGGER, "Saved JWT: " + token)
     }
 
     /**

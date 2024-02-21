@@ -14,15 +14,13 @@ interface BeeGuideApiService {
     @GET("regions/426C7565-4368-6172-6D43-6561636F6E73/maps/3000")
     suspend fun getMap(): Map
 
-    @GET("/user")
+    @GET("user")
     suspend fun getUser(): User
 
-    //getMapXML as String
-
-    @POST("/signup")
+    @POST("signup")
     suspend fun signUp(@Body request: AuthRequest)
 
-    @POST("/login")
+    @POST("login")
     suspend fun signIn(
         @Body body: AuthRequest,
         @Query("rememberme") remember: Boolean
