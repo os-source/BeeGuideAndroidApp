@@ -53,8 +53,10 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
             userUiState = try {
                 UserUiState.Success(beeGuideRepository.getUser())
             } catch (e: IOException) {
+                Log.d("UserUiState", e.toString())
                 UserUiState.Error
             } catch (e: HttpException) {
+                Log.d("UserUiState", e.toString())
                 UserUiState.Error
             }
         }
