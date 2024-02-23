@@ -45,8 +45,10 @@ import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.viewmodels.MapFileViewModel
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
-import com.example.beeguide.ui.viewmodels.SensorViewModel
+import com.example.beeguide.ui.viewmodels.AccelerationSensorViewModel
+import com.example.beeguide.ui.viewmodels.RotationSensorViewModel
 import com.example.beeguide.ui.viewmodels.TestViewModel
+import com.example.beeguide.ui.viewmodels.UncalibratedAccelerationSensorViewModel
 import com.example.beeguide.ui.viewmodels.UserViewModel
 
 /** enum values that represent the screens in the app */
@@ -138,12 +140,16 @@ fun BeeGuideApp(
                 val regionViewModel = monitor.getRegionViewModel()
 
                 val mapViewModel: MapViewModel = viewModel(factory = MapViewModel.Factory)
-                val sensorViewModel: SensorViewModel = viewModel(factory = SensorViewModel.Factory)
+                val accelerationSensorViewModel: AccelerationSensorViewModel = viewModel(factory = AccelerationSensorViewModel.Factory)
+                val uncalibratedAccelerationSensorViewModel: UncalibratedAccelerationSensorViewModel = viewModel(factory = UncalibratedAccelerationSensorViewModel.Factory)
+                val rotationSensorViewModel: RotationSensorViewModel = viewModel(factory = RotationSensorViewModel.Factory)
 
                 val mapPositionViewModel = MapPositionViewModel(
                     regionViewModel = regionViewModel,
                     mapViewModel = mapViewModel,
-                    sensorViewModel = sensorViewModel
+                    accelerationSensorViewModel = accelerationSensorViewModel,
+                    uncalibratedAccelerationSensorViewModel = uncalibratedAccelerationSensorViewModel,
+                    rotationSensorViewModel = rotationSensorViewModel
                 )
 
                 val mapFileViewModel: MapFileViewModel =

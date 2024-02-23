@@ -10,7 +10,9 @@ import com.example.beeguide.navigation.preconditions.SensorGetter
 import com.example.beeguide.network.BeeGuideApiService
 
 interface SensorRepository {
-    fun getSensor(): Sensor
+    fun getAccelerationSensor(): Sensor
+    fun getUncalibratedAccelerationSensor(): Sensor
+    fun getRotationSensor(): Sensor
     fun getSensorManager(): SensorManager
 }
 
@@ -23,8 +25,17 @@ class HardwareSensorRepository(
 
 
 
-    override fun getSensor(): Sensor  {
+
+    override fun getAccelerationSensor(): Sensor  {
         return sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)!!
+    }
+
+    override fun getUncalibratedAccelerationSensor(): Sensor  {
+        return sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!!
+    }
+
+    override fun getRotationSensor(): Sensor  {
+        return sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)!!
     }
 
     override fun getSensorManager(): SensorManager {

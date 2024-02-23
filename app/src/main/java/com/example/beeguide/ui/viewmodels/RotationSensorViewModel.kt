@@ -5,38 +5,30 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.util.Log
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
-import com.example.beeguide.data.HardwareSensorRepository
 import com.example.beeguide.data.SensorRepository
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import retrofit2.HttpException
-import java.io.IOException
-import java.sql.Timestamp
 
 
-sealed interface SensorState {
+sealed interface RotationSensorState {
     data class Success(
-        val accelerationX: Float,
-        val accelerationZ: Float,
-        val timestamp: Long
-    ) : SensorState
+        val rotationXYZ: FloatArray
+    ) : RotationSensorState
 
-    object Error : SensorState
-    object Loading : SensorState
+    object Error : RotationSensorState
+    object Loading : RotationSensorState
 }
 
-class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel(), SensorEventListener {
+class RotationSensorViewModel(private val sensorRepository: SensorRepository): ViewModel(), SensorEventListener {
     companion object {
         private const val TAG = "SensorViewModel"
 
@@ -47,20 +39,20 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
                 val sensorRepository = application.container.sensorRepository
-                SensorViewModel(sensorRepository = sensorRepository)
+                RotationSensorViewModel(sensorRepository = sensorRepository)
             }
         }
 
     }
 
-    private val _sensorState = MutableStateFlow<SensorState>(SensorState.Loading)
-    val sensorState: StateFlow<SensorState> = _sensorState.asStateFlow()
+    private val _rotationSensorState = MutableStateFlow<RotationSensorState>(RotationSensorState.Loading)
+    val rotationSensorState: StateFlow<RotationSensorState> = _rotationSensorState.asStateFlow()
 
     override fun onSensorChanged(event: SensorEvent?) {
         Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
-            _sensorState.update {
-                SensorState.Success(accelerationX = event!!.values[0], accelerationZ = event.values[2], timestamp = event.timestamp)
+            _rotationSensorState.update {
+                RotationSensorState.Success(rotationXYZ = floatArrayOf(event!!.values[0], event.values[1], event.values[2]))
             }
         }
     }
@@ -70,22 +62,9 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
     }
 
     init{
-        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getSensor(), SensorManager.SENSOR_DELAY_GAME)
+        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getRotationSensor(), SensorManager.SENSOR_DELAY_GAME)
     }
     override fun onCleared() {
         sensorRepository.getSensorManager().unregisterListener(this)
     }
 }
-
-/*
-class SensorViewModelFactory(private val sensor: Sensor) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(SensorViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return SensorViewModel(sensor) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
-    }
-}
-
- */
