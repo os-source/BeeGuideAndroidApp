@@ -1,8 +1,5 @@
 package com.example.beeguide.ui.viewmodels
 
-import android.hardware.Sensor
-import android.hardware.SensorEvent
-import android.hardware.SensorEventListener
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,7 +16,6 @@ import kotlinx.coroutines.launch
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RegionViewModel
 import kotlin.math.pow
-import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 sealed interface MapPositionUiState {
@@ -38,8 +34,9 @@ sealed interface MapPositionUiState {
 class MapPositionViewModel(
     private val regionViewModel: RegionViewModel,
     private val mapViewModel: MapViewModel,
-    private val sensorViewModel: SensorViewModel,
-    private val uncalibratedSensorViewModel: UncalibratedSensorViewModel
+    private val accelerationSensorViewModel: AccelerationSensorViewModel,
+    private val uncalibratedAccelerationSensorViewModel: UncalibratedAccelerationSensorViewModel,
+    private val rotationSensorViewModel: RotationSensorViewModel
 ): ViewModel() {
 
     //private var oldSensorValues: SensorState.Success = SensorState.Success(accelerationX = 0f, accelerationZ = 0f, timestamp = 0)
@@ -100,23 +97,30 @@ class MapPositionViewModel(
         calculatePosition()
     }
 
-    private val sensorObserver = Observer<SensorState> {
+    private val accelerationSensorObserver = Observer<AccelerationSensorState> {
         viewModelScope.launch {
             mapPositionUiState = navigate()
         }
     }
 
-    private val uncalibratedSensorObserver = Observer<SensorState> {
-        if(uncalibratedSensorViewModel.sensorState.value is UncalibratedSensorState.Success){
-            val sensorValues: UncalibratedSensorState.Success = uncalibratedSensorViewModel.sensorState.value as UncalibratedSensorState.Success
+    private val uncalibratedAccelerationSensorObserver = Observer<UncalibratedAccelerationSensorState> {
+        if(uncalibratedAccelerationSensorViewModel.uncalibratedSensorState.value is UncalibratedAccelerationSensorState.Success){
+            val sensorValues: UncalibratedAccelerationSensorState.Success = uncalibratedAccelerationSensorViewModel.uncalibratedSensorState.value as UncalibratedAccelerationSensorState.Success
             Log.d("Acceleration-Features-Uncalibrated", "Updated X: ${sensorValues.accelerationXYZ[0]}, Y: ${sensorValues.accelerationXYZ[1]}, Z: ${sensorValues.accelerationXYZ[2]}")
         }
     }
 
+    private val rotationSensorObserver = Observer<RotationSensorState> {
+        if(rotationSensorViewModel.rotationSensorState.value is RotationSensorState.Success){
+            val sensorValues: RotationSensorState.Success = rotationSensorViewModel.rotationSensorState.value as RotationSensorState.Success
+            Log.d("Acceleration-Features-Rotation", "Updated X: ${sensorValues.rotationXYZ[0]}, Y: ${sensorValues.rotationXYZ[1]}, Z: ${sensorValues.rotationXYZ[2]}")
+        }
+    }
+
     private fun navigate(): MapPositionUiState {
-        if(sensorViewModel.sensorState.value is SensorState.Success) {
-            val sensorValues: SensorState.Success =
-                sensorViewModel.sensorState.value as SensorState.Success
+        if(accelerationSensorViewModel.accelerationSensorState.value is AccelerationSensorState.Success) {
+            val sensorValues: AccelerationSensorState.Success =
+                accelerationSensorViewModel.accelerationSensorState.value as AccelerationSensorState.Success
 
             val currentTime = System.currentTimeMillis()
             val dt = if (lastTimestamp != 0L) (currentTime - lastTimestamp) / 1000.0f else 0f
@@ -226,8 +230,9 @@ class MapPositionViewModel(
     init {
         regionViewModel.rangedBeacons.observeForever(rangedBeaconObserver)
         mapViewModel.mapUiState.asLiveData().observeForever(mapObserver)
-        sensorViewModel.sensorState.asLiveData().observeForever(sensorObserver)
-        uncalibratedSensorViewModel.sensorState.asLiveData().observeForever(uncalibratedSensorObserver)
+        accelerationSensorViewModel.accelerationSensorState.asLiveData().observeForever(accelerationSensorObserver)
+        uncalibratedAccelerationSensorViewModel.uncalibratedSensorState.asLiveData().observeForever(uncalibratedAccelerationSensorObserver)
+        rotationSensorViewModel.rotationSensorState.asLiveData().observeForever(rotationSensorObserver)
     }
 
     override fun onCleared() {
