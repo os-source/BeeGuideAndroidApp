@@ -1,6 +1,5 @@
 package com.example.beeguide.ui.screens
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -23,56 +22,55 @@ fun HomeScreen(
     testUiState: TestUiState,
     onSignInButtonClicked: () -> Unit,
 ) {
-    /*when (testUiState) {
-        is TestUiState.Loading -> {
-            Text(text = "Loading...")
-            Log.d("TestUiState", "HomeScreen: ${testUiState}")
-        }
-
-        is TestUiState.Success -> {*/
-            Log.d("TestUiState", "HomeScreen: ")
-            Column(
-                modifier = Modifier
-                    .padding(horizontal = 10.dp)
-            ) {
+    Column(
+        modifier = Modifier
+            .padding(horizontal = 10.dp)
+    ) {
+        when (userUiState) {
+            is UserUiState.Success -> {
                 Text(
-                    text = stringResource(id = R.string.hello) + " " + "John" + "!",
+                    text = "${stringResource(id = R.string.hello)} ${userUiState.user.name}!",
                     fontSize = 30.sp,
                     modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp)
                 )
+            }
+
+            else -> {
                 Text(
-                    text = "Hier erhällst du wichtige Informationen zu neuen Funktionen von BeeGuide.",
-                    fontSize = 18.sp,
+                    text = "${stringResource(id = R.string.hello)}!",
+                    fontSize = 30.sp,
                     modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp)
                 )
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 10.dp),
-                    shape = RoundedCornerShape(10.dp),
-                ) {
-                    Column {
-                        Text(
-                            text = "Individualisierung!",
-                            modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp),
-                            fontSize = 20.sp
-                        )
-                        Text(
-                            text = "Passe deine Einstellungen an, um BeeGuide nach deinen Bedürfnissen zu gestalten. Du möchtest weniger Benachrichtigungen erhalten? Ein helleres Design? Kein Problem!",
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    }
-                }
-                Button(onClick = onSignInButtonClicked) {
-                    Text(text = stringResource(id = R.string.sign_in))
-                }
             }
-    /*}
+        }
 
-    else -> {
-        Text(text = "Error!")
-        Log.d("HomeScreen TestUiState response", testUiState.toString())
+        Text(
+            text =
+            "Hier erhällst du wichtige Informationen zu neuen Funktionen von BeeGuide.",
+            fontSize = 18.sp,
+            modifier = Modifier.padding(0.dp, 10.dp, 0.dp, 0.dp)
+        )
+        Surface(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 10.dp),
+            shape = RoundedCornerShape(10.dp),
+        ) {
+            Column {
+                Text(
+                    text = "Individualisierung!",
+                    modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp),
+                    fontSize = 20.sp
+                )
+                Text(
+                    text = "Passe deine Einstellungen an, um BeeGuide nach deinen Bedürfnissen zu gestalten. Du möchtest weniger Benachrichtigungen erhalten? Ein helleres Design? Kein Problem!",
+                    modifier = Modifier.padding(10.dp)
+                )
+            }
+        }
+
+        Button(onClick = onSignInButtonClicked) {
+            Text(text = stringResource(id = R.string.sign_in))
+        }
     }
-}*/
-    //TODO: Add home screen
 }
