@@ -27,8 +27,7 @@ import java.sql.Timestamp
 
 sealed interface SensorState {
     data class Success(
-        val accelerationX: Float,
-        val accelerationZ: Float,
+        val accelerationXZ: FloatArray,
         val timestamp: Long
     ) : SensorState
 
@@ -60,7 +59,7 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
         Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
             _sensorState.update {
-                SensorState.Success(accelerationX = event!!.values[0], accelerationZ = event.values[2], timestamp = event.timestamp)
+                SensorState.Success(accelerationXZ = floatArrayOf(event!!.values[0], event.values[2]), timestamp = event.timestamp)
             }
         }
     }

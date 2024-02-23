@@ -23,6 +23,7 @@ class HardwareSensorRepository(
 
 
 
+
     override fun getSensor(): Sensor  {
         return sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)!!
     }
