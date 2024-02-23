@@ -30,7 +30,7 @@ class HardwareSensorRepository(
     }
 
     override fun getUncalibratedSensor(): Sensor  {
-        return sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED)!!
+        return sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)!!
     }
 
     override fun getSensorManager(): SensorManager {
