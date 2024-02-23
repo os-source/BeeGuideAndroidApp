@@ -42,6 +42,7 @@ import com.example.beeguide.ui.screens.settings.NotificationsScreen
 import com.example.beeguide.ui.screens.settings.PrivacyScreen
 import com.example.beeguide.ui.screens.settings.SecurityScreen
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
+import com.example.beeguide.ui.viewmodels.MapFileViewModel
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
 import com.example.beeguide.ui.viewmodels.SensorViewModel
@@ -145,7 +146,13 @@ fun BeeGuideApp(
                     sensorViewModel = sensorViewModel
                 )
 
-                MapScreen(mapPositionUiState = mapPositionViewModel.mapPositionUiState)
+                val mapFileViewModel: MapFileViewModel =
+                    viewModel(factory = MapFileViewModel.Factory)
+
+                MapScreen(
+                    mapPositionUiState = mapPositionViewModel.mapPositionUiState,
+                    mapFileUiState = mapFileViewModel.mapFileUiState
+                )
             }
             composable(route = BeeGuideRoute.Home.name) {
                 val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)

@@ -30,5 +30,5 @@ interface BeeGuideApiService {
     ): TokenResponse
 
     @GET("/maps/{id}/file")
-    suspend fun getMapFile(@Path("id") map_id: Int): String
+    suspend fun getMapFile(@Path("id") mapId: Int): String
 }
