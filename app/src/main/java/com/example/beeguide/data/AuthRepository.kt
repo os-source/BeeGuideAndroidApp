@@ -1,5 +1,6 @@
 package com.example.beeguide.data
 
+import android.util.Log
 import com.example.beeguide.model.SignInRequest
 import com.example.beeguide.model.SignUpRequest
 import com.example.beeguide.model.TokenResponse
@@ -21,6 +22,7 @@ class NetworkAuthRepository(
             beeGuideApiService.signUp(SignUpRequest(email, password, name))
             signIn(email, password, false)
         } catch (e: HttpException) {
+            Log.d("NetworkAuthRepository", e.toString())
             if (e.code() == 401) {
                 AuthResult.Unauthorized()
             } else {
@@ -40,12 +42,14 @@ class NetworkAuthRepository(
             }
             return AuthResult.Authorized()
         } catch (e: HttpException) {
+            Log.d("NetworkAuthRepository", e.toString())
             if (e.code() == 401) {
                 return AuthResult.Unauthorized()
             } else {
                 return AuthResult.UnknownError()
             }
         } catch (e: Exception) {
+            Log.d("NetworkAuthRepository", e.toString())
             return AuthResult.UnknownError()
         }
     }
