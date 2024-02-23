@@ -29,6 +29,6 @@ interface BeeGuideApiService {
         @Query("rememberme") remember: Boolean
     ): TokenResponse
 
-    @GET("/maps/{id}/file")
+    @GET("maps/{id}/file")
     suspend fun getMapFile(@Path("id") mapId: Int): String
 }

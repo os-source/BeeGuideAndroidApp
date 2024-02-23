@@ -86,10 +86,10 @@ class MapFileViewModel(private val mapRepository: MapRepository, private val map
         private set
 
     init {
-        getUser()
+        getMapFile()
     }
 
-    fun getUser() {
+    fun getMapFile() {
         viewModelScope.launch {
             mapFileUiState = MapFileUiState.Loading
             mapFileUiState = try {
