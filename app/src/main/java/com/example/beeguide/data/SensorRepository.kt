@@ -11,6 +11,7 @@ import com.example.beeguide.network.BeeGuideApiService
 
 interface SensorRepository {
     fun getSensor(): Sensor
+    fun getUncalibratedSensor(): Sensor
     fun getSensorManager(): SensorManager
 }
 
@@ -26,6 +27,10 @@ class HardwareSensorRepository(
 
     override fun getSensor(): Sensor  {
         return sensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION)!!
+    }
+
+    override fun getUncalibratedSensor(): Sensor  {
+        return sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER_UNCALIBRATED)!!
     }
 
     override fun getSensorManager(): SensorManager {

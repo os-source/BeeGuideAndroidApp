@@ -25,17 +25,16 @@ import java.io.IOException
 import java.sql.Timestamp
 
 
-sealed interface SensorState {
+sealed interface UncalibratedSensorState {
     data class Success(
-        val accelerationXZ: FloatArray,
-        val timestamp: Long
+        val accelerationXYZ: FloatArray
     ) : SensorState
 
     object Error : SensorState
     object Loading : SensorState
 }
 
-class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel(), SensorEventListener {
+class UncalibratedSensorViewModel(private val sensorRepository: SensorRepository): ViewModel(), SensorEventListener {
     companion object {
         private const val TAG = "SensorViewModel"
 
@@ -46,7 +45,7 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
                 val sensorRepository = application.container.sensorRepository
-                SensorViewModel(sensorRepository = sensorRepository)
+                UncalibratedSensorViewModel(sensorRepository = sensorRepository)
             }
         }
 
@@ -59,7 +58,7 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
         Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
             _sensorState.update {
-                SensorState.Success(accelerationXZ = floatArrayOf(event!!.values[0], event.values[2]), timestamp = event.timestamp)
+                UncalibratedSensorState.Success(accelerationXYZ = floatArrayOf(event!!.values[0], event.values[1], event.values[2]))
             }
         }
     }
@@ -69,7 +68,7 @@ class SensorViewModel(private val sensorRepository: SensorRepository): ViewModel
     }
 
     init{
-        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getSensor(), SensorManager.SENSOR_DELAY_GAME)
+        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getUncalibratedSensor(), SensorManager.SENSOR_DELAY_GAME)
     }
     override fun onCleared() {
         sensorRepository.getSensorManager().unregisterListener(this)

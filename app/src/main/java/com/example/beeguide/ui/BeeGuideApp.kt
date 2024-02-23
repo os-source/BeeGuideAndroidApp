@@ -46,6 +46,7 @@ import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
 import com.example.beeguide.ui.viewmodels.SensorViewModel
 import com.example.beeguide.ui.viewmodels.TestViewModel
+import com.example.beeguide.ui.viewmodels.UncalibratedSensorViewModel
 import com.example.beeguide.ui.viewmodels.UserViewModel
 
 /** enum values that represent the screens in the app */
@@ -138,11 +139,13 @@ fun BeeGuideApp(
 
                 val mapViewModel: MapViewModel = viewModel(factory = MapViewModel.Factory)
                 val sensorViewModel: SensorViewModel = viewModel(factory = SensorViewModel.Factory)
+                val uncalibratedSensorViewModel: UncalibratedSensorViewModel = viewModel(factory = UncalibratedSensorViewModel.Factory)
 
                 val mapPositionViewModel = MapPositionViewModel(
                     regionViewModel = regionViewModel,
                     mapViewModel = mapViewModel,
-                    sensorViewModel = sensorViewModel
+                    sensorViewModel = sensorViewModel,
+                    uncalibratedSensorViewModel = uncalibratedSensorViewModel
                 )
 
                 MapScreen(mapPositionUiState = mapPositionViewModel.mapPositionUiState)

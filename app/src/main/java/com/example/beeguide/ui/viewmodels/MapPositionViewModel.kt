@@ -38,7 +38,8 @@ sealed interface MapPositionUiState {
 class MapPositionViewModel(
     private val regionViewModel: RegionViewModel,
     private val mapViewModel: MapViewModel,
-    private val sensorViewModel: SensorViewModel
+    private val sensorViewModel: SensorViewModel,
+    private val uncalibratedSensorViewModel: UncalibratedSensorViewModel
 ): ViewModel() {
 
     //private var oldSensorValues: SensorState.Success = SensorState.Success(accelerationX = 0f, accelerationZ = 0f, timestamp = 0)
@@ -53,6 +54,11 @@ class MapPositionViewModel(
     private var distanceX: Float = 0f
     private var distanceZ: Float = 0f
     private var lastTimestamp: Long = 0
+    private var stuckCounter: Int = 0
+    private var stuckAverageX: Float = 0f
+    private var stuckAverageZ: Float = 0f
+    private var stuckAverageXlow: Float = 0f
+    private var stuckAverageZlow: Float = 0f
 
 
 
@@ -100,6 +106,13 @@ class MapPositionViewModel(
         }
     }
 
+    private val uncalibratedSensorObserver = Observer<SensorState> {
+        if(uncalibratedSensorViewModel.sensorState.value is UncalibratedSensorState.Success){
+            val sensorValues: UncalibratedSensorState.Success = uncalibratedSensorViewModel.sensorState.value as UncalibratedSensorState.Success
+            Log.d("Acceleration-Features-Uncalibrated", "Updated X: ${sensorValues.accelerationXYZ[0]}, Y: ${sensorValues.accelerationXYZ[1]}, Z: ${sensorValues.accelerationXYZ[2]}")
+        }
+    }
+
     private fun navigate(): MapPositionUiState {
         if(sensorViewModel.sensorState.value is SensorState.Success) {
             val sensorValues: SensorState.Success =
@@ -111,6 +124,11 @@ class MapPositionViewModel(
 
             linearAcceleration = sensorValues.accelerationXZ
 
+            if(sensorValues.accelerationXZ[0] > 20 || sensorValues.accelerationXZ[1] > 20 || sensorValues.accelerationXZ[0] < 20 || sensorValues.accelerationXZ[1] < 20){
+                Log.d("filter", "filtered")
+                MapPositionUiState.Useless("Useless calculation")
+            }
+
             // Integrate acceleration to get velocity
             for (i in 0 until 2) {
                 velocity[i] += linearAcceleration[i] * dt
@@ -119,19 +137,48 @@ class MapPositionViewModel(
             val vMagnitude = sqrt(velocity[0].pow(2) + velocity[1].pow(2))
 
             // Integrate velocity to get distance
-            if(linearAcceleration[0] > 0.6) distanceX += velocity[0] * dt
-            if(linearAcceleration[1] > 0.6)distanceZ += velocity[1] * dt
+            val distanceChangeX: Float = velocity[0] * dt
+            val distanceChangeY: Float = velocity[1] * dt
+
+            val bufferValueMagnitude = 0.0001
+            val bufferValueVelocityReset = 0.0005
+
+            if(distanceChangeX > bufferValueMagnitude || distanceChangeX < -bufferValueMagnitude) distanceX += distanceChangeX
+            if(distanceChangeY > bufferValueMagnitude || distanceChangeY < -bufferValueMagnitude) distanceZ += distanceChangeY
 
             // Reset velocity to zero when device is at rest
-            if (vMagnitude < 0.05f) {
-                for (i in 0 until 2) {
-                    velocity[i] = 0f
-                }
-            }
+            //if (distanceChangeX < bufferValueVelocityReset && distanceChangeX > -bufferValueVelocityReset) velocity[0] = 0f
+            //if (distanceChangeY < bufferValueVelocityReset && distanceChangeY > -bufferValueVelocityReset) velocity[1] = 0f
 
             // Print the current distance
             Log.d("since-distance-X", distanceX.toString())
             Log.d("since-distance-Z", distanceZ.toString())
+            Log.d("current-velocity-X", velocity[0].toString())
+
+
+            val bufferValueStuck = 0.05
+
+            if(stuckCounter < 4){
+                stuckAverageX += velocity[0]
+                stuckAverageZ += velocity[1]
+                if(stuckCounter > 1) {
+                    stuckAverageXlow += velocity[0]
+                    stuckAverageZlow += velocity[1]
+                }
+                stuckCounter++
+            }
+            else{
+                stuckAverageX /= stuckCounter
+                stuckAverageZ /= stuckCounter
+
+                stuckAverageXlow /= stuckCounter/2
+                stuckAverageZlow /= stuckCounter/2
+
+                if(stuckAverageXlow < stuckAverageX * 1 + bufferValueStuck && stuckAverageXlow > stuckAverageX * 1 - bufferValueStuck) velocity[0] = 0f
+                if(stuckAverageZlow < stuckAverageZ * 1 + bufferValueStuck && stuckAverageZlow > stuckAverageZ * 1 - bufferValueStuck) velocity[1] = 0f
+
+                stuckCounter = 0
+            }
 
 
 
@@ -180,6 +227,7 @@ class MapPositionViewModel(
         regionViewModel.rangedBeacons.observeForever(rangedBeaconObserver)
         mapViewModel.mapUiState.asLiveData().observeForever(mapObserver)
         sensorViewModel.sensorState.asLiveData().observeForever(sensorObserver)
+        uncalibratedSensorViewModel.sensorState.asLiveData().observeForever(uncalibratedSensorObserver)
     }
 
     override fun onCleared() {
