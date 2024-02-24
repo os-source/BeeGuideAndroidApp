@@ -41,14 +41,12 @@ import com.example.beeguide.ui.screens.settings.EditProfileScreen
 import com.example.beeguide.ui.screens.settings.NotificationsScreen
 import com.example.beeguide.ui.screens.settings.PrivacyScreen
 import com.example.beeguide.ui.screens.settings.SecurityScreen
-import com.example.beeguide.ui.viewmodels.AccelerationSensorViewModel
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.viewmodels.MapFileViewModel
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.RotationSensorViewModel
-import com.example.beeguide.ui.viewmodels.TestViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.UncalibratedAccelerationSensorViewModel
 import com.example.beeguide.ui.viewmodels.UserViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassViewModel
