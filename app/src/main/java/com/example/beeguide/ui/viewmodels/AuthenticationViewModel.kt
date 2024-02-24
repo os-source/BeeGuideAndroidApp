@@ -88,9 +88,9 @@ class SignInViewModel(
     fun signIn() {
         viewModelScope.launch {
             signInUiState = signInUiState.copy(isLoading = true)
-            //val result =
+            val result =
                 authRepository.signIn(signInUiState.email, signInUiState.password, true)
-            //resultChanel.send(result)
+            resultChanel.send(result)
             signInUiState = signInUiState.copy(isLoading = false)
         }
     }

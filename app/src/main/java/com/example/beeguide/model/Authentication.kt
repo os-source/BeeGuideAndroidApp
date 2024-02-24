@@ -8,7 +8,6 @@ data class TokenResponse(
     val refresh: String?
 )
 
-
 @Serializable
 data class SignUpRequest(
     val email: String,

@@ -117,7 +117,6 @@ fun BeeGuideApp(
                     }
                 )
             }
-
         },
         floatingActionButton = {
             if (currentScreen == BeeGuideRoute.Map) {
@@ -213,11 +212,13 @@ fun BeeGuideApp(
                 composable(route = BeeGuideRoute.SignIn.name) {
                     SignInScreen(
                         onSignUpButtonClicked = { navController.navigate(BeeGuideRoute.SignUp.name) },
+                        navigateToHomeScreen = { navController.navigate(BeeGuideRoute.Home.name) },
                     )
                 }
                 composable(route = BeeGuideRoute.SignUp.name) {
                     SignUpScreen(
                         onSignInButtonClicked = { navController.navigate(BeeGuideRoute.SignIn.name) },
+                        navigateToHomeScreen = { navController.navigate(BeeGuideRoute.Home.name) },
                     )
                 }
             }

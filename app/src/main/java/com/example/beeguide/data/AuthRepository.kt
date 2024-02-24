@@ -34,23 +34,23 @@ class NetworkAuthRepository(
     }
 
     override suspend fun signIn(email: String, password: String, remember: Boolean): AuthResult<Unit> {
-        try {
+        return try {
             val token: TokenResponse = beeGuideApiService.signIn(SignInRequest(email, password), false)
             authenticationManager.saveJWTToken(token.JWT)
             if (remember) {
                 authenticationManager.saveRefreshToken(token.refresh)
             }
-            return AuthResult.Authorized()
+            AuthResult.Authorized()
         } catch (e: HttpException) {
             Log.d("NetworkAuthRepository", e.toString())
             if (e.code() == 401) {
-                return AuthResult.Unauthorized()
+                AuthResult.Unauthorized()
             } else {
-                return AuthResult.UnknownError()
+                AuthResult.UnknownError()
             }
         } catch (e: Exception) {
             Log.d("NetworkAuthRepository", e.toString())
-            return AuthResult.UnknownError()
+            AuthResult.UnknownError()
         }
     }
 }

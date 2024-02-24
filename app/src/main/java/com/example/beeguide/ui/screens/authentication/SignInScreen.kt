@@ -1,5 +1,6 @@
 package com.example.beeguide.ui.screens.authentication
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -17,8 +18,10 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beeguide.R
+import com.example.beeguide.network.AuthResult
 import com.example.beeguide.ui.components.BeeGuidePasswordField
 import com.example.beeguide.ui.components.BeeGuideTextField
 import com.example.beeguide.ui.viewmodels.SignInViewModel
@@ -33,8 +37,27 @@ import com.example.beeguide.ui.viewmodels.SignInViewModel
 @Composable
 fun SignInScreen(
     onSignUpButtonClicked: () -> Unit,
+    navigateToHomeScreen: () -> Unit,
     signInViewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
 ) {
+    val context = LocalContext.current
+
+    LaunchedEffect(signInViewModel, context) {
+        signInViewModel.authResults.collect { result ->
+            when (result) {
+                is AuthResult.Authorized -> {
+                    navigateToHomeScreen()
+                }
+                is AuthResult.Unauthorized -> {
+                    Toast.makeText(context, "You are not authorized", Toast.LENGTH_SHORT).show()
+                }
+                is AuthResult.UnknownError -> {
+                    Toast.makeText(context, "An unknown error occurred", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .padding(horizontal = 15.dp)
