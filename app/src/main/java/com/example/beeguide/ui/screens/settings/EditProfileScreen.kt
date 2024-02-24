@@ -1,7 +1,6 @@
 package com.example.beeguide.ui.screens.settings
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -22,7 +21,8 @@ import com.example.beeguide.ui.viewmodels.UserViewModel
 
 @Composable
 fun EditProfileScreen(
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    navigateToProfileScreen: () -> Unit,
 ) {
     when (val userUiState = userViewModel.userUiState) {
         is UserUiState.Loading -> BeeGuideCircularProgressIndicator()
@@ -47,10 +47,8 @@ fun EditProfileScreen(
                     label = "Beschreibung",
                     placeholder = "Beschreibe dich in ein paar Worten.",
                 )
-
-                Spacer(modifier = Modifier.padding(10.dp))
                 
-                Button(onClick = { userViewModel.saveUpdatedUser() }) {
+                Button(onClick = { userViewModel.saveUpdatedUser(navigateToProfileScreen) }) {
                     Text(text = stringResource(id = R.string.save))
                 }
             }

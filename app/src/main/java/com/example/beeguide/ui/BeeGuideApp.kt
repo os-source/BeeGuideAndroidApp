@@ -188,7 +188,8 @@ fun BeeGuideApp(
                 }
                 composable(route = BeeGuideRoute.EditProfile.name) {
                     EditProfileScreen(
-                        userViewModel = userViewModel
+                        userViewModel = userViewModel,
+                        navigateToProfileScreen = { navController.navigate(BeeGuideRoute.Profile.name) },
                     )
                 }
                 composable(route = BeeGuideRoute.Notifications.name) {

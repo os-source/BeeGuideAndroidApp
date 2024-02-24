@@ -70,7 +70,7 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
         }
     }
 
-    fun saveUpdatedUser() {
+    fun saveUpdatedUser(navigateToScreen: () -> Unit) {
         viewModelScope.launch {
             val oldUserUiState = userUiState
             if (oldUserUiState is UserUiState.Success) {
@@ -80,6 +80,7 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
                         beeGuideRepository.saveUserBio(oldUserUiState.user.userDetails.bio)
                     }
                 }
+                navigateToScreen()
             }
         }
     }
