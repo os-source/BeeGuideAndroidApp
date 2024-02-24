@@ -1,5 +1,6 @@
 package com.example.beeguide.data
 
+import android.util.Log
 import com.example.beeguide.model.SignInRequest
 import com.example.beeguide.model.SignUpRequest
 import com.example.beeguide.model.TokenResponse
@@ -21,6 +22,7 @@ class NetworkAuthRepository(
             beeGuideApiService.signUp(SignUpRequest(email, password, name))
             signIn(email, password, false)
         } catch (e: HttpException) {
+            Log.d("NetworkAuthRepository", e.toString())
             if (e.code() == 401) {
                 AuthResult.Unauthorized()
             } else {
@@ -32,21 +34,23 @@ class NetworkAuthRepository(
     }
 
     override suspend fun signIn(email: String, password: String, remember: Boolean): AuthResult<Unit> {
-        try {
+        return try {
             val token: TokenResponse = beeGuideApiService.signIn(SignInRequest(email, password), false)
             authenticationManager.saveJWTToken(token.JWT)
             if (remember) {
                 authenticationManager.saveRefreshToken(token.refresh)
             }
-            return AuthResult.Authorized()
+            AuthResult.Authorized()
         } catch (e: HttpException) {
+            Log.d("NetworkAuthRepository", e.toString())
             if (e.code() == 401) {
-                return AuthResult.Unauthorized()
+                AuthResult.Unauthorized()
             } else {
-                return AuthResult.UnknownError()
+                AuthResult.UnknownError()
             }
         } catch (e: Exception) {
-            return AuthResult.UnknownError()
+            Log.d("NetworkAuthRepository", e.toString())
+            AuthResult.UnknownError()
         }
     }
 }

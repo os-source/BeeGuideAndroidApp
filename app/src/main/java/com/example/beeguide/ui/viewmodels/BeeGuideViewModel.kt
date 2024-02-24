@@ -29,16 +29,6 @@ sealed interface UserUiState {
     object Loading : UserUiState
 }
 
-sealed interface TestUiState {
-    data class Success(
-        val test: String
-    ) : TestUiState
-
-    object Error : TestUiState
-    object Loading : TestUiState
-}
-
-
 class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewModel() {
     var userUiState: UserUiState by mutableStateOf(UserUiState.Loading)
         private set
@@ -47,7 +37,7 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
         getUser()
     }
 
-    fun getUser() {
+    private fun getUser() {
         viewModelScope.launch {
             userUiState = UserUiState.Loading
             userUiState = try {
@@ -62,6 +52,39 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
         }
     }
 
+    fun nameChanged(name: String) {
+        val oldUserUiState = userUiState
+        if (oldUserUiState is UserUiState.Success) {
+            userUiState = UserUiState.Success(oldUserUiState.user.copy(name = name))
+        }
+    }
+
+    fun bioChanged(bio: String) {
+        val oldUserUiState = userUiState
+        if (oldUserUiState is UserUiState.Success) {
+            userUiState = UserUiState.Success(
+                oldUserUiState.user.copy(
+                    userDetails = oldUserUiState.user.userDetails?.copy(bio = bio)
+                )
+            )
+        }
+    }
+
+    fun saveUpdatedUser(navigateToScreen: () -> Unit) {
+        viewModelScope.launch {
+            val oldUserUiState = userUiState
+            if (oldUserUiState is UserUiState.Success) {
+                viewModelScope.launch {
+                    beeGuideRepository.saveUserName(oldUserUiState.user.name)
+                    if (oldUserUiState.user.userDetails?.bio != null) {
+                        beeGuideRepository.saveUserBio(oldUserUiState.user.userDetails.bio)
+                    }
+                }
+                navigateToScreen()
+            }
+        }
+    }
+
     companion object {
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
@@ -69,41 +92,6 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
                         as BeeGuideApplication)
                 val beeGuideRepository = application.container.beeGuideRepository
                 UserViewModel(beeGuideRepository = beeGuideRepository)
-            }
-        }
-    }
-}
-
-class TestViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewModel() {
-    var testUiState: TestUiState by mutableStateOf(TestUiState.Loading)
-        private set
-
-    init {
-        getTest()
-    }
-
-    fun getTest() {
-        viewModelScope.launch {
-            testUiState = TestUiState.Loading
-            testUiState = try {
-                TestUiState.Success(beeGuideRepository.getMap().name)
-            } catch (e: IOException) {
-                Log.d("TestUiState", "getMap: $e")
-                TestUiState.Error
-            } catch (e: HttpException) {
-                Log.d("TestUiState", "getMap: $e")
-                TestUiState.Error
-            }
-        }
-    }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
-                        as BeeGuideApplication)
-                val beeGuideRepository = application.container.beeGuideRepository
-                TestViewModel(beeGuideRepository = beeGuideRepository)
             }
         }
     }
@@ -145,7 +133,6 @@ fun getDarkThemeMode(): Boolean {
     }
     return true
 }
-
 
 
 //darkTheme: Boolean = isSystemInDarkTheme(),

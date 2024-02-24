@@ -12,6 +12,7 @@ import okhttp3.Interceptor
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.scalars.ScalarsConverterFactory
 
 interface AppContainer {
     val beeGuideRepository: BeeGuideRepository
@@ -52,10 +53,9 @@ class DefaultAppContainer(context: Context) : AppContainer {
     }
 
     // Using Retrofit builder to build a retrofit object using a kotlinx.serialization converter
-
     private fun retrofit(context: Context): BeeGuideApiService {
         return Retrofit.Builder()
-            //.addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
             .baseUrl(baseUrl).client(okhttpClient(context)).build()
             .create(BeeGuideApiService::class.java)

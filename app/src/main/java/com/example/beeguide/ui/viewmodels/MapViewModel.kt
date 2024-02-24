@@ -1,6 +1,9 @@
 package com.example.beeguide.ui.viewmodels
 
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -19,11 +22,20 @@ import java.io.IOException
 
 sealed interface MapUiState {
     data class Success(
-        val map: Map
+        val map: Map,
     ) : MapUiState
 
     object Error : MapUiState
     object Loading : MapUiState
+}
+
+sealed interface MapFileUiState {
+    data class Success(
+        val mapFile: String
+    ) : MapFileUiState
+
+    object Error : MapFileUiState
+    object Loading : MapFileUiState
 }
 
 class MapViewModel(
@@ -67,5 +79,39 @@ class MapViewModel(
             }
         }
     }
+}
 
+class MapFileViewModel(private val mapRepository: MapRepository, private val mapId: Int) : ViewModel() {
+    var mapFileUiState: MapFileUiState by mutableStateOf(MapFileUiState.Loading)
+        private set
+
+    init {
+        getMapFile()
+    }
+
+    fun getMapFile() {
+        viewModelScope.launch {
+            mapFileUiState = MapFileUiState.Loading
+            mapFileUiState = try {
+                MapFileUiState.Success(mapRepository.getMapFile(mapId))
+            } catch (e: IOException) {
+                Log.d("MapFileUiState", e.toString())
+                MapFileUiState.Error
+            } catch (e: HttpException) {
+                Log.d("MapFileUiState", e.toString())
+                MapFileUiState.Error
+            }
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
+                        as BeeGuideApplication)
+                val mapRepository = application.container.mapRepository
+                MapFileViewModel(mapRepository = mapRepository, mapId = 1)
+            }
+        }
+    }
 }

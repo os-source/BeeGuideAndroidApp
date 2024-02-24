@@ -1,5 +1,6 @@
 package com.example.beeguide.ui.screens
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,6 +26,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.beeguide.R
+import com.example.beeguide.helpers.imageBitmapFromBase64String
+import com.example.beeguide.ui.components.BeeGuideCircularProgressIndicator
 import com.example.beeguide.ui.viewmodels.UserUiState
 
 @Composable
@@ -33,11 +36,10 @@ fun ProfileScreen(
     onSettingsButtonClicked: () -> Unit
 ) {
     when (userUiState) {
-        is UserUiState.Loading ->
-            Text(text = "Loading...")
+        is UserUiState.Loading -> BeeGuideCircularProgressIndicator()
 
         is UserUiState.Success -> {
-
+            Log.d("ProfileScreen", "User: ${userUiState.user}")
             Icon(
                 painter = painterResource(R.drawable.round_shape),
                 contentDescription = null,
@@ -54,7 +56,7 @@ fun ProfileScreen(
             ) {
                 IconButton(onClick = onSettingsButtonClicked) {
                     Icon(
-                        imageVector =  Icons.Rounded.Settings,
+                        imageVector = Icons.Rounded.Settings,
                         contentDescription = stringResource(R.string.settings),
                         modifier = Modifier.size(35.dp)
                     )
@@ -65,19 +67,36 @@ fun ProfileScreen(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.size(50.dp))
+
                 Text(text = userUiState.user.name, fontSize = 32.sp)
                 Text(text = userUiState.user.email, fontSize = 16.sp)
+
                 Spacer(modifier = Modifier.size(40.dp))
-                Image(
-                    painter = painterResource(id = R.drawable.profile_image_test),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(128.dp)
-                        .clip(
-                            CircleShape
-                        )
-                )
+
+                if (userUiState.user.userDetails?.profilePicture != null) {
+                    Image(
+                        bitmap = imageBitmapFromBase64String(userUiState.user.userDetails.profilePicture),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(128.dp)
+                            .clip(
+                                CircleShape
+                            )
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(id = R.drawable.profile_image_test),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(128.dp)
+                            .clip(
+                                CircleShape
+                            )
+                    )
+                }
+
                 Spacer(modifier = Modifier.size(30.dp))
+
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -86,12 +105,13 @@ fun ProfileScreen(
                 ) {
                     Column {
                         Text(
-                            text = "Deine Karte!",
+                            text = stringResource(id = R.string.about_me),
                             modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp),
                             fontSize = 20.sp
                         )
                         Text(
-                            text = "At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+                            text = userUiState.user.userDetails?.bio
+                                ?: "${stringResource(id = R.string.hello_i_am)} ${userUiState.user.name}.",
                             modifier = Modifier.padding(10.dp)
                         )
                     }
