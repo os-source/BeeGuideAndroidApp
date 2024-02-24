@@ -93,6 +93,8 @@ fun BeeGuideApp(
         backStackEntry?.destination?.route ?: BeeGuideRoute.Map.name
     )
 
+    val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
+
     Scaffold(
         topBar = {
             if (currentScreen in topBarScreens) {
@@ -159,14 +161,12 @@ fun BeeGuideApp(
                 )
             }
             composable(route = BeeGuideRoute.Home.name) {
-                val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
                 HomeScreen(
                     userUiState = userViewModel.userUiState,
                     onSignInButtonClicked = { navController.navigate(BeeGuideRoute.Authentication.name) }
                 )
             }
             composable(route = BeeGuideRoute.Profile.name) {
-                val userViewModel: UserViewModel = viewModel(factory = UserViewModel.Factory)
                 ProfileScreen(
                     userUiState = userViewModel.userUiState,
                     onSettingsButtonClicked = { navController.navigate(BeeGuideRoute.Settings.name) }
@@ -187,7 +187,9 @@ fun BeeGuideApp(
                     )
                 }
                 composable(route = BeeGuideRoute.EditProfile.name) {
-                    EditProfileScreen()
+                    EditProfileScreen(
+                        userViewModel = userViewModel
+                    )
                 }
                 composable(route = BeeGuideRoute.Notifications.name) {
                     NotificationsScreen()

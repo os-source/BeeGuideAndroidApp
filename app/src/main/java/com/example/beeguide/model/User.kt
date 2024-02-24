@@ -1,10 +1,14 @@
 package com.example.beeguide.model
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class UserDetails(
-    val bioHeading: String,
-    val bio: String
+    val bio: String?,
+    @SerialName("profile_picture")
+    val profilePicture: String?,
+    @SerialName("profile_banner")
+    val profileBanner: String?,
 )
 
 @Serializable
@@ -15,4 +19,14 @@ data class User(
     val enabled: Boolean,
     val id: Int,
     val comments: List<String>
+)
+
+@Serializable
+data class NameRequest(
+    val name: String,
+)
+
+@Serializable
+data class BioRequest(
+    val bio: String,
 )

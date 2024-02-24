@@ -37,7 +37,7 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
         getUser()
     }
 
-    fun getUser() {
+    private fun getUser() {
         viewModelScope.launch {
             userUiState = UserUiState.Loading
             userUiState = try {
@@ -48,6 +48,38 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
             } catch (e: HttpException) {
                 Log.d("UserUiState", e.toString())
                 UserUiState.Error
+            }
+        }
+    }
+
+    fun nameChanged(name: String) {
+        val oldUserUiState = userUiState
+        if (oldUserUiState is UserUiState.Success) {
+            userUiState = UserUiState.Success(oldUserUiState.user.copy(name = name))
+        }
+    }
+
+    fun bioChanged(bio: String) {
+        val oldUserUiState = userUiState
+        if (oldUserUiState is UserUiState.Success) {
+            userUiState = UserUiState.Success(
+                oldUserUiState.user.copy(
+                    userDetails = oldUserUiState.user.userDetails?.copy(bio = bio)
+                )
+            )
+        }
+    }
+
+    fun saveUpdatedUser() {
+        viewModelScope.launch {
+            val oldUserUiState = userUiState
+            if (oldUserUiState is UserUiState.Success) {
+                viewModelScope.launch {
+                    beeGuideRepository.saveUserName(oldUserUiState.user.name)
+                    if (oldUserUiState.user.userDetails?.bio != null) {
+                        beeGuideRepository.saveUserBio(oldUserUiState.user.userDetails.bio)
+                    }
+                }
             }
         }
     }
@@ -100,7 +132,6 @@ fun getDarkThemeMode(): Boolean {
     }
     return true
 }
-
 
 
 //darkTheme: Boolean = isSystemInDarkTheme(),
