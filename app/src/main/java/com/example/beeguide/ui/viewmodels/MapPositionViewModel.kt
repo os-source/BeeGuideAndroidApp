@@ -12,6 +12,14 @@ import com.example.beeguide.navigation.algorithm.CalculationController
 import com.example.beeguide.navigation.algorithm.CircleValidator
 import com.example.beeguide.navigation.algorithm.Point
 import com.example.beeguide.navigation.algorithm.PrecisePoint
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorState
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassState
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.RotationSensorState
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.RotationSensorViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.UncalibratedAccelerationSensorState
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.UncalibratedAccelerationSensorViewModel
 import kotlinx.coroutines.launch
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RegionViewModel
@@ -36,7 +44,8 @@ class MapPositionViewModel(
     private val mapViewModel: MapViewModel,
     private val accelerationSensorViewModel: AccelerationSensorViewModel,
     private val uncalibratedAccelerationSensorViewModel: UncalibratedAccelerationSensorViewModel,
-    private val rotationSensorViewModel: RotationSensorViewModel
+    private val rotationSensorViewModel: RotationSensorViewModel,
+    private val compassViewModel: CompassViewModel
 ): ViewModel() {
 
     //private var oldSensorValues: SensorState.Success = SensorState.Success(accelerationX = 0f, accelerationZ = 0f, timestamp = 0)
@@ -114,6 +123,13 @@ class MapPositionViewModel(
         if(rotationSensorViewModel.rotationSensorState.value is RotationSensorState.Success){
             val sensorValues: RotationSensorState.Success = rotationSensorViewModel.rotationSensorState.value as RotationSensorState.Success
             Log.d("Acceleration-Features-Rotation", "Updated X: ${sensorValues.rotationXYZ[0]}, Y: ${sensorValues.rotationXYZ[1]}, Z: ${sensorValues.rotationXYZ[2]}")
+        }
+    }
+
+    private val compassObserver = Observer<CompassState> {
+        if(compassViewModel.compassState.value is CompassState.Success){
+            val sensorValues: CompassState.Success = compassViewModel.compassState.value as CompassState.Success
+            Log.d("Acceleration-Features-Compass", "Degrees: ${sensorValues.azimuthInDegrees}")
         }
     }
 
@@ -233,6 +249,7 @@ class MapPositionViewModel(
         accelerationSensorViewModel.accelerationSensorState.asLiveData().observeForever(accelerationSensorObserver)
         uncalibratedAccelerationSensorViewModel.uncalibratedSensorState.asLiveData().observeForever(uncalibratedAccelerationSensorObserver)
         rotationSensorViewModel.rotationSensorState.asLiveData().observeForever(rotationSensorObserver)
+        compassViewModel.compassState.asLiveData().observeForever(compassObserver)
     }
 
     override fun onCleared() {

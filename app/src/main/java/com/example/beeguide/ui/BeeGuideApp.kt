@@ -44,11 +44,12 @@ import com.example.beeguide.ui.screens.settings.SecurityScreen
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
-import com.example.beeguide.ui.viewmodels.AccelerationSensorViewModel
-import com.example.beeguide.ui.viewmodels.RotationSensorViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.RotationSensorViewModel
 import com.example.beeguide.ui.viewmodels.TestViewModel
-import com.example.beeguide.ui.viewmodels.UncalibratedAccelerationSensorViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.UncalibratedAccelerationSensorViewModel
 import com.example.beeguide.ui.viewmodels.UserViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassViewModel
 
 /** enum values that represent the screens in the app */
 enum class BeeGuideRoute(@StringRes val title: Int) {
@@ -142,13 +143,15 @@ fun BeeGuideApp(
                 val accelerationSensorViewModel: AccelerationSensorViewModel = viewModel(factory = AccelerationSensorViewModel.Factory)
                 val uncalibratedAccelerationSensorViewModel: UncalibratedAccelerationSensorViewModel = viewModel(factory = UncalibratedAccelerationSensorViewModel.Factory)
                 val rotationSensorViewModel: RotationSensorViewModel = viewModel(factory = RotationSensorViewModel.Factory)
+                val compassViewModel: CompassViewModel = viewModel(factory = CompassViewModel.Factory)
 
                 val mapPositionViewModel = MapPositionViewModel(
                     regionViewModel = regionViewModel,
                     mapViewModel = mapViewModel,
                     accelerationSensorViewModel = accelerationSensorViewModel,
                     uncalibratedAccelerationSensorViewModel = uncalibratedAccelerationSensorViewModel,
-                    rotationSensorViewModel = rotationSensorViewModel
+                    rotationSensorViewModel = rotationSensorViewModel,
+                    compassViewModel = compassViewModel
                 )
 
                 MapScreen(mapPositionUiState = mapPositionViewModel.mapPositionUiState)

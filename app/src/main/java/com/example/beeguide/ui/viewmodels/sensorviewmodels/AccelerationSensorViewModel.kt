@@ -1,4 +1,4 @@
-package com.example.beeguide.ui.viewmodels
+package com.example.beeguide.ui.viewmodels.sensorviewmodels
 
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -19,16 +19,17 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-sealed interface RotationSensorState {
+sealed interface AccelerationSensorState {
     data class Success(
-        val rotationXYZ: FloatArray
-    ) : RotationSensorState
+        val accelerationXZ: FloatArray,
+        val timestamp: Long
+    ) : AccelerationSensorState
 
-    object Error : RotationSensorState
-    object Loading : RotationSensorState
+    object Error : AccelerationSensorState
+    object Loading : AccelerationSensorState
 }
 
-class RotationSensorViewModel(private val sensorRepository: SensorRepository): ViewModel(), SensorEventListener {
+class AccelerationSensorViewModel(private val sensorRepository: SensorRepository): ViewModel(), SensorEventListener {
     companion object {
         private const val TAG = "SensorViewModel"
 
@@ -39,20 +40,27 @@ class RotationSensorViewModel(private val sensorRepository: SensorRepository): V
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
                 val sensorRepository = application.container.sensorRepository
-                RotationSensorViewModel(sensorRepository = sensorRepository)
+                AccelerationSensorViewModel(sensorRepository = sensorRepository)
             }
         }
 
     }
 
-    private val _rotationSensorState = MutableStateFlow<RotationSensorState>(RotationSensorState.Loading)
-    val rotationSensorState: StateFlow<RotationSensorState> = _rotationSensorState.asStateFlow()
+    private val _accelerationSensorState = MutableStateFlow<AccelerationSensorState>(
+        AccelerationSensorState.Loading
+    )
+    val accelerationSensorState: StateFlow<AccelerationSensorState> = _accelerationSensorState.asStateFlow()
 
     override fun onSensorChanged(event: SensorEvent?) {
         Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
-            _rotationSensorState.update {
-                RotationSensorState.Success(rotationXYZ = floatArrayOf(event!!.values[0], event.values[1], event.values[2]))
+            _accelerationSensorState.update {
+                AccelerationSensorState.Success(
+                    accelerationXZ = floatArrayOf(
+                        event!!.values[0],
+                        event.values[2]
+                    ), timestamp = event.timestamp
+                )
             }
         }
     }
@@ -62,7 +70,7 @@ class RotationSensorViewModel(private val sensorRepository: SensorRepository): V
     }
 
     init{
-        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getRotationSensor(), SensorManager.SENSOR_DELAY_GAME)
+        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getAccelerationSensor(), SensorManager.SENSOR_DELAY_GAME)
     }
     override fun onCleared() {
         sensorRepository.getSensorManager().unregisterListener(this)
