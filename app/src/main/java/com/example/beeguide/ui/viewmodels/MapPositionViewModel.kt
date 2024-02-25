@@ -12,6 +12,8 @@ import com.example.beeguide.navigation.algorithm.CalculationController
 import com.example.beeguide.navigation.algorithm.CircleValidator
 import com.example.beeguide.navigation.algorithm.Point
 import com.example.beeguide.navigation.algorithm.PrecisePoint
+import com.example.beeguide.navigation.inertia.Navigator
+import com.example.beeguide.navigation.inertia.VelocityResetter
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorState
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassState
@@ -24,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.altbeacon.beacon.Beacon
 import org.altbeacon.beacon.RegionViewModel
 import kotlin.math.pow
+import kotlin.math.roundToInt
 import kotlin.math.sqrt
 
 sealed interface MapPositionUiState {
@@ -47,30 +50,15 @@ class MapPositionViewModel(
     private val rotationSensorViewModel: RotationSensorViewModel,
     private val compassViewModel: CompassViewModel
 ): ViewModel() {
-
-    //private var oldSensorValues: SensorState.Success = SensorState.Success(accelerationX = 0f, accelerationZ = 0f, timestamp = 0)
-    private var currentVelocity: Float = 0f
     private var currentPosition: PrecisePoint = PrecisePoint(0.0, 0.0)
-    private var calculationCounter: Int = 0;
+    private var currentRotation: Float = 0f
+    private var returnCounter: Int = 0
 
-
-
-    private var linearAcceleration: FloatArray = FloatArray(2)
-    private var velocity: FloatArray = FloatArray(2)
-    private var distanceX: Float = 0f
-    private var distanceZ: Float = 0f
-    private var lastTimestamp: Long = 0
-    private var stuckCounter: Int = 0
-    private var stuckAverageX: Float = 0f
-    private var stuckAverageZ: Float = 0f
-    private var stuckAverageXlow: Float = 0f
-    private var stuckAverageZlow: Float = 0f
-
-
+    private var navigator: Navigator? = null
+    private var velocityResetter: VelocityResetter = VelocityResetter()
 
     var mapPositionUiState: MapPositionUiState by mutableStateOf(MapPositionUiState.None)
         private set
-
 
     private fun calculatePosition(){
         viewModelScope.launch {
@@ -99,11 +87,12 @@ class MapPositionViewModel(
     }
 
     private val rangedBeaconObserver =  Observer<Collection<Beacon>> {
-        calculatePosition()
+        //calculatePosition()
     }
 
     private val mapObserver = Observer<MapUiState> {
-        calculatePosition()
+        navigator = Navigator(170f)
+        //calculatePosition()
     }
 
     private val accelerationSensorObserver = Observer<AccelerationSensorState> {
@@ -116,6 +105,10 @@ class MapPositionViewModel(
         if(uncalibratedAccelerationSensorViewModel.uncalibratedSensorState.value is UncalibratedAccelerationSensorState.Success){
             val sensorValues: UncalibratedAccelerationSensorState.Success = uncalibratedAccelerationSensorViewModel.uncalibratedSensorState.value as UncalibratedAccelerationSensorState.Success
             Log.d("Acceleration-Features-Uncalibrated", "Updated X: ${sensorValues.accelerationXYZ[0]}, Y: ${sensorValues.accelerationXYZ[1]}, Z: ${sensorValues.accelerationXYZ[2]}")
+            if(velocityResetter.checkReset(sensorValues.accelerationXYZ) && navigator != null){
+                navigator?.velocity = floatArrayOf(0f, 0f, 0f)
+                Log.d("velocityResetter", "Resetted")
+            }
         }
     }
 
@@ -130,115 +123,28 @@ class MapPositionViewModel(
         if(compassViewModel.compassState.value is CompassState.Success){
             val sensorValues: CompassState.Success = compassViewModel.compassState.value as CompassState.Success
             Log.d("Acceleration-Features-Compass", "Degrees: ${sensorValues.azimuthInDegrees}")
+            currentRotation = sensorValues.azimuthInDegrees
         }
     }
 
     private fun navigate(): MapPositionUiState {
-        if(accelerationSensorViewModel.accelerationSensorState.value is AccelerationSensorState.Success) {
+        if(accelerationSensorViewModel.accelerationSensorState.value is AccelerationSensorState.Success && navigator != null) {
             val sensorValues: AccelerationSensorState.Success =
                 accelerationSensorViewModel.accelerationSensorState.value as AccelerationSensorState.Success
 
-            val currentTime = System.currentTimeMillis()
-            val dt = if (lastTimestamp != 0L) (currentTime - lastTimestamp) / 1000.0f else 0f
-            lastTimestamp = currentTime
+            val positionChangeXZ: FloatArray = navigator!!.calculateNavigation(sensorValues.accelerationXYZ, currentRotation)
+            currentPosition.x += positionChangeXZ[0]
+            currentPosition.y += positionChangeXZ[1]
 
-            linearAcceleration = sensorValues.accelerationXZ
+            returnCounter++
 
-            if(sensorValues.accelerationXZ[0] > 20 || sensorValues.accelerationXZ[1] > 20 || sensorValues.accelerationXZ[0] < 20 || sensorValues.accelerationXZ[1] < 20){
-                Log.d("filter", "filtered")
-                MapPositionUiState.Useless("Useless calculation")
+            if(returnCounter > 20){
+                returnCounter = 0
+                val posX = currentPosition.x.roundToInt()
+                val posY = currentPosition.y.roundToInt()
+                Log.d("CurrentPosition", "X: $posX, Y: $posY")
+                return MapPositionUiState.Success(Point(posX, posY))
             }
-
-            // Integrate acceleration to get velocity
-            for (i in 0 until 2) {
-                velocity[i] += linearAcceleration[i] * dt
-            }
-
-            val vMagnitude = sqrt(velocity[0].pow(2) + velocity[1].pow(2))
-
-            // Integrate velocity to get distance
-            val distanceChangeX: Float = velocity[0] * dt
-            val distanceChangeY: Float = velocity[1] * dt
-
-            val bufferValueMagnitude = 0.0001
-            val bufferValueVelocityReset = 0.0005
-
-            if(distanceChangeX > bufferValueMagnitude || distanceChangeX < -bufferValueMagnitude) distanceX += distanceChangeX
-            if(distanceChangeY > bufferValueMagnitude || distanceChangeY < -bufferValueMagnitude) distanceZ += distanceChangeY
-
-            // Reset velocity to zero when device is at rest
-            //if (distanceChangeX < bufferValueVelocityReset && distanceChangeX > -bufferValueVelocityReset) velocity[0] = 0f
-            //if (distanceChangeY < bufferValueVelocityReset && distanceChangeY > -bufferValueVelocityReset) velocity[1] = 0f
-
-            // Print the current distance
-            Log.d("since-distance-X", distanceX.toString())
-            Log.d("since-distance-Z", distanceZ.toString())
-            Log.d("current-velocity-X", velocity[0].toString())
-
-
-            val bufferValueStuck = 0.05
-
-            if(stuckCounter < 4){
-                stuckAverageX += velocity[0]
-                stuckAverageZ += velocity[1]
-                if(stuckCounter > 1) {
-                    stuckAverageXlow += velocity[0]
-                    stuckAverageZlow += velocity[1]
-                }
-                stuckCounter++
-            }
-            else{
-                stuckAverageX /= stuckCounter
-                stuckAverageZ /= stuckCounter
-
-                stuckAverageXlow /= stuckCounter/2
-                stuckAverageZlow /= stuckCounter/2
-
-                if(stuckAverageXlow < stuckAverageX * 1 + bufferValueStuck && stuckAverageXlow > stuckAverageX * 1 - bufferValueStuck) velocity[0] = 0f
-                if(stuckAverageZlow < stuckAverageZ * 1 + bufferValueStuck && stuckAverageZlow > stuckAverageZ * 1 - bufferValueStuck) velocity[1] = 0f
-
-                stuckCounter = 0
-            }
-
-
-
-            /*
-            val curOldSensorValues = oldSensorValues
-            oldSensorValues = sensorValues
-
-            if (oldSensorValues.timestamp != 0.toLong()) {
-                currentVelocity = 0f
-                val timeDifference: Float =
-                    (sensorValues.timestamp - curOldSensorValues.timestamp).toFloat() / 1000000000.0f //to seconds
-
-                Log.d("Timestamp-old", sensorValues.timestamp.toString())
-                Log.d("Timestamp-new", curOldSensorValues.timestamp.toString())
-
-                val acceleration = sensorValues.accelerationX
-                Log.d("AccelerationX", sensorValues.accelerationX.toString())
-                Log.d("TimeDifference", timeDifference.toString())
-                val distance =
-                    (currentVelocity * timeDifference + 0.5 * acceleration * timeDifference.pow(
-                        2
-                    )) * 100
-                currentVelocity += timeDifference * acceleration
-
-                Log.d("distance", distance.toString())
-                Log.d("velocity", currentVelocity.toString())
-
-                currentPosition.x += distance
-                calculationCounter++
-
-
-                if(calculationCounter > 100)
-                {
-                    calculationCounter = 0
-                    Log.d("position", "X: ${currentPosition.x.toString()}, Y: ${currentPosition.y.roundToInt()}")
-                    return MapPositionUiState.Success(Point(currentPosition.x.roundToInt(), currentPosition.y.roundToInt()))
-                }
-
-            }
-             */
         }
         return MapPositionUiState.Useless("Useless calculation")
     }
@@ -257,7 +163,4 @@ class MapPositionViewModel(
         regionViewModel.rangedBeacons.removeObserver(rangedBeaconObserver)
         mapViewModel.mapUiState.asLiveData().observeForever(mapObserver)
     }
-
-
-
 }

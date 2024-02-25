@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 
 sealed interface AccelerationSensorState {
     data class Success(
-        val accelerationXZ: FloatArray,
+        val accelerationXYZ: FloatArray,
         val timestamp: Long
     ) : AccelerationSensorState
 
@@ -56,8 +56,9 @@ class AccelerationSensorViewModel(private val sensorRepository: SensorRepository
         viewModelScope.launch {
             _accelerationSensorState.update {
                 AccelerationSensorState.Success(
-                    accelerationXZ = floatArrayOf(
+                    accelerationXYZ = floatArrayOf(
                         event!!.values[0],
+                        event.values[1],
                         event.values[2]
                     ), timestamp = event.timestamp
                 )
