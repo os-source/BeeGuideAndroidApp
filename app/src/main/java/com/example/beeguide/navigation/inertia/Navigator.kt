@@ -2,6 +2,7 @@ package com.example.beeguide.navigation.inertia
 
 import android.util.Log
 import com.example.beeguide.ui.viewmodels.MapPositionUiState
+import kotlin.math.absoluteValue
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
@@ -26,8 +27,13 @@ class Navigator(private val mapRotation: Float) {
         }
 
         // Integrate velocity to get distance
-        val distanceChangeX: Float = (velocity[0] * dt) * 100
-        val distanceChangeY: Float = (velocity[1] * dt) * 100
+        var distanceChangeX: Float = (velocity[0] * dt) * 100
+        var distanceChangeY: Float = (velocity[1] * dt) * 100
+
+        // Filtering Useless Movement
+        val bufferVal = 0.0001
+        if(distanceChangeX < bufferVal) distanceChangeX = 0f
+        if(distanceChangeY < bufferVal) distanceChangeY = 0f
 
         val offsetRotation = currentRotation - mapRotation
 
