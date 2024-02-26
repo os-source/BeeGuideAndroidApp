@@ -105,6 +105,12 @@ dependencies {
     // Android SVG
     implementation("com.caverock:androidsvg:1.4")
 
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.3.0")
+
+    // Retrofit logging
+    implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
+
 
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.05.01"))
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
