@@ -13,6 +13,7 @@ interface SensorRepository {
     fun getAccelerationSensor(): Sensor
     fun getUncalibratedAccelerationSensor(): Sensor
     fun getRotationSensor(): Sensor
+    fun getMagneticFieldSensor(): Sensor
     fun getSensorManager(): SensorManager
 }
 
@@ -36,6 +37,10 @@ class HardwareSensorRepository(
 
     override fun getRotationSensor(): Sensor  {
         return sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR)!!
+    }
+
+    override fun getMagneticFieldSensor(): Sensor  {
+        return sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)!!
     }
 
     override fun getSensorManager(): SensorManager {

@@ -1,4 +1,4 @@
-package com.example.beeguide.ui.viewmodels
+package com.example.beeguide.ui.viewmodels.sensorviewmodels
 
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -52,7 +52,13 @@ class RotationSensorViewModel(private val sensorRepository: SensorRepository): V
         Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
             _rotationSensorState.update {
-                RotationSensorState.Success(rotationXYZ = floatArrayOf(event!!.values[0], event.values[1], event.values[2]))
+                RotationSensorState.Success(
+                    rotationXYZ = floatArrayOf(
+                        event!!.values[0],
+                        event.values[1],
+                        event.values[2]
+                    )
+                )
             }
         }
     }

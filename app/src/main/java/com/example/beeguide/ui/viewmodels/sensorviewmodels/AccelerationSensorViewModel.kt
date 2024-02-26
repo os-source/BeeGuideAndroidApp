@@ -1,4 +1,4 @@
-package com.example.beeguide.ui.viewmodels
+package com.example.beeguide.ui.viewmodels.sensorviewmodels
 
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -19,16 +19,17 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-sealed interface UncalibratedAccelerationSensorState {
+sealed interface AccelerationSensorState {
     data class Success(
-        val accelerationXYZ: FloatArray
-    ) : UncalibratedAccelerationSensorState
+        val accelerationXYZ: FloatArray,
+        val timestamp: Long
+    ) : AccelerationSensorState
 
-    object Error : UncalibratedAccelerationSensorState
-    object Loading : UncalibratedAccelerationSensorState
+    object Error : AccelerationSensorState
+    object Loading : AccelerationSensorState
 }
 
-class UncalibratedAccelerationSensorViewModel(private val sensorRepository: SensorRepository): ViewModel(), SensorEventListener {
+class AccelerationSensorViewModel(private val sensorRepository: SensorRepository): ViewModel(), SensorEventListener {
     companion object {
         private const val TAG = "SensorViewModel"
 
@@ -39,20 +40,28 @@ class UncalibratedAccelerationSensorViewModel(private val sensorRepository: Sens
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
                 val sensorRepository = application.container.sensorRepository
-                UncalibratedAccelerationSensorViewModel(sensorRepository = sensorRepository)
+                AccelerationSensorViewModel(sensorRepository = sensorRepository)
             }
         }
 
     }
 
-    private val _uncalibratedSensorState = MutableStateFlow<UncalibratedAccelerationSensorState>(UncalibratedAccelerationSensorState.Loading)
-    val uncalibratedSensorState: StateFlow<UncalibratedAccelerationSensorState> = _uncalibratedSensorState.asStateFlow()
+    private val _accelerationSensorState = MutableStateFlow<AccelerationSensorState>(
+        AccelerationSensorState.Loading
+    )
+    val accelerationSensorState: StateFlow<AccelerationSensorState> = _accelerationSensorState.asStateFlow()
 
     override fun onSensorChanged(event: SensorEvent?) {
-        Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
+        Log.d("Acceleration-Features-Linear", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
-            _uncalibratedSensorState.update {
-                UncalibratedAccelerationSensorState.Success(accelerationXYZ = floatArrayOf(event!!.values[0], event.values[1], event.values[2]))
+            _accelerationSensorState.update {
+                AccelerationSensorState.Success(
+                    accelerationXYZ = floatArrayOf(
+                        event!!.values[0],
+                        event.values[1],
+                        event.values[2]
+                    ), timestamp = event.timestamp
+                )
             }
         }
     }
@@ -62,7 +71,7 @@ class UncalibratedAccelerationSensorViewModel(private val sensorRepository: Sens
     }
 
     init{
-        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getUncalibratedAccelerationSensor(), SensorManager.SENSOR_DELAY_GAME)
+        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getAccelerationSensor(), SensorManager.SENSOR_DELAY_GAME)
     }
     override fun onCleared() {
         sensorRepository.getSensorManager().unregisterListener(this)
