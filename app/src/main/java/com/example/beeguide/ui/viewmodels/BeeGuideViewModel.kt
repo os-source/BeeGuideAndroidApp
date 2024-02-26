@@ -17,6 +17,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
+import java.io.File
 import java.io.IOException
 
 // UI State
@@ -70,7 +71,7 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
         }
     }
 
-    fun saveUpdatedUser(navigateToScreen: () -> Unit) {
+    fun saveUpdatedUser(navigateToScreen: () -> Unit, file: File?) {
         viewModelScope.launch {
             val oldUserUiState = userUiState
             if (oldUserUiState is UserUiState.Success) {
@@ -78,6 +79,9 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
                     beeGuideRepository.saveUserName(oldUserUiState.user.name)
                     if (oldUserUiState.user.userDetails?.bio != null) {
                         beeGuideRepository.saveUserBio(oldUserUiState.user.userDetails.bio)
+                    }
+                    if (file != null) {
+                        beeGuideRepository.saveUserProfilePicture(file)
                     }
                 }
                 navigateToScreen()
