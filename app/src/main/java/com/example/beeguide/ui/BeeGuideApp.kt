@@ -15,7 +15,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -25,7 +24,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.beeguide.R
-import com.example.beeguide.navigation.beacons.Monitor
+import com.example.beeguide.navigation.algorithm.Point
 import com.example.beeguide.ui.components.BeeGuideBottomBar
 import com.example.beeguide.ui.components.BeeGuideFloatingActionButtton
 import com.example.beeguide.ui.components.BeeGuideTopBar
@@ -43,13 +42,8 @@ import com.example.beeguide.ui.screens.settings.PrivacyScreen
 import com.example.beeguide.ui.screens.settings.SecurityScreen
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.viewmodels.MapFileViewModel
-import com.example.beeguide.ui.viewmodels.MapPositionViewModel
-import com.example.beeguide.ui.viewmodels.MapViewModel
-import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorViewModel
-import com.example.beeguide.ui.viewmodels.sensorviewmodels.RotationSensorViewModel
-import com.example.beeguide.ui.viewmodels.sensorviewmodels.UncalibratedAccelerationSensorViewModel
+import com.example.beeguide.ui.viewmodels.MapPositionUiState
 import com.example.beeguide.ui.viewmodels.UserViewModel
-import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassViewModel
 
 /** enum values that represent the screens in the app */
 enum class BeeGuideRoute(@StringRes val title: Int) {
@@ -137,29 +131,14 @@ fun BeeGuideApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = BeeGuideRoute.Map.name) {
-                val monitor = Monitor(LocalContext.current)
-                val regionViewModel = monitor.getRegionViewModel()
 
-                val mapViewModel: MapViewModel = viewModel(factory = MapViewModel.Factory)
-                val accelerationSensorViewModel: AccelerationSensorViewModel = viewModel(factory = AccelerationSensorViewModel.Factory)
-                val uncalibratedAccelerationSensorViewModel: UncalibratedAccelerationSensorViewModel = viewModel(factory = UncalibratedAccelerationSensorViewModel.Factory)
-                val rotationSensorViewModel: RotationSensorViewModel = viewModel(factory = RotationSensorViewModel.Factory)
-                val compassViewModel: CompassViewModel = viewModel(factory = CompassViewModel.Factory)
-
-                val mapPositionViewModel = MapPositionViewModel(
-                    regionViewModel = regionViewModel,
-                    mapViewModel = mapViewModel,
-                    accelerationSensorViewModel = accelerationSensorViewModel,
-                    uncalibratedAccelerationSensorViewModel = uncalibratedAccelerationSensorViewModel,
-                    rotationSensorViewModel = rotationSensorViewModel,
-                    compassViewModel = compassViewModel
-                )
+                //TODO Get mapPositionUIState
 
                 val mapFileViewModel: MapFileViewModel =
                     viewModel(factory = MapFileViewModel.Factory)
 
                 MapScreen(
-                    mapPositionUiState = mapPositionViewModel.mapPositionUiState,
+                    mapPositionUiState = MapPositionUiState.Success(Point(1, 1)), //mapPositionViewModel.mapPositionUiState,
                     mapFileUiState = mapFileViewModel.mapFileUiState
                 )
             }

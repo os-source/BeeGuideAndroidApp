@@ -102,6 +102,7 @@ fun MapScreen(
                     .fillMaxSize()
             ) {
                 // Convert SVG string to InputStream
+                /*
                 val inputStream = ByteArrayInputStream(mapFileUiState.mapFile.toByteArray())
 
                 // Parse SVG from InputStream
@@ -129,6 +130,7 @@ fun MapScreen(
                         topLeft = Offset(0f, 0f),
                     )
                 }
+
 
                 val top = 0.47f
                 val left = 0.033f
@@ -158,7 +160,11 @@ fun MapScreen(
                         else ->
                             Toast.makeText(context, "Error MapPositionUiState", Toast.LENGTH_SHORT).show()
                     }
+
+
                 }
+
+                 */
             }
         }
 

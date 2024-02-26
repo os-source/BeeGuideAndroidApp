@@ -31,7 +31,7 @@ class Navigator(private val mapRotation: Float) {
         var distanceChangeY: Float = (velocity[1] * dt) * 100
 
         // Filtering Useless Movement
-        val bufferVal = 0.0001
+        val bufferVal = 0.0005
         if(distanceChangeX.absoluteValue < bufferVal) distanceChangeX = 0f
         if(distanceChangeY.absoluteValue < bufferVal) distanceChangeY = 0f
 
