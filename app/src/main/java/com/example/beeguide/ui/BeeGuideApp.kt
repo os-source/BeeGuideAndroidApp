@@ -142,7 +142,7 @@ fun BeeGuideApp(
                     viewModel(factory = MapFileViewModel.Factory)
 
                 MapScreen(
-                    mapPositionUiState = MapPositionUiState.Success(Point(1, 1)), //mapPositionViewModel.mapPositionUiState,
+                    mapPositionUiState = mapPositionViewModel.mapPositionUiState,
                     mapFileUiState = mapFileViewModel.mapFileUiState,
                     mapViewModel = mapViewModel
                 )

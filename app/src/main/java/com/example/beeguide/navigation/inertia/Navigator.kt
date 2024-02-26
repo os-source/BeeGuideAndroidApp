@@ -40,6 +40,6 @@ class Navigator(private val mapRotation: Float) {
         val zDistance = (cos(offsetRotation) * distanceChangeY + sin(offsetRotation) * distanceChangeX).toFloat()
         val xDistance = (cos(offsetRotation) * distanceChangeX + sin(offsetRotation) * distanceChangeY).toFloat()
 
-        return floatArrayOf(xDistance, zDistance)
+        return floatArrayOf(distanceChangeX, distanceChangeY)
     }
 }

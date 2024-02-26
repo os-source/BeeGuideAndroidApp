@@ -155,7 +155,7 @@ fun MapScreen(
                                     Toast.makeText(context, "No position found", Toast.LENGTH_SHORT).show()
 
                                 is MapPositionUiState.Success -> {
-                                    Log.d("MapScreen", "MapScreen: ${mapPositionUiState.location}")
+                                    Log.d("MapScreen", "MapScreen: ${mapPositionUiState.location.x}")
                                     val xPosition = (1 / state.map.xAxis * mapPositionUiState.location.x) * (right * size.width - left * size.width) / size.width + left
                                     val yPosition = (1 / state.map.yAxis * mapPositionUiState.location.y) * (bottom * size.height - top * size.height) / size.height + top
                                     UserMarker(
