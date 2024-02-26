@@ -53,6 +53,10 @@ class MapPositionViewModel(
     private var currentPosition: PrecisePoint = PrecisePoint(0.0, 0.0)
     private var currentRotation: Float = 0f
     private var returnCounter: Int = 0
+    private var calculationCounter: Int = 0
+    private var lastAddedCalculation: Int = 10
+    private var calculationResults: MutableMap<Int, FloatArray> = mutableMapOf()
+    private var currentlyAdding: Boolean = false
 
     private var navigator: Navigator? = null
     private var velocityResetter: VelocityResetter = VelocityResetter()
@@ -91,14 +95,25 @@ class MapPositionViewModel(
     }
 
     private val mapObserver = Observer<MapUiState> {
-        navigator = Navigator(170f)
+        navigator = Navigator(160f)
         //calculatePosition()
     }
 
     private val accelerationSensorObserver = Observer<AccelerationSensorState> {
         viewModelScope.launch {
-            mapPositionUiState = navigate()
+            mapPositionUiState = navigate(calculationCounter)
         }
+        if(calculationResults.containsKey(lastAddedCalculation) && !currentlyAdding){
+            currentlyAdding = true
+            val positionChangeXZ = calculationResults[lastAddedCalculation] ?: floatArrayOf(0f, 0f)
+            currentPosition.x += positionChangeXZ[0]
+            currentPosition.y += positionChangeXZ[1]
+            Log.d("Calculations", "Added Calculation-ID: $lastAddedCalculation")
+            calculationResults.remove(lastAddedCalculation)
+            lastAddedCalculation++
+            currentlyAdding = false
+        }
+        calculationCounter++
     }
 
     private val uncalibratedAccelerationSensorObserver = Observer<UncalibratedAccelerationSensorState> {
@@ -127,23 +142,25 @@ class MapPositionViewModel(
         }
     }
 
-    private fun navigate(): MapPositionUiState {
+    private fun navigate(calculationID: Int): MapPositionUiState {
         if(accelerationSensorViewModel.accelerationSensorState.value is AccelerationSensorState.Success && navigator != null) {
             val sensorValues: AccelerationSensorState.Success =
                 accelerationSensorViewModel.accelerationSensorState.value as AccelerationSensorState.Success
 
             val positionChangeXZ: FloatArray = navigator!!.calculateNavigation(sensorValues.accelerationXYZ, currentRotation)
-            currentPosition.x += positionChangeXZ[0]
-            currentPosition.y += positionChangeXZ[1]
+            calculationResults += mapOf(calculationID to positionChangeXZ)
+
+
+
 
             returnCounter++
 
-            if(returnCounter > 20){
+            if(returnCounter > 2){
                 returnCounter = 0
                 val posX = currentPosition.x.roundToInt()
                 val posY = currentPosition.y.roundToInt()
                 Log.d("CurrentPosition", "X: $posX, Y: $posY")
-                return MapPositionUiState.Success(Point(posX, posY))
+                //return MapPositionUiState.Success(Point(posX, posY))
             }
         }
         return MapPositionUiState.Useless("Useless calculation")

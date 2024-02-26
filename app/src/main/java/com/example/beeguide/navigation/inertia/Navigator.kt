@@ -16,9 +16,9 @@ class Navigator(private val mapRotation: Float) {
         val dt = if (lastTimestamp != 0L) (currentTime - lastTimestamp) / 1000.0f else 0f
         lastTimestamp = currentTime
 
-        if(accelerationXYZ[0] > 20 || accelerationXYZ[1] > 20 || accelerationXYZ[0] < 20 || accelerationXYZ[1] < 20){
+        if(accelerationXYZ[0] > 20 || accelerationXYZ[1] > 20 || accelerationXYZ[0] < -20 || accelerationXYZ[1] < -20){
             Log.d("filter", "filtered")
-            MapPositionUiState.Useless("Useless calculation")
+            return floatArrayOf(0f, 0f)
         }
 
         // Integrate acceleration to get velocity
@@ -32,14 +32,14 @@ class Navigator(private val mapRotation: Float) {
 
         // Filtering Useless Movement
         val bufferVal = 0.0001
-        if(distanceChangeX < bufferVal) distanceChangeX = 0f
-        if(distanceChangeY < bufferVal) distanceChangeY = 0f
+        if(distanceChangeX.absoluteValue < bufferVal) distanceChangeX = 0f
+        if(distanceChangeY.absoluteValue < bufferVal) distanceChangeY = 0f
 
         val offsetRotation = currentRotation - mapRotation
 
         val zDistance = sin(offsetRotation) * distanceChangeX + cos(offsetRotation) * distanceChangeY
         val xDistance = cos(offsetRotation) * distanceChangeX + sin(offsetRotation) * distanceChangeY
 
-        return floatArrayOf(xDistance, zDistance)
+        return floatArrayOf(distanceChangeX, distanceChangeY)
     }
 }

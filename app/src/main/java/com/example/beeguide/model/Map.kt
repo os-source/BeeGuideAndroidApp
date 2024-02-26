@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class Map(
     val major: Int,
-    @SerialName("maps_id")
+    @SerialName("map_id")
     val mapId: Int,
     val azimuth: Float,
     val beacons: List<BeeGuideBeacon>,
