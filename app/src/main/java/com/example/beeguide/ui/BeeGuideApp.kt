@@ -48,6 +48,9 @@ import com.example.beeguide.ui.viewmodels.MapViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.RotationSensorViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.UncalibratedAccelerationSensorViewModel
+import com.example.beeguide.ui.viewmodels.NotificationsViewModel
+import com.example.beeguide.ui.viewmodels.RotationSensorViewModel
+import com.example.beeguide.ui.viewmodels.UncalibratedAccelerationSensorViewModel
 import com.example.beeguide.ui.viewmodels.UserViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassViewModel
 
