@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -148,6 +149,9 @@ fun MapScreen(
                             MapMarker(markerPosition = Pair(left, top), imageSize = size)
                             MapMarker(markerPosition = Pair(left, bottom), imageSize = size)*/
 
+                            //var mapPosition: Pair<Float, Float>?
+                            var mapPosition: MutableState<Pair<Float, Float>?> = remember { mutableStateOf(null) }
+
                             when (mapPositionUiState) {
                                 is MapPositionUiState.None -> {
                                     Toast.makeText(context, "No position found", Toast.LENGTH_SHORT).show()
@@ -157,16 +161,23 @@ fun MapScreen(
                                 is MapPositionUiState.Success -> {
                                     val xPosition = 1 / state.map.xAxis.toFloat() * mapPositionUiState.location.x
                                     val yPosition = 1 / state.map.yAxis.toFloat() * mapPositionUiState.location.y
-                                    UserMarker(
-                                        markerPosition = Pair(xPosition, yPosition),
-                                        imageSize = size
-                                    )
+
+                                    mapPosition.value = Pair(xPosition, yPosition)
                                 }
 
                                 else -> {
-                                    Toast.makeText(context, "Error MapPositionUiState", Toast.LENGTH_SHORT).show()
-                                    Log.d("MapScreen", "MapScreen: Error MapPositionUiState")
+                                    if (mapPosition == null) {
+                                        Toast.makeText(context, "Error MapPositionUiState", Toast.LENGTH_SHORT).show()
+                                        Log.d("MapScreen", "MapScreen: Error MapPositionUiState")
+                                    }
                                 }
+                            }
+
+                            if (mapPosition.value != null) {
+                                UserMarker(
+                                    markerPosition = mapPosition.value!!,
+                                    imageSize = size
+                                )
                             }
                         }
                     }
