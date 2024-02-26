@@ -54,12 +54,6 @@ class MapPositionViewModel(
     private var currentRotation: Float = 0f
     private var currentAttractionForce: FloatArray = floatArrayOf(0f, 0f ,0f)
     private var returnCounter: Int = 0
-    private var calculationCounter: Int = 0
-    private var lastAddedCalculation: Int = 10
-    private var calculationResults: MutableMap<Int, FloatArray> = mutableMapOf()
-    private var currentlyAdding: Boolean = false
-
-    private var lastAccelerationTimestamp: Long = 0L
 
     private var navigator: Navigator? = null
     private var velocityResetter: VelocityResetter = VelocityResetter()
@@ -106,31 +100,9 @@ class MapPositionViewModel(
         if(accelerationSensorViewModel.accelerationSensorState.value is AccelerationSensorState.Success && navigator != null) {
             val sensorValues: AccelerationSensorState.Success =
                 accelerationSensorViewModel.accelerationSensorState.value as AccelerationSensorState.Success
-            /*
-        viewModelScope.launch {
-            mapPositionUiState = navigate(calculationCounter)
-        }
 
-        if(calculationResults.containsKey(lastAddedCalculation) && !currentlyAdding){
-            currentlyAdding = true
-            val positionChangeXZ = calculationResults[lastAddedCalculation] ?: floatArrayOf(0f, 0f)
-            currentPosition.x += positionChangeXZ[0]
-            currentPosition.y += positionChangeXZ[1]
-            Log.d("Calculations", "Added Calculation-ID: $lastAddedCalculation")
-            calculationResults.remove(lastAddedCalculation)
-            lastAddedCalculation++
-            currentlyAdding = false
-        }
-
-         */
-            if (lastAccelerationTimestamp != sensorValues.timestamp) {
-                lastAccelerationTimestamp = sensorValues.timestamp
-                Log.d(
-                    "AccelerationObserver",
-                    accelerationSensorViewModel.accelerationSensorState.value.toString()
-                )
-                navigate(calculationCounter, sensorValues)
-                calculationCounter++
+            viewModelScope.launch {
+                mapPositionUiState = navigate(sensorValues)
             }
         }
     }
@@ -162,22 +134,20 @@ class MapPositionViewModel(
         }
     }
 
-    private fun navigate(calculationID: Int, sensorValues: AccelerationSensorState.Success): MapPositionUiState {
+    private fun navigate(sensorValues: AccelerationSensorState.Success): MapPositionUiState {
         val positionChangeXZ: FloatArray = navigator!!.calculateNavigation(sensorValues.accelerationXYZ, currentRotation)
-        calculationResults += mapOf(calculationID to positionChangeXZ)
 
         currentPosition.x += positionChangeXZ[0]
         currentPosition.y += positionChangeXZ[1]
-        Log.d("Calculations", "Added Calculation-ID: $calculationID")
 
         returnCounter++
 
-        if(returnCounter > 2){
+        if(returnCounter > 50){
             returnCounter = 0
             val posX = currentPosition.x.roundToInt()
             val posY = currentPosition.y.roundToInt()
             Log.d("CurrentPosition", "X: $posX, Y: $posY")
-            //return MapPositionUiState.Success(Point(posX, posY))
+            return MapPositionUiState.Success(Point(posX, posY))
         }
 
         return MapPositionUiState.Useless("Useless calculation")
