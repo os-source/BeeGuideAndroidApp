@@ -71,7 +71,7 @@ class AccelerationSensorViewModel(private val sensorRepository: SensorRepository
     }
 
     init{
-        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getAccelerationSensor(), SensorManager.SENSOR_DELAY_GAME)
+        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getAccelerationSensor(), 100000)
     }
     override fun onCleared() {
         sensorRepository.getSensorManager().unregisterListener(this)
