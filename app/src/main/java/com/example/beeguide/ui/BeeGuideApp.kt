@@ -24,7 +24,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.beeguide.R
-import com.example.beeguide.navigation.algorithm.Point
 import com.example.beeguide.ui.components.BeeGuideBottomBar
 import com.example.beeguide.ui.components.BeeGuideFloatingActionButtton
 import com.example.beeguide.ui.components.BeeGuideTopBar
@@ -42,7 +41,6 @@ import com.example.beeguide.ui.screens.settings.PrivacyScreen
 import com.example.beeguide.ui.screens.settings.SecurityScreen
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.viewmodels.MapFileViewModel
-import com.example.beeguide.ui.viewmodels.MapPositionUiState
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
 import com.example.beeguide.ui.viewmodels.UserViewModel
@@ -142,7 +140,7 @@ fun BeeGuideApp(
                     viewModel(factory = MapFileViewModel.Factory)
 
                 MapScreen(
-                    mapPositionUiState = MapPositionUiState.Success(Point(1, 1)), //mapPositionViewModel.mapPositionUiState,
+                    mapPositionUiState = mapPositionViewModel.mapPositionUiState,
                     mapFileUiState = mapFileViewModel.mapFileUiState,
                     mapViewModel = mapViewModel
                 )
