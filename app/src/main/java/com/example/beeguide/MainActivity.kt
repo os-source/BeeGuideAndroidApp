@@ -10,15 +10,15 @@ import com.example.beeguide.navigation.preconditions.PermissionChecker
 import com.example.beeguide.ui.BeeGuideApp
 import com.example.beeguide.ui.theme.BeeGuideTheme
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
+import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.RotationSensorViewModel
+import com.example.beeguide.ui.viewmodels.sensorviewmodels.UncalibratedAccelerationSensorViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.example.beeguide.ui.viewmodels.MapPositionViewModel
-import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorViewModel
-import com.example.beeguide.ui.viewmodels.sensorviewmodels.RotationSensorViewModel
-import com.example.beeguide.ui.viewmodels.sensorviewmodels.UncalibratedAccelerationSensorViewModel
-import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassViewModel
 
 class MainActivity : ComponentActivity() {
     private val appearanceViewModel by viewModels<AppearanceViewModel>(
@@ -29,7 +29,7 @@ class MainActivity : ComponentActivity() {
 
     private val mapViewModel by viewModels<MapViewModel>(
         factoryProducer = {
-            MapViewModel.Factory
+            MapViewModel.Companion.Factory
         }
     )
 
@@ -81,7 +81,11 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             BeeGuideTheme(appearanceViewModel) {
-                BeeGuideApp(appearanceViewModel)
+                BeeGuideApp(
+                    appearanceViewModel = appearanceViewModel,
+                    mapViewModel = mapViewModel,
+                    mapPositionViewModel = mapPositionViewModel!!
+                )
             }
         }
     }

@@ -43,6 +43,8 @@ import com.example.beeguide.ui.screens.settings.SecurityScreen
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.viewmodels.MapFileViewModel
 import com.example.beeguide.ui.viewmodels.MapPositionUiState
+import com.example.beeguide.ui.viewmodels.MapPositionViewModel
+import com.example.beeguide.ui.viewmodels.MapViewModel
 import com.example.beeguide.ui.viewmodels.UserViewModel
 
 /** enum values that represent the screens in the app */
@@ -68,6 +70,8 @@ enum class BeeGuideRoute(@StringRes val title: Int) {
 @Composable
 fun BeeGuideApp(
     appearanceViewModel: AppearanceViewModel,
+    mapViewModel: MapViewModel,
+    mapPositionViewModel: MapPositionViewModel,
     navController: NavHostController = rememberNavController()
 ) {
     val topBarScreens = listOf<BeeGuideRoute>(
@@ -139,7 +143,8 @@ fun BeeGuideApp(
 
                 MapScreen(
                     mapPositionUiState = MapPositionUiState.Success(Point(1, 1)), //mapPositionViewModel.mapPositionUiState,
-                    mapFileUiState = mapFileViewModel.mapFileUiState
+                    mapFileUiState = mapFileViewModel.mapFileUiState,
+                    mapViewModel = mapViewModel
                 )
             }
             composable(route = BeeGuideRoute.Home.name) {
