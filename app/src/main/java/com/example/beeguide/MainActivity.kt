@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.beeguide.navigation.beacons.Monitor
 import com.example.beeguide.navigation.preconditions.PermissionChecker
 import com.example.beeguide.ui.BeeGuideApp
@@ -12,6 +13,7 @@ import com.example.beeguide.ui.theme.BeeGuideTheme
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
+import com.example.beeguide.ui.viewmodels.MovingViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.AccelerationSensorViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.CompassViewModel
 import com.example.beeguide.ui.viewmodels.sensorviewmodels.RotationSensorViewModel
@@ -66,11 +68,13 @@ class MainActivity : ComponentActivity() {
             }
         )
 
+        val movingViewModel: MovingViewModel = MovingViewModel(uncalibratedAccelerationSensorViewModel)
+
         mapPositionViewModel = MapPositionViewModel(
             regionViewModel = regionViewModel,
             mapViewModel = mapViewModel,
             accelerationSensorViewModel = accelerationSensorViewModel,
-            uncalibratedAccelerationSensorViewModel = uncalibratedAccelerationSensorViewModel,
+            movingViewModel = movingViewModel,
             rotationSensorViewModel = rotationSensorViewModel,
             compassViewModel = compassViewModel
         )
