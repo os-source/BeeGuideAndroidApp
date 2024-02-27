@@ -113,20 +113,21 @@ class MapPositionViewModel(
         if(movingViewModel.movingState.value is MovingState.Success){
             val movingValues: MovingState.Success = movingViewModel.movingState.value as MovingState.Success
             isMoving = movingValues.isMoving
+            if(!isMoving) navigator!!.velocity = floatArrayOf(0f, 0f ,0f)
         }
     }
 
     private val rotationSensorObserver = Observer<RotationSensorState> {
         if(rotationSensorViewModel.rotationSensorState.value is RotationSensorState.Success){
             val sensorValues: RotationSensorState.Success = rotationSensorViewModel.rotationSensorState.value as RotationSensorState.Success
-            Log.d("Acceleration-Features-Rotation", "Updated X: ${sensorValues.rotationXYZ[0]}, Y: ${sensorValues.rotationXYZ[1]}, Z: ${sensorValues.rotationXYZ[2]}")
+            //Log.d("Acceleration-Features-Rotation", "Updated X: ${sensorValues.rotationXYZ[0]}, Y: ${sensorValues.rotationXYZ[1]}, Z: ${sensorValues.rotationXYZ[2]}")
         }
     }
 
     private val compassObserver = Observer<CompassState> {
         if(compassViewModel.compassState.value is CompassState.Success){
             val sensorValues: CompassState.Success = compassViewModel.compassState.value as CompassState.Success
-            Log.d("Acceleration-Features-Compass", "Degrees: ${sensorValues.azimuthInDegrees}")
+            //Log.d("Acceleration-Features-Compass", "Degrees: ${sensorValues.azimuthInDegrees}")
             currentRotation = sensorValues.azimuthInDegrees
         }
     }
@@ -141,7 +142,7 @@ class MapPositionViewModel(
 
         returnCounter++
 
-        if(returnCounter > 20){
+        if(returnCounter > 50){
             returnCounter = 0
             val posX = currentPosition.x.roundToInt()
             val posY = currentPosition.y.roundToInt()

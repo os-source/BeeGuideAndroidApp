@@ -49,7 +49,7 @@ class RotationSensorViewModel(private val sensorRepository: SensorRepository): V
     val rotationSensorState: StateFlow<RotationSensorState> = _rotationSensorState.asStateFlow()
 
     override fun onSensorChanged(event: SensorEvent?) {
-        Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
+        //Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
             _rotationSensorState.update {
                 RotationSensorState.Success(

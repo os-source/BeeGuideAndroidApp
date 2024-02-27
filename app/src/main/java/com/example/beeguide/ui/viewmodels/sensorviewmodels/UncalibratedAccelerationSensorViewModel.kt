@@ -51,7 +51,7 @@ class UncalibratedAccelerationSensorViewModel(private val sensorRepository: Sens
     val uncalibratedSensorState: StateFlow<UncalibratedAccelerationSensorState> = _uncalibratedSensorState.asStateFlow()
 
     override fun onSensorChanged(event: SensorEvent?) {
-        Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
+        //Log.d("Acceleration-Features", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
             _uncalibratedSensorState.update {
                 UncalibratedAccelerationSensorState.Success(
@@ -70,7 +70,7 @@ class UncalibratedAccelerationSensorViewModel(private val sensorRepository: Sens
     }
 
     init{
-        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getUncalibratedAccelerationSensor(), SensorManager.SENSOR_DELAY_GAME)
+        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getUncalibratedAccelerationSensor(), 5000)
     }
     override fun onCleared() {
         sensorRepository.getSensorManager().unregisterListener(this)

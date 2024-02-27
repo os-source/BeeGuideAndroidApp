@@ -40,8 +40,8 @@ class MovingViewModel(
     private var hitSum: Double = 0.0
     private var hitResult: Double = 0.0
 
-    private val SAMPLE_SIZE = 50 // change this sample size as you want, higher is more precise but slow measure.
-    private val THRESHOLD = 0.2 // change this threshold as you want, higher is more spike movement
+    private val SAMPLE_SIZE = 7 // change this sample size as you want, higher is more precise but slow measure.
+    private val THRESHOLD = 0.3 // change this threshold as you want, higher is more spike movement
 
     private var mAccelCurrent: Double = 0.0
     private var mAccelLast: Double = 0.0

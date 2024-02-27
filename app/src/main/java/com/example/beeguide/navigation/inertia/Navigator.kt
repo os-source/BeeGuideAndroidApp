@@ -35,6 +35,8 @@ class Navigator(private val mapRotation: Float) {
         if(distanceChangeX.absoluteValue < bufferVal) distanceChangeX = 0f
         if(distanceChangeY.absoluteValue < bufferVal) distanceChangeY = 0f
 
+        Log.d("testhomiejo", distanceChangeX.toString())
+
         val offsetRotation = Math.toRadians((currentRotation - mapRotation).toDouble())
 
         val zDistance = (cos(offsetRotation) * distanceChangeY + sin(offsetRotation) * distanceChangeX).toFloat()

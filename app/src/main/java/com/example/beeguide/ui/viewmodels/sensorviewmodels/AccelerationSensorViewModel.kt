@@ -52,7 +52,7 @@ class AccelerationSensorViewModel(private val sensorRepository: SensorRepository
     val accelerationSensorState: StateFlow<AccelerationSensorState> = _accelerationSensorState.asStateFlow()
 
     override fun onSensorChanged(event: SensorEvent?) {
-        Log.d("Acceleration-Features-Linear", "Updated ${event?.values?.joinToString(", ")}")
+        //Log.d("Acceleration-Features-Linear", "Updated ${event?.values?.joinToString(", ")}")
         viewModelScope.launch {
             _accelerationSensorState.update {
                 AccelerationSensorState.Success(
@@ -71,7 +71,7 @@ class AccelerationSensorViewModel(private val sensorRepository: SensorRepository
     }
 
     init{
-        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getAccelerationSensor(), SensorManager.SENSOR_DELAY_GAME)
+        sensorRepository.getSensorManager().registerListener(this, sensorRepository.getAccelerationSensor(), 100)
     }
     override fun onCleared() {
         sensorRepository.getSensorManager().unregisterListener(this)
