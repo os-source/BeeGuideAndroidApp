@@ -6,8 +6,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,9 +22,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import com.example.beeguide.R
-import com.example.beeguide.navigation.algorithm.Point
 import com.example.beeguide.ui.components.BeeGuideBottomBar
-import com.example.beeguide.ui.components.BeeGuideFloatingActionButtton
 import com.example.beeguide.ui.components.BeeGuideTopBar
 import com.example.beeguide.ui.screens.HomeScreen
 import com.example.beeguide.ui.screens.MapScreen
@@ -42,7 +38,6 @@ import com.example.beeguide.ui.screens.settings.PrivacyScreen
 import com.example.beeguide.ui.screens.settings.SecurityScreen
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
 import com.example.beeguide.ui.viewmodels.MapFileViewModel
-import com.example.beeguide.ui.viewmodels.MapPositionUiState
 import com.example.beeguide.ui.viewmodels.MapPositionViewModel
 import com.example.beeguide.ui.viewmodels.MapViewModel
 import com.example.beeguide.ui.viewmodels.UserViewModel
@@ -119,7 +114,7 @@ fun BeeGuideApp(
                 )
             }
         },
-        floatingActionButton = {
+        /*floatingActionButton = {
             if (currentScreen == BeeGuideRoute.Map) {
                 BeeGuideFloatingActionButtton(
                     fabIcon = Icons.Rounded.Star,
@@ -127,7 +122,7 @@ fun BeeGuideApp(
                     onFabClicked = { /*TODO*/ }
                 )
             }
-        }
+        }*/
     ) { innerPadding ->
         NavHost(
             navController = navController,

@@ -7,10 +7,13 @@ import com.example.beeguide.model.SignInRequest
 import com.example.beeguide.model.SignUpRequest
 import com.example.beeguide.model.TokenResponse
 import com.example.beeguide.model.User
+import okhttp3.MultipartBody
 import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 
@@ -40,4 +43,8 @@ interface BeeGuideApiService {
 
     @PATCH("user/bio")
     suspend fun saveUserBio(@Body bio: BioRequest)
+
+    @Multipart
+    @POST("user/profile")
+    suspend fun saveUserProfilePicture(@Part file: MultipartBody.Part)
 }

@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -61,8 +62,6 @@ fun MapScreen(
                 }
 
                 is MapFileUiState.Success -> {
-                    Log.d("MapScreen", "MapScreen: ${mapFileUiState.mapFile}")
-
                     // get local density from composable
                     val density = LocalDensity.current
 
@@ -150,25 +149,36 @@ fun MapScreen(
                             MapMarker(markerPosition = Pair(left, top), imageSize = size)
                             MapMarker(markerPosition = Pair(left, bottom), imageSize = size)*/
 
-                            when (mapPositionUiState) {
-                                is MapPositionUiState.None ->
-                                    Toast.makeText(context, "No position found", Toast.LENGTH_SHORT).show()
+                            //var mapPosition: Pair<Float, Float>?
+                            var mapPosition: MutableState<Pair<Float, Float>?> = remember { mutableStateOf(null) }
 
-                                is MapPositionUiState.Success -> {
-                                    Log.d("MapScreen", "MapScreen: ${mapPositionUiState.location.x}")
-                                    val xPosition = (1 / state.map.xAxis * mapPositionUiState.location.x) * (right * size.width - left * size.width) / size.width + left
-                                    val yPosition = (1 / state.map.yAxis * mapPositionUiState.location.y) * (bottom * size.height - top * size.height) / size.height + top
-                                    UserMarker(
-                                        markerPosition = Pair(xPosition, yPosition),
-                                        imageSize = size
-                                    )
+                            when (mapPositionUiState) {
+                                is MapPositionUiState.None -> {
+                                    Toast.makeText(context, "No position found", Toast.LENGTH_SHORT).show()
+                                    Log.d("MapScreen", "MapScreen: No position found")
                                 }
 
-                                else ->
-                                    Toast.makeText(context, "Error MapPositionUiState", Toast.LENGTH_SHORT).show()
+                                is MapPositionUiState.Success -> {
+                                    val xPosition = 1 / state.map.xAxis.toFloat() * mapPositionUiState.location.x
+                                    val yPosition = 1 / state.map.yAxis.toFloat() * mapPositionUiState.location.y
+
+                                    mapPosition.value = Pair(xPosition, yPosition)
+                                }
+
+                                else -> {
+                                    if (mapPosition == null) {
+                                        Toast.makeText(context, "Error MapPositionUiState", Toast.LENGTH_SHORT).show()
+                                        Log.d("MapScreen", "MapScreen: Error MapPositionUiState")
+                                    }
+                                }
                             }
 
-
+                            if (mapPosition.value != null) {
+                                UserMarker(
+                                    markerPosition = mapPosition.value!!,
+                                    imageSize = size
+                                )
+                            }
                         }
                     }
                 }
@@ -177,10 +187,10 @@ fun MapScreen(
             }
         }
         MapUiState.Loading -> {
-            // Render your loading state UI
+            BeeGuideCircularProgressIndicator()
         }
         MapUiState.Error -> {
-            // Render your error state UI
+            Toast.makeText(context, "Error MapUiState", Toast.LENGTH_SHORT).show()
         }
     }
 }
