@@ -46,7 +46,7 @@ class MapPositionViewModel(
     private val regionViewModel: RegionViewModel,
     private val mapViewModel: MapViewModel,
     private val accelerationSensorViewModel: AccelerationSensorViewModel,
-    private val uncalibratedAccelerationSensorViewModel: UncalibratedAccelerationSensorViewModel,
+    private val movingViewModel: MovingViewModel,
     private val rotationSensorViewModel: RotationSensorViewModel,
     private val compassViewModel: CompassViewModel
 ): ViewModel() {
@@ -54,6 +54,8 @@ class MapPositionViewModel(
     private var currentRotation: Float = 0f
     private var currentAttractionForce: FloatArray = floatArrayOf(0f, 0f ,0f)
     private var returnCounter: Int = 0
+
+    private var isMoving: Boolean = false
 
     private var navigator: Navigator? = null
     private var velocityResetter: VelocityResetter = VelocityResetter()
@@ -107,29 +109,25 @@ class MapPositionViewModel(
         }
     }
 
-    private val uncalibratedAccelerationSensorObserver = Observer<UncalibratedAccelerationSensorState> {
-        if(uncalibratedAccelerationSensorViewModel.uncalibratedSensorState.value is UncalibratedAccelerationSensorState.Success){
-            val sensorValues: UncalibratedAccelerationSensorState.Success = uncalibratedAccelerationSensorViewModel.uncalibratedSensorState.value as UncalibratedAccelerationSensorState.Success
-            Log.d("Acceleration-Features-Uncalibrated", "Updated X: ${sensorValues.accelerationXYZ[0]}, Y: ${sensorValues.accelerationXYZ[1]}, Z: ${sensorValues.accelerationXYZ[2]}")
-            if(velocityResetter.checkReset(sensorValues.accelerationXYZ) && navigator != null){
-                currentAttractionForce = sensorValues.accelerationXYZ
-                navigator?.velocity = floatArrayOf(0f, 0f, 0f)
-                Log.d("velocityResetter", "Resetted")
-            }
+    private val movingObserver = Observer<MovingState> {
+        if(movingViewModel.movingState.value is MovingState.Success){
+            val movingValues: MovingState.Success = movingViewModel.movingState.value as MovingState.Success
+            isMoving = movingValues.isMoving
+            if(!isMoving) navigator!!.velocity = floatArrayOf(0f, 0f ,0f)
         }
     }
 
     private val rotationSensorObserver = Observer<RotationSensorState> {
         if(rotationSensorViewModel.rotationSensorState.value is RotationSensorState.Success){
             val sensorValues: RotationSensorState.Success = rotationSensorViewModel.rotationSensorState.value as RotationSensorState.Success
-            Log.d("Acceleration-Features-Rotation", "Updated X: ${sensorValues.rotationXYZ[0]}, Y: ${sensorValues.rotationXYZ[1]}, Z: ${sensorValues.rotationXYZ[2]}")
+            //Log.d("Acceleration-Features-Rotation", "Updated X: ${sensorValues.rotationXYZ[0]}, Y: ${sensorValues.rotationXYZ[1]}, Z: ${sensorValues.rotationXYZ[2]}")
         }
     }
 
     private val compassObserver = Observer<CompassState> {
         if(compassViewModel.compassState.value is CompassState.Success){
             val sensorValues: CompassState.Success = compassViewModel.compassState.value as CompassState.Success
-            Log.d("Acceleration-Features-Compass", "Degrees: ${sensorValues.azimuthInDegrees}")
+            //Log.d("Acceleration-Features-Compass", "Degrees: ${sensorValues.azimuthInDegrees}")
             currentRotation = sensorValues.azimuthInDegrees
         }
     }
@@ -137,8 +135,10 @@ class MapPositionViewModel(
     private fun navigate(sensorValues: AccelerationSensorState.Success): MapPositionUiState {
         val positionChangeXZ: FloatArray = navigator!!.calculateNavigation(sensorValues.accelerationXYZ, currentRotation)
 
-        currentPosition.x += positionChangeXZ[0]
-        currentPosition.y += positionChangeXZ[1]
+        if(isMoving) {
+            currentPosition.x += positionChangeXZ[0]
+            currentPosition.y += positionChangeXZ[1]
+        }
 
         returnCounter++
 
@@ -157,7 +157,7 @@ class MapPositionViewModel(
         regionViewModel.rangedBeacons.observeForever(rangedBeaconObserver)
         mapViewModel.mapUiState.asLiveData().observeForever(mapObserver)
         accelerationSensorViewModel.accelerationSensorState.asLiveData().observeForever(accelerationSensorObserver)
-        uncalibratedAccelerationSensorViewModel.uncalibratedSensorState.asLiveData().observeForever(uncalibratedAccelerationSensorObserver)
+        movingViewModel.movingState.asLiveData().observeForever(movingObserver)
         rotationSensorViewModel.rotationSensorState.asLiveData().observeForever(rotationSensorObserver)
         compassViewModel.compassState.asLiveData().observeForever(compassObserver)
     }
