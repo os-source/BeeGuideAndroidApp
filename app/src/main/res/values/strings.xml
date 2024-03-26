@@ -51,4 +51,8 @@
     <string name="hello_i_am">Hallo ich bin</string>
     <string name="about_me">Über mich!</string>
 
+    <string name="no_position_found">Keine Position gefunden</string>
+
+    <string name="unexpected_error">Ein unerwarteter Fehler ist aufgetreten</string>
+
 </resources>

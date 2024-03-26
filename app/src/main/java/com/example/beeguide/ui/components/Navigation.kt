@@ -38,7 +38,6 @@ fun BeeGuideBottomBar(
     onMapIconClicked: () -> Unit,
     onProfileIconClicked: () -> Unit
 ) {
-
     Surface(
         modifier = Modifier
             .fillMaxWidth()

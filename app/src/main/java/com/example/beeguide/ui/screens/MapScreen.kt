@@ -1,7 +1,5 @@
 package com.example.beeguide.ui.screens
 
-import android.graphics.Bitmap
-import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -26,19 +24,19 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.TransformOrigin
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.caverock.androidsvg.SVG
+import com.example.beeguide.R
+import com.example.beeguide.helpers.svgStringToImageBitmap
 import com.example.beeguide.ui.components.BeeGuideCircularProgressIndicator
 import com.example.beeguide.ui.viewmodels.MapFileUiState
 import com.example.beeguide.ui.viewmodels.MapPositionUiState
 import com.example.beeguide.ui.viewmodels.MapUiState
 import com.example.beeguide.ui.viewmodels.MapViewModel
-import java.io.ByteArrayInputStream
 import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
@@ -57,14 +55,10 @@ fun MapScreen(
         is MapUiState.Success -> {
             when (mapFileUiState) {
                 is MapFileUiState.Loading -> {
-                    Log.d("MapScreen", "MapScreen: Loading")
                     BeeGuideCircularProgressIndicator()
                 }
 
                 is MapFileUiState.Success -> {
-                    // get local density from composable
-                    val density = LocalDensity.current
-
                     fun Offset.rotateBy(angle: Float): Offset {
                         val angleInRadians = angle * PI / 180
                         return Offset(
@@ -85,16 +79,10 @@ fun MapScreen(
                                         val oldScale = mapZoom
                                         val newScale = mapZoom * gestureZoom
 
-                                        // For natural zooming and rotating, the centroid of the gesture should
-                                        // be the fixed point where zooming and rotating occurs.
-                                        // We compute where the centroid was (in the pre-transformed coordinate
-                                        // space), and then compute where it will be after this delta.
-                                        // We then compute what the new offset should be to keep the centroid
-                                        // visually stationary for rotating and zooming, and also apply the pan.
-                                        mapOffset =
-                                            (mapOffset + centroid / oldScale).rotateBy(gestureRotate) -
-                                                    (centroid / newScale + pan / oldScale)
+                                        mapOffset = (mapOffset + centroid / oldScale).rotateBy(gestureRotate) - (centroid / newScale + pan / oldScale)
+
                                         mapZoom = newScale
+
                                         mapAngle += gestureRotate
                                     }
                                 )
@@ -109,24 +97,8 @@ fun MapScreen(
                             }
                             .fillMaxSize()
                     ) {
-                        // Convert SVG string to InputStream
-                        val inputStream = ByteArrayInputStream(mapFileUiState.mapFile.toByteArray())
-
-                        // Parse SVG from InputStream
-                        val svg = SVG.getFromInputStream(inputStream)
-
-                        // Render SVG to bitmap
-                        val bitmap = Bitmap.createBitmap(
-                            svg.documentWidth.toInt(),
-                            svg.documentHeight.toInt(),
-                            Bitmap.Config.ARGB_8888
-                        )
-
-                        val canvas = android.graphics.Canvas(bitmap)
-                        svg.renderToCanvas(canvas)
-
-                        // Convert bitmap to ImageBitmap
-                        val imageBitmap = bitmap.asImageBitmap()
+                        // convert svg string to image bitmap
+                        val imageBitmap = svgStringToImageBitmap(mapFileUiState.mapFile)
 
                         val imageSize = Size(imageBitmap.width.toFloat(), imageBitmap.height.toFloat())
 
@@ -138,24 +110,12 @@ fun MapScreen(
                             )
                         }
 
-                        val top = 0.47f
-                        val left = 0.033f
-                        val right = 0.2842f
-                        val bottom = 0.883f
-
                         imageSize.let { size ->
-                            /*MapMarker(markerPosition = Pair(right, top), imageSize = size)
-                            MapMarker(markerPosition = Pair(right, bottom), imageSize = size)
-                            MapMarker(markerPosition = Pair(left, top), imageSize = size)
-                            MapMarker(markerPosition = Pair(left, bottom), imageSize = size)*/
-
-                            //var mapPosition: Pair<Float, Float>?
                             var mapPosition: MutableState<Pair<Float, Float>?> = remember { mutableStateOf(null) }
 
                             when (mapPositionUiState) {
                                 is MapPositionUiState.None -> {
-                                    Toast.makeText(context, "No position found", Toast.LENGTH_SHORT).show()
-                                    Log.d("MapScreen", "MapScreen: No position found")
+                                    Toast.makeText(context, stringResource(id = R.string.no_position_found), Toast.LENGTH_SHORT).show()
                                 }
 
                                 is MapPositionUiState.Success -> {
@@ -167,8 +127,7 @@ fun MapScreen(
 
                                 else -> {
                                     if (mapPosition == null) {
-                                        Toast.makeText(context, "Error MapPositionUiState", Toast.LENGTH_SHORT).show()
-                                        Log.d("MapScreen", "MapScreen: Error MapPositionUiState")
+                                        Toast.makeText(context, stringResource(id = R.string.unexpected_error), Toast.LENGTH_SHORT).show()
                                     }
                                 }
                             }
@@ -183,14 +142,14 @@ fun MapScreen(
                     }
                 }
 
-                else -> Log.d("MapScreen", "MapScreen: Error MapFileUiState")
+                else -> Toast.makeText(context, stringResource(id = R.string.unexpected_error), Toast.LENGTH_SHORT).show()
             }
         }
-        MapUiState.Loading -> {
+        is MapUiState.Loading -> {
             BeeGuideCircularProgressIndicator()
         }
-        MapUiState.Error -> {
-            Toast.makeText(context, "Error MapUiState", Toast.LENGTH_SHORT).show()
+        is MapUiState.Error -> {
+            Toast.makeText(context, stringResource(id = R.string.unexpected_error), Toast.LENGTH_SHORT).show()
         }
     }
 }

@@ -18,7 +18,6 @@ data class User(
     val userDetails: UserDetails?,
     val enabled: Boolean,
     val id: Int,
-    val comments: List<String>
 )
 
 @Serializable

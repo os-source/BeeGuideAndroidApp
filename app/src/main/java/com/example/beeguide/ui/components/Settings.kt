@@ -137,7 +137,6 @@ fun SettingsSingleGroup(
 @Composable
 fun SettingsGroup(
     @StringRes name: Int,
-    // to accept only composables compatible with column
     content: @Composable ColumnScope.() -> Unit
 ) {
     Column(
