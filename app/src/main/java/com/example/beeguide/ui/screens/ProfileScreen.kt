@@ -8,13 +8,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,7 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.beeguide.R
 import com.example.beeguide.helpers.imageBitmapFromBase64String
+import com.example.beeguide.ui.components.BeeGuideCard
 import com.example.beeguide.ui.components.BeeGuideCircularProgressIndicator
+import com.example.beeguide.ui.components.BeeGuideUnexpectedError
 import com.example.beeguide.ui.viewmodels.UserUiState
 
 @Composable
@@ -97,30 +97,18 @@ fun ProfileScreen(
 
                 Spacer(modifier = Modifier.size(30.dp))
 
-                Surface(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                        .clip(RoundedCornerShape(10.dp, 10.dp, 10.dp, 10.dp))
+                Column(
+                    modifier = Modifier.padding(horizontal = 10.dp)
                 ) {
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.about_me),
-                            modifier = Modifier.padding(10.dp, 10.dp, 10.dp, 0.dp),
-                            fontSize = 20.sp
-                        )
-                        Text(
-                            text = userUiState.user.userDetails?.bio
-                                ?: "${stringResource(id = R.string.hello_i_am)} ${userUiState.user.name}.",
-                            modifier = Modifier.padding(10.dp)
-                        )
-                    }
+                    BeeGuideCard(
+                        text = userUiState.user.userDetails?.bio
+                            ?: "${stringResource(id = R.string.hello_i_am)} ${userUiState.user.name}.",
+                        heading = stringResource(id = R.string.about_me),
+                    ) {}
                 }
             }
         }
 
-        else -> Text(text = "Error!")
+        else -> BeeGuideUnexpectedError()
     }
-
-    //TODO: Add profile page
 }
