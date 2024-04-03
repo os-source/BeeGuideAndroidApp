@@ -85,7 +85,7 @@ fun ProfileScreen(
                     )
                 } else {
                     Image(
-                        painter = painterResource(id = R.drawable.profile_image_test),
+                        painter = painterResource(id = R.drawable.profile),
                         contentDescription = null,
                         modifier = Modifier
                             .size(128.dp)
