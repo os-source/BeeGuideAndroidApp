@@ -10,11 +10,8 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.beeguide.BeeGuideApplication
-import com.example.beeguide.PreferencesDataStore
 import com.example.beeguide.data.BeeGuideRepository
 import com.example.beeguide.model.User
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.File
@@ -124,9 +121,6 @@ class AppearanceViewModel(
 
     fun update() {
         darkMode = !darkMode
-        /*viewModelScope.launch {
-            preferencesDataStore.setDarkThemeMode(darkMode)
-        }*/
     }
 
     companion object {
@@ -137,15 +131,3 @@ class AppearanceViewModel(
         }
     }
 }
-
-
-fun getDarkThemeMode(): Boolean {
-    CoroutineScope(Dispatchers.IO).launch {
-        val preferencesDataStore = PreferencesDataStore(BeeGuideApplication())
-        Log.d("AppearanceViewModel", "create: ${preferencesDataStore.getDarkThemeMode()}")
-    }
-    return true
-}
-
-
-//darkTheme: Boolean = isSystemInDarkTheme(),

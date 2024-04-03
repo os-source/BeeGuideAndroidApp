@@ -43,7 +43,6 @@ val LightColorScheme = lightColorScheme(
 @Composable
 fun BeeGuideTheme(
     appearanceViewModel: AppearanceViewModel,
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false, // Disabled
     content: @Composable () -> Unit
 ) {
@@ -65,7 +64,6 @@ fun BeeGuideTheme(
             val window = (view.context as Activity).window
             window.statusBarColor = colorScheme.background.toArgb()
             window.navigationBarColor = colorScheme.surface.toArgb()
-            //WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
 

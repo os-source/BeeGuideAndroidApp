@@ -12,9 +12,5 @@ val background_light = Color(0xFFEFF2F5)
 val surface_light = Color(0xFFE4E9EE)
 
 val primary = Color(0xFF16588E)
-val primary_light = Color(0xFF757DE8)
-val primary_dark = Color(0xFF002984)
 
 val secondary = Color(0xFFED9833)
-val secondary_light = Color(0xFFFF6090)
-val secondary_dark = Color(0xFFB0003A)

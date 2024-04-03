@@ -12,9 +12,7 @@ class AuthenticationManager(dataStore: SharedPreferences) {
         const val LOGGER = "AuthenticationManager"
     }
 
-    /**
-     * Function to save session token
-     */
+   // save session token
     fun saveJWTToken(token: String) {
         val editor = prefs.edit()
         editor.putString(JWT_TOKEN, token)
@@ -29,18 +27,12 @@ class AuthenticationManager(dataStore: SharedPreferences) {
         Log.d(LOGGER, "Saved JWT: " + token)
     }
 
-    /**
-     * Function to fetch auth token
-     */
+    // fetch auth token
     fun fetchJWTToken(): String? {
         val token = prefs.getString(JWT_TOKEN, null)
         Log.d(LOGGER, "Retrieved Token: " + token)
         return token;
 
-    }
-
-    fun fetchRefreshToken(): String? {
-        return prefs.getString(JWT_REFRESH, null)
     }
 
     fun clearAllTokens() {

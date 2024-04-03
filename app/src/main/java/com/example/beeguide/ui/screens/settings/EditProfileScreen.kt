@@ -63,25 +63,6 @@ fun EditProfileScreen(
                     Text("Profilbild ändern")
                 }
 
-                /*Button(onClick = {
-                    photoPicker.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                }) {
-                    Text(text = "Profilbild ändern")
-                }
-
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        model = uri
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .size(100.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                )*/
-
                 BeeGuideSingleLineTextArea(
                     value = userUiState.user.name,
                     onValueChange = { userViewModel.nameChanged(it) },

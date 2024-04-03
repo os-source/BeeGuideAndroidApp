@@ -111,15 +111,6 @@ fun BeeGuideApp(
                 )
             }
         },
-        /*floatingActionButton = {
-            if (currentScreen == BeeGuideRoute.Map) {
-                BeeGuideFloatingActionButtton(
-                    fabIcon = Icons.Rounded.Star,
-                    fabDescription = R.string.map,
-                    onFabClicked = { /*TODO*/ }
-                )
-            }
-        }*/
     ) { innerPadding ->
         NavHost(
             navController = navController,
@@ -127,9 +118,6 @@ fun BeeGuideApp(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(route = BeeGuideRoute.Map.name) {
-
-                //TODO Get mapPositionUIState
-
                 val mapFileViewModel: MapFileViewModel =
                     viewModel(factory = MapFileViewModel.Factory)
 

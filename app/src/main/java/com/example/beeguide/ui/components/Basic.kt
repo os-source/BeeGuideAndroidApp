@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.beeguide.R
@@ -44,7 +45,7 @@ fun BeeGuideUnexpectedError() {
                     .padding(100.dp, 50.dp)
                     .alpha(0.5f),
             )
-            Text(text = "An unexpected error occurred")
+            Text(text = stringResource(id = R.string.unexpected_error))
         }
     }
 }
