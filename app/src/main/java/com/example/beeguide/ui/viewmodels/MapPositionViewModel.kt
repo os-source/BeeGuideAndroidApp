@@ -90,12 +90,12 @@ class MapPositionViewModel(
     }
 
     private val rangedBeaconObserver =  Observer<Collection<Beacon>> {
-        //calculatePosition()
+        calculatePosition()
     }
 
     private val mapObserver = Observer<MapUiState> {
         navigator = Navigator(160f)
-        //calculatePosition()
+        calculatePosition()
     }
 
     private val accelerationSensorObserver = Observer<AccelerationSensorState> {
