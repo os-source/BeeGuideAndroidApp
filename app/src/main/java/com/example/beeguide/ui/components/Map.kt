@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +34,6 @@ fun MapMarker(markerPosition: Pair<Float, Float>, imageSize: Size, description: 
         modifier = Modifier
             .offset(x = offsetX, y = offsetY)
             .clickable { showDescription = !showDescription }
-            .width(200.dp)
     ) {
         Column {
             Box(
