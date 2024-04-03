@@ -26,6 +26,7 @@ sealed interface UserUiState {
         val user: User
     ) : UserUiState
 
+    object None : UserUiState
     object Error : UserUiState
     object Loading : UserUiState
 }
@@ -51,6 +52,14 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
                 UserUiState.Error
             }
         }
+    }
+
+    fun fetchUser() {
+        getUser()
+    }
+
+    fun clearUser() {
+        userUiState = UserUiState.None
     }
 
     fun nameChanged(name: String) {

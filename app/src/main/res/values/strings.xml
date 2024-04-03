@@ -11,7 +11,7 @@
     <string name="settings">Einstellungen</string>
     <string name="edit_profile">Profil bearbeiten</string>
     <string name="notifications">Benachrichtigungen</string>
-    <string name="privacy">Privatsphäre</string>
+    <string name="privacy">Datenschutz</string>
     <string name="security">Sicherheit</string>
     <string name="appearance">Darstellung</string>
     <string name="about">Über</string>
@@ -55,4 +55,6 @@
 
     <string name="unexpected_error">Ein unerwarteter Fehler ist aufgetreten</string>
 
+    <string name="request_profile_deletion">Profillöschung beantragen</string>
+    
 </resources>

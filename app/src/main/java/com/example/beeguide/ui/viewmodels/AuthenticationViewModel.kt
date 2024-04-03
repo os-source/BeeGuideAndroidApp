@@ -30,7 +30,7 @@ data class SignInUiState(
 
 class SignUpViewModel(
     private val authRepository: AuthRepository
-): ViewModel() {
+) : ViewModel() {
     var signUpUiState: SignUpUiState by mutableStateOf(SignUpUiState())
 
     private val resultChanel = Channel<AuthResult<Unit>>()
@@ -51,7 +51,11 @@ class SignUpViewModel(
     fun signUp() {
         viewModelScope.launch {
             signUpUiState = signUpUiState.copy(isLoading = true)
-            val result = authRepository.signUp(signUpUiState.email, signUpUiState.password, signUpUiState.name)
+            val result = authRepository.signUp(
+                signUpUiState.email,
+                signUpUiState.password,
+                signUpUiState.name
+            )
             resultChanel.send(result)
             signUpUiState = signUpUiState.copy(isLoading = false)
         }
@@ -71,7 +75,7 @@ class SignUpViewModel(
 
 class SignInViewModel(
     private val authRepository: AuthRepository
-): ViewModel() {
+) : ViewModel() {
     var signInUiState: SignInUiState by mutableStateOf(SignInUiState())
 
     private val resultChanel = Channel<AuthResult<Unit>>()
@@ -102,6 +106,27 @@ class SignInViewModel(
                         as BeeGuideApplication)
                 val authRepository = application.container.authRepository
                 SignInViewModel(authRepository = authRepository)
+            }
+        }
+    }
+}
+
+class SignOutViewModel(
+    private val authRepository: AuthRepository
+) : ViewModel() {
+    fun signOut() {
+        viewModelScope.launch {
+            authRepository.signOut()
+        }
+    }
+
+    companion object {
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
+                        as BeeGuideApplication)
+                val authRepository = application.container.authRepository
+                SignOutViewModel(authRepository = authRepository)
             }
         }
     }

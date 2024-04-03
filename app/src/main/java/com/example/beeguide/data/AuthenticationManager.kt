@@ -46,6 +46,5 @@ class AuthenticationManager(dataStore: SharedPreferences) {
     fun clearAllTokens() {
         prefs.edit().remove(JWT_REFRESH)
         prefs.edit().remove(JWT_TOKEN)
-
     }
 }

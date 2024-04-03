@@ -33,11 +33,13 @@ import com.example.beeguide.network.AuthResult
 import com.example.beeguide.ui.components.BeeGuidePasswordField
 import com.example.beeguide.ui.components.BeeGuideTextField
 import com.example.beeguide.ui.viewmodels.SignInViewModel
+import com.example.beeguide.ui.viewmodels.UserViewModel
 
 @Composable
 fun SignInScreen(
     onSignUpButtonClicked: () -> Unit,
     navigateToHomeScreen: () -> Unit,
+    userViewModel: UserViewModel,
     signInViewModel: SignInViewModel = viewModel(factory = SignInViewModel.Factory)
 ) {
     val context = LocalContext.current
@@ -46,13 +48,14 @@ fun SignInScreen(
         signInViewModel.authResults.collect { result ->
             when (result) {
                 is AuthResult.Authorized -> {
+                    userViewModel.fetchUser()
                     navigateToHomeScreen()
                 }
                 is AuthResult.Unauthorized -> {
-                    Toast.makeText(context, "You are not authorized", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Du konntest nicht angemeldet werden!", Toast.LENGTH_SHORT).show()
                 }
                 is AuthResult.UnknownError -> {
-                    Toast.makeText(context, "An unknown error occurred", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "Ein unbekannter Fehler ist aufgetreten!", Toast.LENGTH_SHORT).show()
                 }
             }
         }

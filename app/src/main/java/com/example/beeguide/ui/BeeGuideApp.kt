@@ -30,7 +30,6 @@ import com.example.beeguide.ui.screens.ProfileScreen
 import com.example.beeguide.ui.screens.SettingsScreen
 import com.example.beeguide.ui.screens.authentication.SignInScreen
 import com.example.beeguide.ui.screens.authentication.SignUpScreen
-import com.example.beeguide.ui.screens.settings.AboutScreen
 import com.example.beeguide.ui.screens.settings.AppearanceScreen
 import com.example.beeguide.ui.screens.settings.EditProfileScreen
 import com.example.beeguide.ui.screens.settings.NotificationsScreen
@@ -56,7 +55,6 @@ enum class BeeGuideRoute(@StringRes val title: Int) {
     Privacy(R.string.privacy),
     Security(R.string.security),
     Appearance(R.string.appearance),
-    About(R.string.about),
 
     SignIn(R.string.sign_in),
     SignUp(R.string.sign_up),
@@ -76,7 +74,6 @@ fun BeeGuideApp(
         BeeGuideRoute.Privacy,
         BeeGuideRoute.Security,
         BeeGuideRoute.Appearance,
-        BeeGuideRoute.About
     )
     val bottomBarScreens =
         listOf<BeeGuideRoute>(BeeGuideRoute.Home, BeeGuideRoute.Map, BeeGuideRoute.Profile)
@@ -165,7 +162,6 @@ fun BeeGuideApp(
                         onPrivacySettingsClicked = { navController.navigate(BeeGuideRoute.Privacy.name) },
                         onSecuritySettingsClicked = { navController.navigate(BeeGuideRoute.Security.name) },
                         onAppearanceSettingsClicked = { navController.navigate(BeeGuideRoute.Appearance.name) },
-                        onAboutSettingsClicked = { navController.navigate(BeeGuideRoute.About.name) },
                     )
                 }
                 composable(route = BeeGuideRoute.EditProfile.name) {
@@ -181,13 +177,12 @@ fun BeeGuideApp(
                     PrivacyScreen()
                 }
                 composable(route = BeeGuideRoute.Security.name) {
-                    SecurityScreen()
+                    SecurityScreen(
+                        userViewModel = userViewModel
+                    )
                 }
                 composable(route = BeeGuideRoute.Appearance.name) {
                     AppearanceScreen(appearanceViewModel)
-                }
-                composable(route = BeeGuideRoute.About.name) {
-                    AboutScreen()
                 }
             }
             navigation(
@@ -196,12 +191,14 @@ fun BeeGuideApp(
             ) {
                 composable(route = BeeGuideRoute.SignIn.name) {
                     SignInScreen(
+                        userViewModel = userViewModel,
                         onSignUpButtonClicked = { navController.navigate(BeeGuideRoute.SignUp.name) },
                         navigateToHomeScreen = { navController.navigate(BeeGuideRoute.Home.name) },
                     )
                 }
                 composable(route = BeeGuideRoute.SignUp.name) {
                     SignUpScreen(
+                        userViewModel = userViewModel,
                         onSignInButtonClicked = { navController.navigate(BeeGuideRoute.SignIn.name) },
                         navigateToHomeScreen = { navController.navigate(BeeGuideRoute.Home.name) },
                     )

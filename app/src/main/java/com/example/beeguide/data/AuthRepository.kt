@@ -11,6 +11,7 @@ import retrofit2.HttpException
 interface AuthRepository {
     suspend fun signUp(email: String, password: String, name: String): AuthResult<Unit>
     suspend fun signIn(email: String, password: String, remember: Boolean): AuthResult<Unit>
+    suspend fun signOut()
 }
 
 class NetworkAuthRepository(
@@ -52,5 +53,9 @@ class NetworkAuthRepository(
             Log.d("NetworkAuthRepository", e.toString())
             AuthResult.UnknownError()
         }
+    }
+
+    override suspend fun signOut() {
+        authenticationManager.clearAllTokens()
     }
 }

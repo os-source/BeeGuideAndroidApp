@@ -219,7 +219,7 @@ fun MapMarker(markerPosition: Pair<Float, Float>, imageSize: Size, description: 
                     .size(12.dp)
                     .clip(CircleShape)
                     .background(
-                        TransparentColor(
+                        transparentColor(
                             color = MaterialTheme.colorScheme.primary,
                             alpha = 0.6f
                         )
@@ -255,7 +255,7 @@ fun UserMarker(markerPosition: Pair<Float, Float>, imageSize: Size) {
 fun Float.pxToDp() = with(LocalDensity.current) { this@pxToDp.toDp() }
 
 @Composable
-fun TransparentColor(color: Color, alpha: Float): Color {
+fun transparentColor(color: Color, alpha: Float): Color {
     val red = color.red
     val green = color.green
     val blue = color.blue

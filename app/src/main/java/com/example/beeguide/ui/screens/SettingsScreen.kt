@@ -1,5 +1,6 @@
 package com.example.beeguide.ui.screens
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.beeguide.R
@@ -35,8 +37,10 @@ fun SettingsScreen(
     onPrivacySettingsClicked: () -> Unit,
     onSecuritySettingsClicked: () -> Unit,
     onAppearanceSettingsClicked: () -> Unit,
-    onAboutSettingsClicked: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val uriHandler = LocalUriHandler.current
+
     Column(
         modifier = Modifier
             .verticalScroll(rememberScrollState())
@@ -94,6 +98,7 @@ fun SettingsScreen(
                 icon = Icons.Rounded.Share,
                 iconDesc = R.string.share_beeguide,
             ) {
+                Toast.makeText(context, "Die App konnte im Play Store nicht gefunden werden!", Toast.LENGTH_SHORT).show()
             }
             Divider()
             SettingsClickableComp(
@@ -101,6 +106,7 @@ fun SettingsScreen(
                 icon = Icons.Rounded.Star,
                 iconDesc = R.string.rate_beeguide,
             ) {
+                Toast.makeText(context, "Die App konnte im Play Store nicht gefunden werden!", Toast.LENGTH_SHORT).show()
             }
             Divider()
             SettingsClickableComp(
@@ -108,6 +114,7 @@ fun SettingsScreen(
                 icon = Icons.Rounded.Build,
                 iconDesc = R.string.help,
             ) {
+                uriHandler.openUri("https://beeguide.at/")
             }
             Divider()
             SettingsClickableComp(
@@ -115,13 +122,9 @@ fun SettingsScreen(
                 icon = Icons.Rounded.Info,
                 iconDesc = R.string.about,
             ) {
-                onAboutSettingsClicked()
+                uriHandler.openUri("https://beeguide.at/")
             }
         }
-
-        /*Button(onClick = { /*TODO*/ }) {
-            Text(stringResource(id = R.string.sign_out))
-        }*/
 
         Text(
             text = "Version ${getVersionName(context = LocalContext.current)}",
