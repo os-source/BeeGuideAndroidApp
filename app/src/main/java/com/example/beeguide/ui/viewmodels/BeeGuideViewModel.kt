@@ -46,7 +46,12 @@ class UserViewModel(private val beeGuideRepository: BeeGuideRepository) : ViewMo
                 UserUiState.Error
             } catch (e: HttpException) {
                 Log.d("UserUiState", e.toString())
-                UserUiState.Error
+
+                if (e.code() == 403) {
+                    UserUiState.None
+                } else {
+                    UserUiState.Error
+                }
             }
         }
     }

@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.beeguide.R
@@ -45,7 +46,24 @@ fun BeeGuideUnexpectedError() {
                     .padding(100.dp, 50.dp)
                     .alpha(0.5f),
             )
-            Text(text = stringResource(id = R.string.unexpected_error))
+            Text(text = stringResource(id = R.string.unexpected_error), textAlign = TextAlign.Center)
+        }
+    }
+}
+
+@Composable
+fun BeeGuidePleaseSignIn() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Image(
+                painter = painterResource(id = R.drawable.undraw_sign_in_re_o58h),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(100.dp, 50.dp)
+                    .alpha(0.5f),
+            )
+            Text(text = "Bitte melde dich an, um alle Funktionen von BeeGuide zu nutzen.", textAlign = TextAlign.Center)
         }
     }
 }

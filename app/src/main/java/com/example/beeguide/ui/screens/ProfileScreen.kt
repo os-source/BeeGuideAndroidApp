@@ -27,6 +27,7 @@ import com.example.beeguide.R
 import com.example.beeguide.helpers.imageBitmapFromBase64String
 import com.example.beeguide.ui.components.BeeGuideCard
 import com.example.beeguide.ui.components.BeeGuideCircularProgressIndicator
+import com.example.beeguide.ui.components.BeeGuidePleaseSignIn
 import com.example.beeguide.ui.components.BeeGuideUnexpectedError
 import com.example.beeguide.ui.viewmodels.UserUiState
 
@@ -108,6 +109,8 @@ fun ProfileScreen(
                 }
             }
         }
+
+        is UserUiState.None ->  BeeGuidePleaseSignIn()
 
         else -> BeeGuideUnexpectedError()
     }

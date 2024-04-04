@@ -24,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import com.example.beeguide.R
 import com.example.beeguide.helpers.svgStringToImageBitmap
 import com.example.beeguide.ui.components.BeeGuideCircularProgressIndicator
+import com.example.beeguide.ui.components.BeeGuideUnexpectedError
 import com.example.beeguide.ui.components.MapMarker
 import com.example.beeguide.ui.components.UserMarker
 import com.example.beeguide.ui.viewmodels.MapFileUiState
@@ -146,7 +147,7 @@ fun MapScreen(
                                     if (mapPosition == null) {
                                         Toast.makeText(
                                             context,
-                                            stringResource(id = R.string.unexpected_error),
+                                            "Beim Laden der Position ist ein unerwarteter Fehler aufgetreten.",
                                             Toast.LENGTH_SHORT
                                         ).show()
                                     }
@@ -163,11 +164,7 @@ fun MapScreen(
                     }
                 }
 
-                else -> Toast.makeText(
-                    context,
-                    stringResource(id = R.string.unexpected_error),
-                    Toast.LENGTH_SHORT
-                ).show()
+                else -> BeeGuideUnexpectedError()
             }
         }
 
@@ -175,12 +172,6 @@ fun MapScreen(
             BeeGuideCircularProgressIndicator()
         }
 
-        is MapUiState.Error -> {
-            Toast.makeText(
-                context,
-                stringResource(id = R.string.unexpected_error),
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        is MapUiState.Error -> BeeGuideUnexpectedError()
     }
 }
