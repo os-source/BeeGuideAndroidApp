@@ -39,7 +39,9 @@ sealed interface MapFileUiState {
 }
 
 class MapViewModel(
-    private val mapRepository: MapRepository
+    private val mapRepository: MapRepository,
+    uuId: String,
+    major: Int,
 ) : ViewModel() {
     companion object {
         private const val TAG = "MapViewModel"
@@ -49,7 +51,7 @@ class MapViewModel(
                 val application = (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY]
                         as BeeGuideApplication)
                 val mapRepository = application.container.mapRepository
-                MapViewModel(mapRepository = mapRepository)
+                MapViewModel(mapRepository = mapRepository, uuId = "426C7565-4368-6172-6D43-6561636F6E73", major = 3000)
             }
         }
     }
@@ -58,17 +60,17 @@ class MapViewModel(
     val mapUiState: StateFlow<MapUiState> = _mapUiState.asStateFlow()
 
     init {
-        getMap()
+        getMap(uuId, major)
     }
 
-    fun getMap() {
+    fun getMap(uuId: String, major: Int) {
         viewModelScope.launch {
             _mapUiState.update {
                 MapUiState.Loading
             }
             _mapUiState.update {
                 try {
-                    MapUiState.Success(mapRepository.getMap())
+                    MapUiState.Success(mapRepository.getMap(uuId, major))
                 } catch (e: IOException) {
                     Log.d(TAG, "getMap: $e")
                     MapUiState.Error

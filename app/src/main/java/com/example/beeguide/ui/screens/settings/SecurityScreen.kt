@@ -35,7 +35,7 @@ fun SecurityScreen(
         Button(onClick = {
             userViewModel.clearUser()
             signOutViewModel.signOut()
-            Toast.makeText(context, "Du wurdes abgemeldet!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Du wurdest abgemeldet!", Toast.LENGTH_SHORT).show()
         }) {
             Text(text = stringResource(id = R.string.sign_out))
         }
