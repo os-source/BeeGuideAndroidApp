@@ -12,7 +12,6 @@ import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material.icons.rounded.Favorite
 import androidx.compose.material.icons.rounded.Info
 import androidx.compose.material.icons.rounded.Lock
-import androidx.compose.material.icons.rounded.Notifications
 import androidx.compose.material.icons.rounded.Share
 import androidx.compose.material.icons.rounded.Star
 import androidx.compose.material3.Divider
@@ -33,7 +32,6 @@ import com.example.beeguide.ui.components.SettingsGroup
 @Composable
 fun SettingsScreen(
     onEditProfileSettingsClicked: () -> Unit,
-    onNotificationsSettingsClicked: () -> Unit,
     onPrivacySettingsClicked: () -> Unit,
     onSecuritySettingsClicked: () -> Unit,
     onAppearanceSettingsClicked: () -> Unit,
@@ -57,14 +55,6 @@ fun SettingsScreen(
         }
 
         SettingsGroup(name = R.string.settings) {
-            SettingsClickableComp(
-                name = R.string.notifications,
-                icon = Icons.Rounded.Notifications,
-                iconDesc = R.string.notifications,
-            ) {
-                onNotificationsSettingsClicked()
-            }
-            Divider()
             SettingsClickableComp(
                 name = R.string.privacy,
                 icon = Icons.Rounded.AccountBox,

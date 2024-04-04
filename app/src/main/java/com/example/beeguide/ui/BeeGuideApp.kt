@@ -32,7 +32,6 @@ import com.example.beeguide.ui.screens.authentication.SignInScreen
 import com.example.beeguide.ui.screens.authentication.SignUpScreen
 import com.example.beeguide.ui.screens.settings.AppearanceScreen
 import com.example.beeguide.ui.screens.settings.EditProfileScreen
-import com.example.beeguide.ui.screens.settings.NotificationsScreen
 import com.example.beeguide.ui.screens.settings.PrivacyScreen
 import com.example.beeguide.ui.screens.settings.SecurityScreen
 import com.example.beeguide.ui.viewmodels.AppearanceViewModel
@@ -51,7 +50,6 @@ enum class BeeGuideRoute(@StringRes val title: Int) {
 
     SettingsOverview(R.string.settings),
     EditProfile(R.string.edit_profile),
-    Notifications(R.string.notifications),
     Privacy(R.string.privacy),
     Security(R.string.security),
     Appearance(R.string.appearance),
@@ -70,7 +68,6 @@ fun BeeGuideApp(
     val topBarScreens = listOf<BeeGuideRoute>(
         BeeGuideRoute.SettingsOverview,
         BeeGuideRoute.EditProfile,
-        BeeGuideRoute.Notifications,
         BeeGuideRoute.Privacy,
         BeeGuideRoute.Security,
         BeeGuideRoute.Appearance,
@@ -146,7 +143,6 @@ fun BeeGuideApp(
                 composable(route = BeeGuideRoute.SettingsOverview.name) {
                     SettingsScreen(
                         onEditProfileSettingsClicked = { navController.navigate(BeeGuideRoute.EditProfile.name) },
-                        onNotificationsSettingsClicked = { navController.navigate(BeeGuideRoute.Notifications.name) },
                         onPrivacySettingsClicked = { navController.navigate(BeeGuideRoute.Privacy.name) },
                         onSecuritySettingsClicked = { navController.navigate(BeeGuideRoute.Security.name) },
                         onAppearanceSettingsClicked = { navController.navigate(BeeGuideRoute.Appearance.name) },
@@ -157,9 +153,6 @@ fun BeeGuideApp(
                         userViewModel = userViewModel,
                         navigateToProfileScreen = { navController.navigate(BeeGuideRoute.Profile.name) },
                     )
-                }
-                composable(route = BeeGuideRoute.Notifications.name) {
-                    NotificationsScreen()
                 }
                 composable(route = BeeGuideRoute.Privacy.name) {
                     PrivacyScreen()
