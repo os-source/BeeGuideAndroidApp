@@ -36,7 +36,7 @@ fun BeeGuideCircularProgressIndicator() {
 @Composable
 fun BeeGuideUnexpectedError() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Column {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Image(
                 painter = painterResource(id = R.drawable.undraw_sign_in_re_o58h),
                 contentDescription = null,
